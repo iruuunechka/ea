@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 public class Main {
     private static final int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800};//, 1600, 3200};
     private static final int n = 1000;
+    private static final int avCount = 10;
 
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -33,22 +34,24 @@ public class Main {
         pw.println("gen, lambda");
         for (int lambda : lambdas) {
             System.out.println(lambda + " " + lowerBound);
-            Problem om = new OneMax(n);
-            TwoRate tr = new TwoRate(2, lowerBound, lambda, om);
-            int iterCount = 0;
-            while (om.getFitness() != n) {
-                tr.makeIteration();
-                iterCount++;
-            }
-            pw.println(iterCount + ", " + lambda);
-
-            System.out.println("decCou: " + tr.decreaseCount + " incCou: " + tr.increaseCount + " eqCou: " + tr.equalCount);
+            double averageIterCount = 0;
+            for (int i = 0; i < avCount; i++) {
+                int curIterCount = 0;
+                Problem om = new OneMax(n);
+                TwoRate tr = new TwoRate(2, lowerBound, lambda, om);
+                while (om.getFitness() != n) {
+                    tr.makeIteration();
+                    curIterCount++;
+                }
+                averageIterCount = (i == 0) ? curIterCount : (averageIterCount * i + curIterCount) / (i + 1);
+//                System.out.println("decCou: " + tr.decreaseCount + " incCou: " + tr.increaseCount + " eqCou: " + tr.equalCount);
 
 //            for (String s : ((TwoRate) tr).decreaseCountInfo) {
 //                System.out.print(s + " ");
 //            }
 //            System.out.println();
-
+            }
+            pw.println((int) averageIterCount + ", " + lambda);
         }
         pw.close();
     }

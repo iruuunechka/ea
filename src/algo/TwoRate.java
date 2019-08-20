@@ -84,7 +84,7 @@ public class TwoRate implements Algorithm {
         List<Integer> bestPatch = null;
         int bestFitness = -1;
         for (int i = 0; i < lambda / 2; ++i) {
-            List<Integer> patch = createPatch(mutation);
+            List<Integer> patch = Utils.createPatch(mutation, problemLength);
             int fitness = problem.calculatePatchFitness(patch);
             if (fitness >= bestFitness) {
                 bestFitness = fitness;
@@ -143,18 +143,18 @@ public class TwoRate implements Algorithm {
 //        return new BestCalculatedPatch(bestPatch, bestFitness);
 //    }
 
-    private List<Integer> createPatch(double mutation) {
-        List<Integer> patch = new ArrayList<>();
-        for (int i = 0; i < problemLength; i++) {
-            if (rand.nextDouble() < mutation) {
-                patch.add(i);
-            }
-        }
-        if (patch.isEmpty()) {
-            patch.add(rand.nextInt(problemLength));
-        }
-        return patch;
-    }
+//    private List<Integer> createPatch(double mutation) {
+//        List<Integer> patch = new ArrayList<>();
+//        for (int i = 0; i < problemLength; i++) {
+//            if (rand.nextDouble() < mutation) {
+//                patch.add(i);
+//            }
+//        }
+//        if (patch.isEmpty()) {
+//            patch.add(rand.nextInt(problemLength));
+//        }
+//        return patch;
+//    }
 
     private class BestCalculatedPatch {
         List<Integer> patch;
