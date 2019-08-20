@@ -16,6 +16,11 @@ public class TwoRate implements Algorithm {
 
     private final Random rand;
 
+    public int decreaseCount = 0;
+    public List<String> decreaseCountInfo = new ArrayList<>();
+    public int increaseCount = 0;
+    public int equalCount = 0;
+
     public TwoRate(double r, double lowerBound, int lambda, Problem problem) {
         this.problem = problem;
         this.problemLength = problem.getLength();
@@ -33,22 +38,31 @@ public class TwoRate implements Algorithm {
         if (bpHalf.fitness > bpMult.fitness) {
             if (bpHalf.fitness >= problem.getFitness()) {
                 problem.applyPatch(bpHalf.patch, bpHalf.fitness);
+            } else {
+                decreaseCount++;
+                decreaseCountInfo.add(problem.getFitness() + "," + mutationRate + "'" + (problem.getFitness() - bpHalf.fitness) + "," + (problem.getFitness() - bpMult.fitness));
             }
             newMutationRate = mutationRate / 2;
         } else if (bpHalf.fitness < bpMult.fitness) {
             if (bpMult.fitness >= problem.getFitness()) {
                 problem.applyPatch(bpMult.patch, bpMult.fitness);
+            } else {
+                increaseCount++;
             }
             newMutationRate = mutationRate * 2;
         } else { // что если равны?
             if (rand.nextBoolean()) {
                 if (bpHalf.fitness >= problem.getFitness()) {
                     problem.applyPatch(bpHalf.patch, bpHalf.fitness);
+                } else {
+                    equalCount++;
                 }
                 newMutationRate = mutationRate / 2;
             } else {
                 if (bpHalf.fitness >= problem.getFitness()) {
                     problem.applyPatch(bpMult.patch, bpMult.fitness);
+                } else {
+                    equalCount++;
                 }
                 newMutationRate = mutationRate * 2;
             }

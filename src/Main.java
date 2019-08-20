@@ -6,8 +6,6 @@ import problem.Problem;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     private static final int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800};//, 1600, 3200};
@@ -15,30 +13,42 @@ public class Main {
 
 
     public static void main(String[] args) throws FileNotFoundException {
+        double lowerBoundTwoRate = 2.0 / n;
+        double lowerBoundTwoRateSq = 2.0 / (n * n);
+
         System.out.println("two rate");
-        testTwoRate();
-        System.out.println("AB algorithm");
-        testAbalgo();
+        testTwoRate("tworate.csv", lowerBoundTwoRate);
         System.out.println("two rate sq");
-        testTwoRateSq();
-        System.out.println("AB algorithm sq");
-        testAbalgoSq();
+        testTwoRate("tworatesq.csv", lowerBoundTwoRateSq);
+
+//        System.out.println("AB algorithm");
+//        testAbalgo();
+//        System.out.println("AB algorithm sq");
+//        testAbalgoSq();
 
     }
 
-    private static void testTwoRate() throws FileNotFoundException {
-        PrintWriter pw = new PrintWriter("tworate.csv");
+    private static void testTwoRate(String filename, double lowerBound) throws FileNotFoundException {
+        PrintWriter pw = new PrintWriter(filename);
         pw.println("gen, lambda");
         for (int lambda : lambdas) {
-            System.out.println(lambda);
+            System.out.println(lambda + " " + lowerBound);
             Problem om = new OneMax(n);
-            Algorithm tr = new TwoRate(2, 2.0 / n, lambda, om);
+            TwoRate tr = new TwoRate(2, lowerBound, lambda, om);
             int iterCount = 0;
             while (om.getFitness() != n) {
                 tr.makeIteration();
                 iterCount++;
             }
             pw.println(iterCount + ", " + lambda);
+
+            System.out.println("decCou: " + tr.decreaseCount + " incCou: " + tr.increaseCount + " eqCou: " + tr.equalCount);
+
+//            for (String s : ((TwoRate) tr).decreaseCountInfo) {
+//                System.out.print(s + " ");
+//            }
+//            System.out.println();
+
         }
         pw.close();
     }
@@ -53,23 +63,6 @@ public class Main {
             int iterCount = 0;
             while (om.getFitness() != n) {
                 ab.makeIteration();
-                iterCount++;
-            }
-            pw.println(iterCount + ", " + lambda);
-        }
-        pw.close();
-    }
-
-    private static void testTwoRateSq() throws FileNotFoundException {
-        PrintWriter pw = new PrintWriter("tworatesq.csv");
-        pw.println("gen, lambda");
-        for (int lambda : lambdas) {
-            System.out.println(lambda);
-            Problem om = new OneMax(n);
-            Algorithm tr = new TwoRate(2, 2.0 / (n * n), lambda, om);
-            int iterCount = 0;
-            while (om.getFitness() != n) {
-                tr.makeIteration();
                 iterCount++;
             }
             pw.println(iterCount + ", " + lambda);
