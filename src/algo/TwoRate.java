@@ -80,6 +80,20 @@ public class TwoRate implements Algorithm {
         mutationRate = Math.min(Math.max(lowerBound, mutationRate), 0.25);
     }
 
+    @Override
+    public boolean isFinished() {
+        return problem.isOptimized();
+    }
+
+    @Override
+    public void printInfo() {
+        System.out.println("decCou: " + decreaseCount + " incCou: " + increaseCount + " eqCou: " + equalCount);
+        for (String s : decreaseCountInfo) {
+            System.out.print(s + " ");
+        }
+        System.out.println();
+    }
+
     private BestCalculatedPatch getHalfBest(double mutation) {
         List<Integer> bestPatch = null;
         int bestFitness = -1;

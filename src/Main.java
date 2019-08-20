@@ -1,4 +1,5 @@
 import algo.ABalgo;
+import algo.AlgoFactory;
 import algo.Algorithm;
 import algo.TwoRate;
 import problem.OneMax;
@@ -9,27 +10,29 @@ import java.io.PrintWriter;
 
 public class Main {
     private static final int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800};//, 1600, 3200};
-    private static final int n = 1000;
-    private static final int avCount = 10;
+    private static final int n = 10000;
+    private static final int avCount = 50;
 
 
     public static void main(String[] args) throws FileNotFoundException {
         double lowerBoundTwoRate = 2.0 / n;
         double lowerBoundTwoRateSq = 2.0 / (n * n);
+        double lowerBoundAb = 1.0 / n;
+        double lowerBoundAbSq = 1.0 / (n * n);
 
-        System.out.println("two rate");
-        testTwoRate("tworate.csv", lowerBoundTwoRate);
-        System.out.println("two rate sq");
-        testTwoRate("tworatesq.csv", lowerBoundTwoRateSq);
+//        System.out.println("two rate");
+//        runAlgo("tworate.csv", lowerBoundTwoRate, getTwoRateImplementation());
+//        System.out.println("two rate sq");
+//        runAlgo("tworatesq.csv", lowerBoundTwoRateSq, getTwoRateImplementation());
 
-//        System.out.println("AB algorithm");
-//        testAbalgo();
-//        System.out.println("AB algorithm sq");
-//        testAbalgoSq();
+        System.out.println("AB algorithm");
+        runAlgo("ab.csv", lowerBoundAb, getABImplementation());
+        System.out.println("AB algorithm sq");
+        runAlgo("absq.csv", lowerBoundAbSq, getABSQImplementation());
 
     }
 
-    private static void testTwoRate(String filename, double lowerBound) throws FileNotFoundException {
+    private static void runAlgo(String filename, double lowerBound, AlgoFactory factory) throws FileNotFoundException {
         PrintWriter pw = new PrintWriter(filename);
         pw.println("gen, lambda");
         for (int lambda : lambdas) {
@@ -37,57 +40,27 @@ public class Main {
             double averageIterCount = 0;
             for (int i = 0; i < avCount; i++) {
                 int curIterCount = 0;
-                Problem om = new OneMax(n);
-                TwoRate tr = new TwoRate(2, lowerBound, lambda, om);
-                while (om.getFitness() != n) {
-                    tr.makeIteration();
+                Algorithm algo = factory.getInstance(lambda, lowerBound, n);
+                while (!algo.isFinished()) {
+                    algo.makeIteration();
                     curIterCount++;
                 }
                 averageIterCount = (i == 0) ? curIterCount : (averageIterCount * i + curIterCount) / (i + 1);
-//                System.out.println("decCou: " + tr.decreaseCount + " incCou: " + tr.increaseCount + " eqCou: " + tr.equalCount);
-
-//            for (String s : ((TwoRate) tr).decreaseCountInfo) {
-//                System.out.print(s + " ");
-//            }
-//            System.out.println();
             }
             pw.println((int) averageIterCount + ", " + lambda);
         }
         pw.close();
     }
 
-    private static void testAbalgo() throws FileNotFoundException {
-        PrintWriter pw = new PrintWriter("ab.csv");
-        pw.println("gen, lambda");
-        for (int lambda : lambdas) {
-            System.out.println(lambda);
-            Problem om = new OneMax(n);
-            Algorithm ab = new ABalgo(1.0 / n, 2, 0.5, 1.0 / n, lambda, om);
-            int iterCount = 0;
-            while (om.getFitness() != n) {
-                ab.makeIteration();
-                iterCount++;
-            }
-            pw.println(iterCount + ", " + lambda);
-        }
-        pw.close();
+    private static AlgoFactory getTwoRateImplementation() {
+        return (lambda, lowerBound, problemLength) -> new TwoRate(2, lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static void testAbalgoSq() throws FileNotFoundException {
-        PrintWriter pw = new PrintWriter("absq.csv");
-        pw.println("gen, lambda");
-        for (int lambda : lambdas) {
-            System.out.println(lambda);
-            Problem om = new OneMax(n);
-            Algorithm ab = new ABalgo(1.0 / n, 2, 0.5, 1.0 / (n * n), lambda, om);
-            int iterCount = 0;
-            while (om.getFitness() != n) {
-                ab.makeIteration();
-                iterCount++;
-            }
-            pw.println(iterCount + ", " + lambda);
-        }
-        pw.close();
+    private static AlgoFactory getABImplementation() {
+        return (lambda, lowerBound, problemLength) -> new ABalgo(1.0 / n, 2, 0.5, lowerBound, lambda, new OneMax(problemLength));
     }
 
+    private static AlgoFactory getABSQImplementation() {
+        return (lambda, lowerBound, problemLength) -> new ABalgo(1.0 / (n * n), 2, 0.5, lowerBound, lambda, new OneMax(problemLength));
+    }
 }

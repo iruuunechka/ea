@@ -33,7 +33,7 @@ public class ABalgo implements Algorithm {
         int bestFitness = problem.getFitness();
         int numberOfBetter = 0;
         for (int i = 0; i < lambda; ++i) {
-            List<Integer> patch = createPatch();
+            List<Integer> patch = Utils.createPatch(mutationRate, problemLength);
             int fitness = problem.calculatePatchFitness(patch);
             if (fitness > problem.getFitness()) {
                 numberOfBetter++;
@@ -53,16 +53,26 @@ public class ABalgo implements Algorithm {
         }
     }
 
-    private List<Integer> createPatch() {
-        List<Integer> patch = new ArrayList<>();
-        for (int i = 0; i < problemLength; i++) {
-            if (rand.nextDouble() < mutationRate) {
-                patch.add(i);
-            }
-        }
-        if (patch.isEmpty()) {
-            patch.add(rand.nextInt(problemLength));
-        }
-        return patch;
+    @Override
+    public boolean isFinished() {
+        return problem.isOptimized();
     }
+
+    @Override
+    public void printInfo() {
+
+    }
+
+//    private List<Integer> createPatch() {
+//        List<Integer> patch = new ArrayList<>();
+//        for (int i = 0; i < problemLength; i++) {
+//            if (rand.nextDouble() < mutationRate) {
+//                patch.add(i);
+//            }
+//        }
+//        if (patch.isEmpty()) {
+//            patch.add(rand.nextInt(problemLength));
+//        }
+//        return patch;
+//    }
 }

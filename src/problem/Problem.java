@@ -11,4 +11,6 @@ public interface Problem {
     int getFitness();
 
     int getLength();
+
+    boolean isOptimized();
 }

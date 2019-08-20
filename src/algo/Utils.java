@@ -7,7 +7,7 @@ import java.util.Random;
 public class Utils {
     private static final Random rand = new Random();
     public static List<Integer> createPatch (double mutation, int problemLength) {
-        List<Integer> patch = new ArrayList<>();
+        List<Integer> patch = new ArrayList<>(16);
         int i = getNextIndex(-1, mutation);
         while (i < problemLength) {
             patch.add(i);
