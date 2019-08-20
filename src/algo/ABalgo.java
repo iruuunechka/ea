@@ -49,7 +49,7 @@ public class ABalgo implements Algorithm {
         if (numberOfBetter > 0.05 * lambda) {
             mutationRate = Math.min(0.5, a * mutationRate);
         } else {
-            mutationRate = Math.max(1.0 / problemLength, b * mutationRate);
+            mutationRate = Math.max(lowerBound, b * mutationRate);
         }
     }
 

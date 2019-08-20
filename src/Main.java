@@ -10,11 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+    private static final int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800};//, 1600, 3200};
+    private static final int n = 1000;
+
+
     public static void main(String[] args) throws FileNotFoundException {
-//        System.out.println("two rate");
-//        testTwoRate();
-//        System.out.println("AB algorithm");
-//        testAbalgo();
+        System.out.println("two rate");
+        testTwoRate();
+        System.out.println("AB algorithm");
+        testAbalgo();
         System.out.println("two rate sq");
         testTwoRateSq();
         System.out.println("AB algorithm sq");
@@ -25,8 +29,6 @@ public class Main {
     private static void testTwoRate() throws FileNotFoundException {
         PrintWriter pw = new PrintWriter("tworate.csv");
         pw.println("gen, lambda");
-        int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800, 1600, 3200};
-        int n = 1000;
         for (int lambda : lambdas) {
             System.out.println(lambda);
             Problem om = new OneMax(n);
@@ -44,8 +46,6 @@ public class Main {
     private static void testAbalgo() throws FileNotFoundException {
         PrintWriter pw = new PrintWriter("ab.csv");
         pw.println("gen, lambda");
-        int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800, 1600, 3200};
-        int n = 1000;
         for (int lambda : lambdas) {
             System.out.println(lambda);
             Problem om = new OneMax(n);
@@ -63,8 +63,6 @@ public class Main {
     private static void testTwoRateSq() throws FileNotFoundException {
         PrintWriter pw = new PrintWriter("tworatesq.csv");
         pw.println("gen, lambda");
-        int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800, 1600, 3200};
-        int n = 1000;
         for (int lambda : lambdas) {
             System.out.println(lambda);
             Problem om = new OneMax(n);
@@ -82,8 +80,6 @@ public class Main {
     private static void testAbalgoSq() throws FileNotFoundException {
         PrintWriter pw = new PrintWriter("absq.csv");
         pw.println("gen, lambda");
-        int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800, 1600, 3200};
-        int n = 1000;
         for (int lambda : lambdas) {
             System.out.println(lambda);
             Problem om = new OneMax(n);

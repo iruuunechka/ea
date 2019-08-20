@@ -31,20 +31,26 @@ public class TwoRate implements Algorithm {
         BestCalculatedPatch bpMult = getHalfBest(mutationRate * 2);
         double newMutationRate = mutationRate;
         if (bpHalf.fitness > bpMult.fitness) {
-            problem.applyPatch(bpHalf.patch, bpHalf.fitness);
+            if (bpHalf.fitness >= problem.getFitness()) {
+                problem.applyPatch(bpHalf.patch, bpHalf.fitness);
+            }
             newMutationRate = mutationRate / 2;
         } else if (bpHalf.fitness < bpMult.fitness) {
-            problem.applyPatch(bpMult.patch, bpMult.fitness);
+            if (bpMult.fitness >= problem.getFitness()) {
+                problem.applyPatch(bpMult.patch, bpMult.fitness);
+            }
             newMutationRate = mutationRate * 2;
         } else { // что если равны?
-            if (!(bpHalf.fitness == problem.getFitness())) { // если улучшилось решение
-                if (rand.nextBoolean()) {
+            if (rand.nextBoolean()) {
+                if (bpHalf.fitness >= problem.getFitness()) {
                     problem.applyPatch(bpHalf.patch, bpHalf.fitness);
-                    newMutationRate = mutationRate / 2;
-                } else {
-                    problem.applyPatch(bpMult.patch, bpMult.fitness);
-                    newMutationRate = mutationRate * 2;
                 }
+                newMutationRate = mutationRate / 2;
+            } else {
+                if (bpHalf.fitness >= problem.getFitness()) {
+                    problem.applyPatch(bpMult.patch, bpMult.fitness);
+                }
+                newMutationRate = mutationRate * 2;
             }
         }
         if (rand.nextBoolean()) {
@@ -62,18 +68,66 @@ public class TwoRate implements Algorithm {
 
     private BestCalculatedPatch getHalfBest(double mutation) {
         List<Integer> bestPatch = null;
-        int bestFitness = problem.getFitness();
+        int bestFitness = -1;
         for (int i = 0; i < lambda / 2; ++i) {
             List<Integer> patch = createPatch(mutation);
             int fitness = problem.calculatePatchFitness(patch);
-            if (fitness > bestFitness) {
-                //а что если равен, и вообще мы не нашли в итоге лучшую особь, но находили такую же. делаем ли мы изменение?
+            if (fitness >= bestFitness) {
                 bestFitness = fitness;
                 bestPatch = patch;
             }
         }
         return new BestCalculatedPatch(bestPatch, bestFitness);
     }
+//@Override
+//    public void makeIteration() {
+//        BestCalculatedPatch bpHalf = getHalfBest(mutationRate / 2);
+//        BestCalculatedPatch bpMult = getHalfBest(mutationRate * 2);
+//        double newMutationRate = mutationRate;
+//        if (bpHalf.fitness > bpMult.fitness) {
+//            problem.applyPatch(bpHalf.patch, bpHalf.fitness);
+//            newMutationRate = mutationRate / 2;
+//        } else if (bpHalf.fitness < bpMult.fitness) {
+//            problem.applyPatch(bpMult.patch, bpMult.fitness);
+//            newMutationRate = mutationRate * 2;
+//        } else { // что если равны?
+//            if (!(bpHalf.fitness == problem.getFitness())) { // если улучшилось решение
+//                if (rand.nextBoolean()) {
+//                    problem.applyPatch(bpHalf.patch, bpHalf.fitness);
+//                    newMutationRate = mutationRate / 2;
+//                } else {
+//                    problem.applyPatch(bpMult.patch, bpMult.fitness);
+//                    newMutationRate = mutationRate * 2;
+//                }
+//            }
+//        }
+//        if (rand.nextBoolean()) {
+//            if (rand.nextBoolean()) {
+//                mutationRate = mutationRate / 2;
+//            } else {
+//                mutationRate = mutationRate * 2;
+//            }
+//        } else {
+//            mutationRate = newMutationRate;
+//        }
+//
+//        mutationRate = Math.min(Math.max(lowerBound, mutationRate), 0.25);
+//    }
+//
+//    private BestCalculatedPatch getHalfBest(double mutation) {
+//        List<Integer> bestPatch = null;
+//        int bestFitness = problem.getFitness();
+//        for (int i = 0; i < lambda / 2; ++i) {
+//            List<Integer> patch = createPatch(mutation);
+//            int fitness = problem.calculatePatchFitness(patch);
+//            if (fitness > bestFitness) {
+//                //а что если равен, и вообще мы не нашли в итоге лучшую особь, но находили такую же. делаем ли мы изменение?
+//                bestFitness = fitness;
+//                bestPatch = patch;
+//            }
+//        }
+//        return new BestCalculatedPatch(bestPatch, bestFitness);
+//    }
 
     private List<Integer> createPatch(double mutation) {
         List<Integer> patch = new ArrayList<>();
