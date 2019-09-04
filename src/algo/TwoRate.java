@@ -20,6 +20,7 @@ public class TwoRate implements Algorithm {
     public List<String> decreaseCountInfo = new ArrayList<>();
     public int increaseCount = 0;
     public int equalCount = 0;
+    private int almostTheSame = 0;
 
     public TwoRate(double r, double lowerBound, int lambda, Problem problem) {
         this.problem = problem;
@@ -67,7 +68,9 @@ public class TwoRate implements Algorithm {
                 newMutationRate = mutationRate * 2;
             }
         }
-        if (rand.nextBoolean()) {
+        if (rand.nextBoolean()) { //вероятность не 0.5 а регулиировать в зависимости от разницы фитнеса в левой и правой.
+            //посчитать среднее и дальше как по методу отжига
+            almostTheSame++;
             if (rand.nextBoolean()) {
                 mutationRate = mutationRate / 2;
             } else {
@@ -87,11 +90,21 @@ public class TwoRate implements Algorithm {
 
     @Override
     public void printInfo() {
-        System.out.println("decCou: " + decreaseCount + " incCou: " + increaseCount + " eqCou: " + equalCount);
-        for (String s : decreaseCountInfo) {
-            System.out.print(s + " ");
-        }
+        System.out.println("decCou: " + decreaseCount + " incCou: " + increaseCount + " eqCou: " + equalCount + " sameCou: " + almostTheSame);
+//        for (String s : decreaseCountInfo) {
+//            System.out.print(s + " ");
+//        }
         System.out.println();
+    }
+
+    @Override
+    public double getMutationRate() {
+        return mutationRate;
+    }
+
+    @Override
+    public int getFitness() {
+        return problem.getFitness();
     }
 
     private BestCalculatedPatch getHalfBest(double mutation) {

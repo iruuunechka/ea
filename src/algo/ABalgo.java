@@ -63,6 +63,16 @@ public class ABalgo implements Algorithm {
 
     }
 
+    @Override
+    public double getMutationRate() {
+        return mutationRate;
+    }
+
+    @Override
+    public int getFitness() {
+        return problem.getFitness();
+    }
+
 //    private List<Integer> createPatch() {
 //        List<Integer> patch = new ArrayList<>();
 //        for (int i = 0; i < problemLength; i++) {
