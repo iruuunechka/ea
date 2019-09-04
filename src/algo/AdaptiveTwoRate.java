@@ -45,53 +45,31 @@ public class AdaptiveTwoRate implements Algorithm{
         if (bpHalf.fitness > bpMult.fitness) {
             if (bpHalf.fitness >= problem.getFitness()) {
                 problem.applyPatch(bpHalf.patch, bpHalf.fitness);
-            } else {
-//                decreaseCount++;
-//                decreaseCountInfo.add(problem.getFitness() + "," + mutationRate + "'" + (problem.getFitness() - bpHalf.fitness) + "," + (problem.getFitness() - bpMult.fitness));
             }
             newMutationRate = mutationRate / 2;
         } else if (bpHalf.fitness < bpMult.fitness) {
             if (bpMult.fitness >= problem.getFitness()) {
                 problem.applyPatch(bpMult.patch, bpMult.fitness);
-            } else {
-//                increaseCount++;
             }
             newMutationRate = mutationRate * 2;
-        } else { // что если равны?
+        } else {
             if (rand.nextBoolean()) {
                 if (bpHalf.fitness >= problem.getFitness()) {
                     problem.applyPatch(bpHalf.patch, bpHalf.fitness);
-                } else {
-//                    equalCount++;
                 }
                 newMutationRate = mutationRate / 2;
             } else {
                 if (bpHalf.fitness >= problem.getFitness()) {
                     problem.applyPatch(bpMult.patch, bpMult.fitness);
-                } else {
-//                    equalCount++;
                 }
                 newMutationRate = mutationRate * 2;
             }
         }
-//        boolean almostEqual = Math.abs(bpHalf.median - bpMult.median) < 1;
-//        if (almostEqual) {
-//            almostTheSame++;
-//        }
-//        if (rand.nextBoolean() || almostEqual) {
         double diff = Math.abs(bpHalf.average - bpMult.average);
-//        prob = Math.pow(1.3, -diff - 2);
-//        prob = Math.pow(1.3, (-3.5 * diff / Math.pow(problem.getFitness(), 0.3)) - 2); непонятно как уравновесить diff и фитнес чтоб не скатываться совсем в 0
-
-//        prob = Math.exp(-diff / (problemLength - problem.getFitness()) - 0.6); // идея что в конце меньше рандома должно быть работает не очень.
-//        prob = Math.pow(1.3, -diff / 5 - 2);
         prob = Math.pow(1.3, -diff / 3.5 - 1.6);
-//        prob = Math.pow(1.3, -diff / 2 - 1.7);
-
         System.out.println(problem.getFitness() + " " + diff + " " + prob);
         if (rand.nextDouble() < prob) {
             almostTheSame++;
-//            if (rand.nextBoolean()) {
             if (rand.nextDouble() < prob + (0.3 * problem.getFitness() / problemLength)) {
                 mutationRate = mutationRate * 2;
             } else {
@@ -103,6 +81,75 @@ public class AdaptiveTwoRate implements Algorithm{
 
         mutationRate = Math.min(Math.max(lowerBound, mutationRate), 0.25);
     }
+
+//    все попытки с настройкой
+//    @Override
+//    public void makeIteration() {
+//        curIter++;
+//        BestCalculatedPatch bpHalf = getHalfBest(mutationRate / 2);
+//        BestCalculatedPatch bpMult = getHalfBest(mutationRate * 2);
+//        double newMutationRate = mutationRate;
+//        if (bpHalf.fitness > bpMult.fitness) {
+//            if (bpHalf.fitness >= problem.getFitness()) {
+//                problem.applyPatch(bpHalf.patch, bpHalf.fitness);
+//            } else {
+////                decreaseCount++;
+////                decreaseCountInfo.add(problem.getFitness() + "," + mutationRate + "'" + (problem.getFitness() - bpHalf.fitness) + "," + (problem.getFitness() - bpMult.fitness));
+//            }
+//            newMutationRate = mutationRate / 2;
+//        } else if (bpHalf.fitness < bpMult.fitness) {
+//            if (bpMult.fitness >= problem.getFitness()) {
+//                problem.applyPatch(bpMult.patch, bpMult.fitness);
+//            } else {
+////                increaseCount++;
+//            }
+//            newMutationRate = mutationRate * 2;
+//        } else { // что если равны?
+//            if (rand.nextBoolean()) {
+//                if (bpHalf.fitness >= problem.getFitness()) {
+//                    problem.applyPatch(bpHalf.patch, bpHalf.fitness);
+//                } else {
+////                    equalCount++;
+//                }
+//                newMutationRate = mutationRate / 2;
+//            } else {
+//                if (bpHalf.fitness >= problem.getFitness()) {
+//                    problem.applyPatch(bpMult.patch, bpMult.fitness);
+//                } else {
+////                    equalCount++;
+//                }
+//                newMutationRate = mutationRate * 2;
+//            }
+//        }
+////        boolean almostEqual = Math.abs(bpHalf.median - bpMult.median) < 1;
+////        if (almostEqual) {
+////            almostTheSame++;
+////        }
+////        if (rand.nextBoolean() || almostEqual) {
+//        double diff = Math.abs(bpHalf.average - bpMult.average);
+////        prob = Math.pow(1.3, -diff - 2);
+////        prob = Math.pow(1.3, (-3.5 * diff / Math.pow(problem.getFitness(), 0.3)) - 2); непонятно как уравновесить diff и фитнес чтоб не скатываться совсем в 0
+//
+////        prob = Math.exp(-diff / (problemLength - problem.getFitness()) - 0.6); // идея что в конце меньше рандома должно быть работает не очень.
+////        prob = Math.pow(1.3, -diff / 5 - 2);
+//        prob = Math.pow(1.3, -diff / 3.5 - 1.6);
+////        prob = Math.pow(1.3, -diff / 2 - 1.7);
+//
+//        System.out.println(problem.getFitness() + " " + diff + " " + prob);
+//        if (rand.nextDouble() < prob) {
+//            almostTheSame++;
+////            if (rand.nextBoolean()) {
+//            if (rand.nextDouble() < prob + (0.3 * problem.getFitness() / problemLength)) {
+//                mutationRate = mutationRate * 2;
+//            } else {
+//                mutationRate = mutationRate / 2;
+//            }
+//        } else {
+//            mutationRate = newMutationRate;
+//        }
+//
+//        mutationRate = Math.min(Math.max(lowerBound, mutationRate), 0.25);
+//    }
 
     @Override
     public boolean isFinished() {
@@ -136,14 +183,14 @@ public class AdaptiveTwoRate implements Algorithm{
         for (int i = 0; i < lambda / 2; ++i) {
             List<Integer> patch = Utils.createPatch(mutation, problemLength);
             int fitness = problem.calculatePatchFitness(patch);
-//            fitnessOfPatches[i] = fitness;
+            fitnessOfPatches[i] = fitness; //убрать если не надо считать медиану
             average = (i == 0) ? fitness : (average * i + fitness) / (i + 1);
             if (fitness >= bestFitness) {
                 bestFitness = fitness;
                 bestPatch = patch;
             }
         }
-//        Arrays.sort(fitnessOfPatches);
+        Arrays.sort(fitnessOfPatches); //убрать если не надо считать медиану
         return new BestCalculatedPatch(bestPatch, bestFitness, fitnessOfPatches[lambda / 4], average);
     }
 
