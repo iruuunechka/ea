@@ -17,25 +17,26 @@ public class Main {
         double lowerBoundAb = 1.0 / n;
         double lowerBoundAbSq = 1.0 / (n * n);
 
-//        System.out.println("two rate");
-//        runAlgo("tworate.csv", lowerBoundTwoRate, getTwoRateImplementation());
-//        System.out.println("two rate sq");
-//        runAlgo("tworatesq.csv", lowerBoundTwoRateSq, getTwoRateImplementation());
-//
-        System.out.println("two rate adaptive");
-        runAlgo("adtworate.csv", lowerBoundTwoRate, getAdaptiveTwoRateImplementation());
-        System.out.println("two rate sq adaptive");
-        runAlgo("adtworatesq.csv", lowerBoundTwoRateSq, getAdaptiveTwoRateSQImplementation());
+        System.out.println("two rate");
+        runAlgo("tworate.csv", lowerBoundTwoRate, getTwoRateImplementation());
+        System.out.println("two rate sq");
+        runAlgo("tworatesq.csv", lowerBoundTwoRateSq, getTwoRateImplementation());
 
+
+//        System.out.println("two rate adaptive");
+//        runAlgo("adtworate.csv", lowerBoundTwoRate, getAdaptiveTwoRateImplementation());
+//        System.out.println("two rate sq adaptive");
+//        runAlgo("adtworatesq.csv", lowerBoundTwoRateSq, getAdaptiveTwoRateImplementation());
+//
 //        System.out.println("two rate");
 //        runAlgoOnPoint("tworate1600.csv", lowerBoundTwoRate, getTwoRateImplementation(), 1600);
 //        System.out.println("two rate sq");
-//        runAlgoOnPoint("tworatesq1600.csv", lowerBoundTwoRateSq, getTwoRateSQImplementation(), 1600);
-
+//        runAlgoOnPoint("tworatesq1600.csv", lowerBoundTwoRateSq, getTwoRateImplementation(), 1600);
+//
 //        System.out.println("two rate ad");
 //        runAlgoOnPoint("adtworate1600.csv", lowerBoundTwoRate, getAdaptiveTwoRateImplementation(), 1600);
 //        System.out.println("two rate ad sq");
-//        runAlgoOnPoint("adtworatesq1600.csv", lowerBoundTwoRateSq, getAdaptiveTwoRateSQImplementation(), 1600);
+//        runAlgoOnPoint("adtworatesq1600.csv", lowerBoundTwoRateSq, getAdaptiveTwoRateImplementation(), 1600);
 
 //        System.out.println("AB algorithm");
 //        runAlgo("ab.csv", lowerBoundAb, getABImplementation());
@@ -83,11 +84,11 @@ public class Main {
     }
 
     private static AlgoFactory getTwoRateSQImplementation() {
-        return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new OneMax(problemLength));
+        return (lambda, lowerBound, problemLength) -> new TwoRate(2.0 / n, lowerBound, lambda, new OneMax(problemLength));
     }
 
     private static AlgoFactory getAdaptiveTwoRateSQImplementation() {
-        return (lambda, lowerBound, problemLength) -> new AdaptiveTwoRate(2.0, lowerBound, lambda, new OneMax(problemLength));
+        return (lambda, lowerBound, problemLength) -> new AdaptiveTwoRate(2.0 / n, lowerBound, lambda, new OneMax(problemLength));
     }
 
     private static AlgoFactory getAdaptiveTwoRateImplementation() {
@@ -99,6 +100,6 @@ public class Main {
     }
 
     private static AlgoFactory getABSQImplementation() {
-        return (lambda, lowerBound, problemLength) -> new ABalgo(1.0 / n, 2, 0.5, lowerBound, lambda, new OneMax(problemLength));
+        return (lambda, lowerBound, problemLength) -> new ABalgo(1.0 / (n * n), 2, 0.5, lowerBound, lambda, new OneMax(problemLength));
     }
 }
