@@ -1,8 +1,8 @@
 package algo;
 
 import problem.Problem;
+import utils.PatchCalcUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -33,7 +33,7 @@ public class ABalgo implements Algorithm {
         int bestFitness = problem.getFitness();
         int numberOfBetter = 0;
         for (int i = 0; i < lambda; ++i) {
-            List<Integer> patch = Utils.createPatch(mutationRate, problemLength);
+            List<Integer> patch = PatchCalcUtil.createPatch(mutationRate, problemLength);
             int fitness = problem.calculatePatchFitness(patch);
             if (fitness > problem.getFitness()) {
                 numberOfBetter++;

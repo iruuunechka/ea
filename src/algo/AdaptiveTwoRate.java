@@ -1,6 +1,8 @@
 package algo;
 
 import problem.Problem;
+import utils.BestCalculatedPatch;
+import utils.PatchCalcUtil;
 
 import java.util.*;
 
@@ -181,7 +183,7 @@ public class AdaptiveTwoRate implements Algorithm{
         int bestFitness = -1;
         double average = 0;
         for (int i = 0; i < lambda / 2; ++i) {
-            List<Integer> patch = Utils.createPatch(mutation, problemLength);
+            List<Integer> patch = PatchCalcUtil.createPatch(mutation, problemLength);
             int fitness = problem.calculatePatchFitness(patch);
             fitnessOfPatches[i] = fitness; //убрать если не надо считать медиану
             average = (i == 0) ? fitness : (average * i + fitness) / (i + 1);
@@ -192,20 +194,6 @@ public class AdaptiveTwoRate implements Algorithm{
         }
         Arrays.sort(fitnessOfPatches); //убрать если не надо считать медиану
         return new BestCalculatedPatch(bestPatch, bestFitness, fitnessOfPatches[lambda / 4], average);
-    }
-
-    private class BestCalculatedPatch {
-        List<Integer> patch;
-        int fitness;
-        int median;
-        double average;
-
-        public BestCalculatedPatch(List<Integer> patch, int fitness, int median, double average) {
-            this.patch = patch;
-            this.fitness = fitness;
-            this.median = median;
-            this.average = average;
-        }
     }
 
 }

@@ -1,6 +1,7 @@
 package algo;
 
 import problem.Problem;
+import utils.PatchCalcUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +112,7 @@ public class TwoRate implements Algorithm {
         List<Integer> bestPatch = null;
         int bestFitness = -1;
         for (int i = 0; i < lambda / 2; ++i) {
-            List<Integer> patch = Utils.createPatch(mutation, problemLength);
+            List<Integer> patch = PatchCalcUtil.createPatch(mutation, problemLength);
             int fitness = problem.calculatePatchFitness(patch);
             if (fitness >= bestFitness) {
                 bestFitness = fitness;

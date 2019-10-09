@@ -17,16 +17,26 @@ public class Main {
         double lowerBoundAb = 1.0 / n;
         double lowerBoundAbSq = 1.0 / (n * n);
 
-        System.out.println("two rate");
-        runAlgo("tworate.csv", lowerBoundTwoRate, getTwoRateImplementation());
-        System.out.println("two rate sq");
-        runAlgo("tworatesq.csv", lowerBoundTwoRateSq, getTwoRateImplementation());
-
+//        System.out.println("two rate");
+//        runAlgo("tworate.csv", lowerBoundTwoRate, getTwoRateImplementation());
+//        System.out.println("two rate sq");
+//        runAlgo("tworatesq.csv", lowerBoundTwoRateSq, getTwoRateImplementation());
 
 //        System.out.println("two rate adaptive");
 //        runAlgo("adtworate.csv", lowerBoundTwoRate, getAdaptiveTwoRateImplementation());
 //        System.out.println("two rate sq adaptive");
 //        runAlgo("adtworatesq.csv", lowerBoundTwoRateSq, getAdaptiveTwoRateImplementation());
+
+//        System.out.println("two rate adaptive div");
+//        runAlgo("addivtworate.csv", lowerBoundTwoRate, getAdaptiveDivTwoRateImplementation());
+//        System.out.println("two rate sq adaptive div");
+//        runAlgo("addivtworatesq.csv", lowerBoundTwoRateSq, getAdaptiveDivTwoRateImplementation());
+
+        System.out.println("two rate ad div");
+        runAlgoOnPoint("addivtworate1600.csv", lowerBoundTwoRate, getAdaptiveDivTwoRateImplementation(), 1600);
+        System.out.println("two rate ad div sq");
+        runAlgoOnPoint("addivtworatesq1600.csv", lowerBoundTwoRateSq, getAdaptiveDivTwoRateImplementation(), 1600);
+
 //
 //        System.out.println("two rate");
 //        runAlgoOnPoint("tworate1600.csv", lowerBoundTwoRate, getTwoRateImplementation(), 1600);
@@ -59,7 +69,7 @@ public class Main {
                     curIterCount++;
                 }
                 averageIterCount = (i == 0) ? curIterCount : (averageIterCount * i + curIterCount) / (i + 1);
-                algo.printInfo();
+//                algo.printInfo();
             }
             pw.println((int) averageIterCount + ", " + lambda);
         }
@@ -76,11 +86,20 @@ public class Main {
             curIterCount++;
             pw.println(algo.getFitness() + ", " + algo.getMutationRate()  + ", " + curIterCount);
         }
+        algo.printInfo();
         pw.close();
     }
 
     private static AlgoFactory getTwoRateImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new OneMax(problemLength));
+    }
+
+    private static AlgoFactory getAdaptiveTwoRateImplementation() {
+        return (lambda, lowerBound, problemLength) -> new AdaptiveTwoRate(2.0, lowerBound, lambda, new OneMax(problemLength));
+    }
+
+    private static AlgoFactory getAdaptiveDivTwoRateImplementation() {
+        return (lambda, lowerBound, problemLength) -> new AdaptiveDivTwoRate(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
     private static AlgoFactory getTwoRateSQImplementation() {
@@ -89,10 +108,6 @@ public class Main {
 
     private static AlgoFactory getAdaptiveTwoRateSQImplementation() {
         return (lambda, lowerBound, problemLength) -> new AdaptiveTwoRate(2.0 / n, lowerBound, lambda, new OneMax(problemLength));
-    }
-
-    private static AlgoFactory getAdaptiveTwoRateImplementation() {
-        return (lambda, lowerBound, problemLength) -> new AdaptiveTwoRate(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
     private static AlgoFactory getABImplementation() {

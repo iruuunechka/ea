@@ -1,10 +1,10 @@
-package algo;
+package utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Utils {
+public class PatchCalcUtil {
     private static final Random rand = new Random();
     public static List<Integer> createPatch (double mutation, int problemLength) {
         List<Integer> patch = new ArrayList<>(16);
