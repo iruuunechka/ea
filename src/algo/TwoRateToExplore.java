@@ -79,14 +79,13 @@ public class TwoRateToExplore implements Algorithm {
                 info = "mult both onebit rand     ";
 //            }
         }
-        if (rand.nextDouble() < 0.5) {
-            if (rand.nextDouble() < 0.5) {
-                mutationRate = mutationRate / 2;
-                info = "div     rand              ";
-            } else {
+        double prob = rand.nextDouble();
+        if (prob < 0.25) {
+            mutationRate = mutationRate / 2;
+            info = "div     rand              ";
+        } else if (prob < 0.5){
                 mutationRate = mutationRate * 2;
                 info = "mult    rand              ";
-            }
         } else {
             mutationRate = newMutationRate;
         }

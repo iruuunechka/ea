@@ -37,10 +37,10 @@ public class Main {
 //        System.out.println("two rate ad div sq");
 //        runAlgoOnPoint("addivtworatesq1600.csv", lowerBoundTwoRateSq, getAdaptiveDivTwoRateImplementation(), 1600);
 //
-        System.out.println("two rate exp");
-        runAlgo("tworateexp.csv", lowerBoundTwoRate, getTwoRateExpImplementation());
-        System.out.println("two rate exp sq");
-        runAlgo("tworateexpsq.csv", lowerBoundTwoRateSq, getTwoRateExpImplementation());
+//        System.out.println("two rate exp");
+//        runAlgo("tworateexp.csv", lowerBoundTwoRate, getTwoRateExpImplementation());
+//        System.out.println("two rate exp sq");
+//        runAlgo("tworateexpsq.csv", lowerBoundTwoRateSq, getTwoRateExpImplementation());
 
 //        System.out.println("two rate exp");
 //        runAlgoOnPoint("tworateexp3200.csv", lowerBoundTwoRate, getTwoRateExpImplementation(), 3200);
@@ -49,9 +49,12 @@ public class Main {
 
 //
 //        System.out.println("two rate");
-//        runAlgoOnPoint("tworate1600.csv", lowerBoundTwoRate, getTwoRateImplementation(), 1600);
+//        runAlgoOnPoint("tworate3200.csv", lowerBoundTwoRate, getTwoRateImplementation(), 3200);
 //        System.out.println("two rate sq");
-//        runAlgoOnPoint("tworatesq1600.csv", lowerBoundTwoRateSq, getTwoRateImplementation(), 1600);
+//        runAlgoOnPoint("tworatesq3200.csv", lowerBoundTwoRateSq, getTwoRateImplementation(), 3200);
+
+        System.out.println("simpleAlgo");
+        runAlgo("simple.csv", lowerBoundTwoRateSq, getSimpleEAImplementation());
 //
 //        System.out.println("two rate ad");
 //        runAlgoOnPoint("adtworate1600.csv", lowerBoundTwoRate, getAdaptiveTwoRateImplementation(), 1600);
@@ -132,4 +135,9 @@ public class Main {
     private static AlgoFactory getABSQImplementation() {
         return (lambda, lowerBound, problemLength) -> new ABalgo(1.0 / (n * n), 2, 0.5, lowerBound, lambda, new OneMax(problemLength));
     }
+
+    private static AlgoFactory getSimpleEAImplementation() {
+        return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new OneMax(problemLength));
+    }
+
 }
