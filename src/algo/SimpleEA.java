@@ -30,7 +30,7 @@ public class SimpleEA implements Algorithm {
 
     @Override
     public void makeIteration() {
-        BestCalculatedPatch best = getBest();
+        BestCalculatedPatch best = new BestCalculatedPatch(mutationRate, lambda, problem);
         if (best.fitness > problem.getFitness()) {
             problem.applyPatch(best.patch, best.fitness);
         }
@@ -54,20 +54,6 @@ public class SimpleEA implements Algorithm {
     @Override
     public int getFitness() {
         return problem.getFitness();
-    }
-
-    private BestCalculatedPatch getBest() {
-        List<Integer> bestPatch = null;
-        int bestFitness = -1;
-        for (int i = 0; i < lambda; ++i) {
-            List<Integer> patch = PatchCalcUtil.createPatch(mutationRate, problemLength);
-            int fitness = problem.calculatePatchFitness(patch);
-            if (fitness >= bestFitness) {
-                bestFitness = fitness;
-                bestPatch = patch;
-            }
-        }
-        return new BestCalculatedPatch(bestPatch, bestFitness, 0, 0);
     }
 }
 

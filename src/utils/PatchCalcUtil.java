@@ -21,7 +21,7 @@ public class PatchCalcUtil {
 
     }
 
-    private static int getNextIndex(int curIndex, double mutation) {
+    public static int getNextIndex(int curIndex, double mutation) {
         return curIndex + 1 + (int) (Math.log(rand.nextDouble()) / Math.log(1.0 - mutation));
     }
 }

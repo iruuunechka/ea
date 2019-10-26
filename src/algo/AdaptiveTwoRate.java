@@ -2,6 +2,7 @@ package algo;
 
 import problem.Problem;
 import utils.BestCalculatedPatch;
+import utils.BestCalculatedPatchMedAverage;
 import utils.PatchCalcUtil;
 
 import java.util.*;
@@ -41,8 +42,8 @@ public class AdaptiveTwoRate implements Algorithm{
     @Override
     public void makeIteration() {
         curIter++;
-        BestCalculatedPatch bpHalf = getHalfBest(mutationRate / 2);
-        BestCalculatedPatch bpMult = getHalfBest(mutationRate * 2);
+        BestCalculatedPatchMedAverage bpHalf = new BestCalculatedPatchMedAverage(mutationRate / 2, lambda / 2, problem);
+        BestCalculatedPatchMedAverage bpMult = new BestCalculatedPatchMedAverage(mutationRate * 2, lambda / 2, problem);
         double newMutationRate = mutationRate;
         if (bpHalf.fitness > bpMult.fitness) {
             if (bpHalf.fitness >= problem.getFitness()) {
@@ -176,24 +177,6 @@ public class AdaptiveTwoRate implements Algorithm{
     @Override
     public int getFitness() {
         return problem.getFitness();
-    }
-
-    private BestCalculatedPatch getHalfBest(double mutation) {
-        List<Integer> bestPatch = null;
-        int bestFitness = -1;
-        double average = 0;
-        for (int i = 0; i < lambda / 2; ++i) {
-            List<Integer> patch = PatchCalcUtil.createPatch(mutation, problemLength);
-            int fitness = problem.calculatePatchFitness(patch);
-            fitnessOfPatches[i] = fitness; //убрать если не надо считать медиану
-            average = (i == 0) ? fitness : (average * i + fitness) / (i + 1);
-            if (fitness >= bestFitness) {
-                bestFitness = fitness;
-                bestPatch = patch;
-            }
-        }
-        Arrays.sort(fitnessOfPatches); //убрать если не надо считать медиану
-        return new BestCalculatedPatch(bestPatch, bestFitness, fitnessOfPatches[lambda / 4], average);
     }
 
 }

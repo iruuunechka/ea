@@ -53,18 +53,28 @@ public class Main {
 //        System.out.println("two rate sq");
 //        runAlgoOnPoint("tworatesq3200.csv", lowerBoundTwoRateSq, getTwoRateImplementation(), 3200);
 
-        System.out.println("simpleAlgo");
-        runAlgo("simple.csv", lowerBoundTwoRateSq, getSimpleEAImplementation());
+//        System.out.println("simpleAlgo");
+//        runAlgo("simple.csv", lowerBoundTwoRateSq, getSimpleEAImplementation());
 //
 //        System.out.println("two rate ad");
 //        runAlgoOnPoint("adtworate1600.csv", lowerBoundTwoRate, getAdaptiveTwoRateImplementation(), 1600);
 //        System.out.println("two rate ad sq");
 //        runAlgoOnPoint("adtworatesq1600.csv", lowerBoundTwoRateSq, getAdaptiveTwoRateImplementation(), 1600);
-
+//
 //        System.out.println("AB algorithm");
 //        runAlgo("ab.csv", lowerBoundAb, getABImplementation());
 //        System.out.println("AB algorithm sq");
 //        runAlgo("absq.csv", lowerBoundAbSq, getABImplementation());
+
+//        System.out.println("AB algorithm");
+//        runAlgoOnPoint("ab1600.csv", lowerBoundAb, getABImplementation(), 1600);
+//        System.out.println("AB algorithm sq");
+//        runAlgoOnPoint("absq1600.csv", lowerBoundAbSq, getABImplementation(), 1600);
+
+        System.out.println("AB algorithm");
+        runAlgoOnPoint("abexp1600.csv", lowerBoundAb, getABExpImplementation(), 1600);
+        System.out.println("AB algorithm sq");
+        runAlgoOnPoint("abexpsq1600.csv", lowerBoundAbSq, getABExpImplementation(), 1600);
 
     }
 
@@ -126,6 +136,10 @@ public class Main {
 
     private static AlgoFactory getAdaptiveTwoRateSQImplementation() {
         return (lambda, lowerBound, problemLength) -> new AdaptiveTwoRate(2.0 / n, lowerBound, lambda, new OneMax(problemLength));
+    }
+
+    private static AlgoFactory getABExpImplementation() {
+        return (lambda, lowerBound, problemLength) -> new ABalgoToExplore(1.0 / n, 2, 0.5, lowerBound, lambda, new OneMax(problemLength));
     }
 
     private static AlgoFactory getABImplementation() {

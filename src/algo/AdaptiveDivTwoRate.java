@@ -2,6 +2,7 @@ package algo;
 
 import problem.Problem;
 import utils.BestCalculatedPatch;
+import utils.BestCalculatedPatchMedAverage;
 import utils.PatchCalcUtil;
 
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ public class AdaptiveDivTwoRate implements Algorithm {
     private final int problemLength;
 
     private final Random rand;
-    private final int[] fitnessOfPatches; //created once for calculating median
 
     private int curIter = 0;
     private double mutationRate;
@@ -37,14 +37,13 @@ public class AdaptiveDivTwoRate implements Algorithm {
         this.lowerBound = lowerBound;
         this.lambda = lambda;
         rand = new Random();
-        fitnessOfPatches = new int[lambda / 2];
     }
 
     @Override
     public void makeIteration() {
         curIter++;
-        BestCalculatedPatch bpHalf = getHalfBest(mutationRate / 2);
-        BestCalculatedPatch bpMult = getHalfBest(mutationRate * 2);
+        BestCalculatedPatchMedAverage bpHalf = new BestCalculatedPatchMedAverage(mutationRate / 2, lambda / 2, problem);
+        BestCalculatedPatchMedAverage bpMult = new BestCalculatedPatchMedAverage(mutationRate * 2, lambda / 2, problem);
         double newMutationRate = mutationRate;
         double diff = Math.abs(bpHalf.average - bpMult.average);
         double rateMult = Math.max(Math.exp(-diff/7 + 0.95), 1.2); // на этой получилось лучше tworate//Math.max(1.3, Math.pow(3.7, -diff/15 +0.7)); //Math.pow(8, diff / 10);
@@ -117,25 +116,5 @@ public class AdaptiveDivTwoRate implements Algorithm {
     public int getFitness() {
         return problem.getFitness();
     }
-
-    private BestCalculatedPatch getHalfBest(double mutation) {
-        List<Integer> bestPatch = null;
-        int bestFitness = -1;
-        double average = 0;
-        for (int i = 0; i < lambda / 2; ++i) {
-            List<Integer> patch = PatchCalcUtil.createPatch(mutation, problemLength);
-            int fitness = problem.calculatePatchFitness(patch);
-//            fitnessOfPatches[i] = fitness; //убрать если не надо считать медиану
-            average = (i == 0) ? fitness : (average * i + fitness) / (i + 1);
-            if (fitness >= bestFitness) {
-                bestFitness = fitness;
-                bestPatch = patch;
-            }
-        }
-//        Arrays.sort(fitnessOfPatches); //убрать если не надо считать медиану
-        return new BestCalculatedPatch(bestPatch, bestFitness, fitnessOfPatches[lambda / 4], average);
-    }
-
-
 
 }

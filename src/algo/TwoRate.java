@@ -1,6 +1,7 @@
 package algo;
 
 import problem.Problem;
+import utils.BestCalculatedPatch;
 import utils.PatchCalcUtil;
 
 import java.util.ArrayList;
@@ -34,8 +35,8 @@ public class TwoRate implements Algorithm {
 
     @Override
     public void makeIteration() {
-        BestCalculatedPatch bpHalf = getHalfBest(mutationRate / 2);
-        BestCalculatedPatch bpMult = getHalfBest(mutationRate * 2);
+        BestCalculatedPatch bpHalf = new BestCalculatedPatch(mutationRate / 2, lambda / 2, problem);
+        BestCalculatedPatch bpMult = new BestCalculatedPatch(mutationRate * 2, lambda / 2, problem);
         double newMutationRate = mutationRate;
         if (bpHalf.fitness > bpMult.fitness) {
             if (bpHalf.fitness >= problem.getFitness()) {
@@ -108,19 +109,6 @@ public class TwoRate implements Algorithm {
         return problem.getFitness();
     }
 
-    private BestCalculatedPatch getHalfBest(double mutation) {
-        List<Integer> bestPatch = null;
-        int bestFitness = -1;
-        for (int i = 0; i < lambda / 2; ++i) {
-            List<Integer> patch = PatchCalcUtil.createPatch(mutation, problemLength);
-            int fitness = problem.calculatePatchFitness(patch);
-            if (fitness >= bestFitness) {
-                bestFitness = fitness;
-                bestPatch = patch;
-            }
-        }
-        return new BestCalculatedPatch(bestPatch, bestFitness);
-    }
 //@Override
 //    public void makeIteration() {
 //        BestCalculatedPatch bpHalf = getHalfBest(mutationRate / 2);
@@ -184,13 +172,4 @@ public class TwoRate implements Algorithm {
 //        return patch;
 //    }
 
-    private class BestCalculatedPatch {
-        List<Integer> patch;
-        int fitness;
-
-        BestCalculatedPatch(List<Integer> patch, int fitness) {
-            this.patch = patch;
-            this.fitness = fitness;
-        }
-    }
 }

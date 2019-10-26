@@ -1,7 +1,7 @@
 package algo;
 
 import problem.Problem;
-import utils.PatchCalcUtil;
+import utils.BestCalculatedPatchOneBitMarker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,8 @@ public class TwoRateToExplore implements Algorithm {
 
     @Override
     public void makeIteration() {
-        BestCalculatedPatch bpHalf = getHalfBest(mutationRate / 2);
-        BestCalculatedPatch bpMult = getHalfBest(mutationRate * 2);
+        BestCalculatedPatchOneBitMarker bpHalf = new BestCalculatedPatchOneBitMarker(mutationRate / 2, lambda / 2, problem, rand);
+        BestCalculatedPatchOneBitMarker bpMult = new BestCalculatedPatchOneBitMarker(mutationRate * 2, lambda / 2, problem, rand);
         double newMutationRate = mutationRate;
         info = "";
         if (bpHalf.fitness > bpMult.fitness) {
@@ -113,53 +113,4 @@ public class TwoRateToExplore implements Algorithm {
         return problem.getFitness();
     }
 
-    private BestCalculatedPatch getHalfBest(double mutation) {
-        List<Integer> bestPatch = null;
-        int bestFitness = -1;
-        boolean bestFitnessOneBit = false;
-        for (int i = 0; i < lambda / 2; ++i) {
-            List<Integer> patch = createPatch(mutation, problemLength);
-            int fitness = problem.calculatePatchFitness(patch);
-            if (fitness >= bestFitness) {
-                bestFitness = fitness;
-                bestPatch = patch;
-                bestFitnessOneBit = oneBit;
-            }
-        }
-        return new BestCalculatedPatch(bestPatch, bestFitness, bestFitnessOneBit);
-    }
-
-    private class BestCalculatedPatch {
-        List<Integer> patch;
-        int fitness;
-        boolean isOneBit;
-
-        BestCalculatedPatch(List<Integer> patch, int fitness, boolean isOneBit) {
-            this.patch = patch;
-            this.fitness = fitness;
-            this.isOneBit = isOneBit;
-        }
-    }
-
-    private List<Integer> createPatch (double mutation, int problemLength) {
-        List<Integer> patch = new ArrayList<>(16);
-        int i = getNextIndex(-1, mutation);
-        while (i < problemLength) {
-            patch.add(i);
-            i = getNextIndex(i, mutation);
-        }
-
-        if (patch.isEmpty()) {
-            patch.add(rand.nextInt(problemLength));
-            oneBit = true; //marker to print info if 1 random bit inverted
-        } else {
-            oneBit = false; //marker to print info if mutation occured
-        }
-        return patch;
-
-    }
-
-    private int getNextIndex(int curIndex, double mutation) {
-        return curIndex + 1 + (int) (Math.log(rand.nextDouble()) / Math.log(1.0 - mutation));
-    }
 }
