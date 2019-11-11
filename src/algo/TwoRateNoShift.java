@@ -18,7 +18,8 @@ public class TwoRateNoShift implements Algorithm {
 
     private final Random rand;
 
-    public long fitnessCount = 0;
+    private long fitnessCount = 0;
+    private int iterCount = 0;
 
 
     public TwoRateNoShift(double r, double lowerBound, int lambda, Problem problem) {
@@ -32,6 +33,7 @@ public class TwoRateNoShift implements Algorithm {
 
     @Override
     public void makeIteration() {
+        iterCount++;
         BestCalculatedPatchNoShiftFitnessCount bpHalf = new BestCalculatedPatchNoShiftFitnessCount(mutationRate / 2, lambda / 2, problem, rand);
         BestCalculatedPatchNoShiftFitnessCount bpMult = new BestCalculatedPatchNoShiftFitnessCount(mutationRate * 2, lambda / 2, problem, rand);
         fitnessCount += bpHalf.fitnessCount + bpMult.fitnessCount;
@@ -95,6 +97,11 @@ public class TwoRateNoShift implements Algorithm {
     @Override
     public long getFitnessCount() {
         return fitnessCount;
+    }
+
+    @Override
+    public int getIterCount() {
+        return iterCount;
     }
 
 }

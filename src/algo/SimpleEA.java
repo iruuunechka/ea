@@ -63,5 +63,10 @@ public class SimpleEA implements Algorithm {
     public long getFitnessCount() {
         return iterCount * lambda;
     }
+
+    @Override
+    public int getIterCount() {
+        return iterCount;
+    }
 }
 

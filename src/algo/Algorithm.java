@@ -7,5 +7,6 @@ public interface Algorithm {
     double getMutationRate();
     int getFitness();
     long getFitnessCount();
+    int getIterCount();
 
 }

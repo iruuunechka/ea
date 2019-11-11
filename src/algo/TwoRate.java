@@ -117,6 +117,11 @@ public class TwoRate implements Algorithm {
         return iterCount * lambda;
     }
 
+    @Override
+    public int getIterCount() {
+        return iterCount;
+    }
+
 //@Override
 //    public void makeIteration() {
 //        BestCalculatedPatch bpHalf = getHalfBest(mutationRate / 2);

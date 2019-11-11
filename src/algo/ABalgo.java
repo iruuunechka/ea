@@ -82,6 +82,11 @@ public class ABalgo implements Algorithm {
         return iterCount * lambda;
     }
 
+    @Override
+    public int getIterCount() {
+        return iterCount;
+    }
+
 //    private List<Integer> createPatch() {
 //        List<Integer> patch = new ArrayList<>();
 //        for (int i = 0; i < problemLength; i++) {

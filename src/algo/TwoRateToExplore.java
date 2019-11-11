@@ -121,4 +121,9 @@ public class TwoRateToExplore implements Algorithm {
         return iterCount * lambda;
     }
 
+    @Override
+    public int getIterCount() {
+        return iterCount;
+    }
+
 }

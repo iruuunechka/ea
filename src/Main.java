@@ -127,19 +127,21 @@ public class Main {
     }
     private static void runAlgoByFitnessCount(String filename, double lowerBound, AlgoFactory factory) throws FileNotFoundException {
         PrintWriter pw = new PrintWriter(filename);
-        pw.println("fitCou, lambda");
+        pw.println("fitCou, lambda, iter");
         for (int lambda : lambdas) {
             System.out.println(lambda + " " + lowerBound);
             double averageFitCou = 0;
+            double averageIterCou = 0;
             for (int i = 0; i < avCount; i++) {
                 Algorithm algo = factory.getInstance(lambda, lowerBound, n);
                 while (!algo.isFinished()) {
                     algo.makeIteration();
                 }
                 averageFitCou = (i == 0) ? algo.getFitnessCount() : (averageFitCou * i + algo.getFitnessCount()) / (i + 1);
+                averageIterCou = (i == 0) ? algo.getIterCount() : (averageIterCou * i + algo.getIterCount()) / (i + 1);
 //                algo.printInfo();
             }
-            pw.println((int) averageFitCou + ", " + lambda);
+            pw.println((int) averageFitCou + ", " + lambda + ", " + averageIterCou);
         }
         pw.close();
     }
