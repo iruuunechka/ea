@@ -19,7 +19,8 @@ public class AdaptiveDivTwoRate implements Algorithm {
 
     private final Random rand;
 
-    private int curIter = 0;
+
+    private int iterCount = 0;
     private double mutationRate;
 
 
@@ -41,7 +42,7 @@ public class AdaptiveDivTwoRate implements Algorithm {
 
     @Override
     public void makeIteration() {
-        curIter++;
+        iterCount++;
         BestCalculatedPatchMedAverage bpHalf = new BestCalculatedPatchMedAverage(mutationRate / 2, lambda / 2, problem);
         BestCalculatedPatchMedAverage bpMult = new BestCalculatedPatchMedAverage(mutationRate * 2, lambda / 2, problem);
         double newMutationRate = mutationRate;
@@ -115,6 +116,11 @@ public class AdaptiveDivTwoRate implements Algorithm {
     @Override
     public int getFitness() {
         return problem.getFitness();
+    }
+
+    @Override
+    public long getFitnessCount() {
+        return iterCount * lambda;
     }
 
 }

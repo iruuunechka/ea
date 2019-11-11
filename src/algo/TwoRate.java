@@ -18,6 +18,8 @@ public class TwoRate implements Algorithm {
 
     private final Random rand;
 
+    private int iterCount = 0;
+
     public int decreaseCount = 0;
     public List<String> decreaseCountInfo = new ArrayList<>();
     public int increaseCount = 0;
@@ -35,6 +37,7 @@ public class TwoRate implements Algorithm {
 
     @Override
     public void makeIteration() {
+        iterCount++;
         BestCalculatedPatch bpHalf = new BestCalculatedPatch(mutationRate / 2, lambda / 2, problem);
         BestCalculatedPatch bpMult = new BestCalculatedPatch(mutationRate * 2, lambda / 2, problem);
         double newMutationRate = mutationRate;
@@ -107,6 +110,11 @@ public class TwoRate implements Algorithm {
     @Override
     public int getFitness() {
         return problem.getFitness();
+    }
+
+    @Override
+    public long getFitnessCount() {
+        return iterCount * lambda;
     }
 
 //@Override

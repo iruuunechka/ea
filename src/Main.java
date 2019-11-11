@@ -60,21 +60,48 @@ public class Main {
 //        runAlgoOnPoint("adtworate1600.csv", lowerBoundTwoRate, getAdaptiveTwoRateImplementation(), 1600);
 //        System.out.println("two rate ad sq");
 //        runAlgoOnPoint("adtworatesq1600.csv", lowerBoundTwoRateSq, getAdaptiveTwoRateImplementation(), 1600);
-//
+
 //        System.out.println("AB algorithm");
 //        runAlgo("ab.csv", lowerBoundAb, getABImplementation());
 //        System.out.println("AB algorithm sq");
 //        runAlgo("absq.csv", lowerBoundAbSq, getABImplementation());
+
+//        System.out.println("AbToExplore algorithm");
+//        runAlgo("abexp.csv", lowerBoundAb, getABExpImplementation());
+//        System.out.println("AB algorithm sq");
+//        runAlgo("abexpsq.csv", lowerBoundAbSq, getABExpImplementation());
 
 //        System.out.println("AB algorithm");
 //        runAlgoOnPoint("ab1600.csv", lowerBoundAb, getABImplementation(), 1600);
 //        System.out.println("AB algorithm sq");
 //        runAlgoOnPoint("absq1600.csv", lowerBoundAbSq, getABImplementation(), 1600);
 
-        System.out.println("AB algorithm");
-        runAlgoOnPoint("abexp1600.csv", lowerBoundAb, getABExpImplementation(), 1600);
-        System.out.println("AB algorithm sq");
-        runAlgoOnPoint("abexpsq1600.csv", lowerBoundAbSq, getABExpImplementation(), 1600);
+//        System.out.println("AB algorithm");
+//        runAlgoOnPoint("ab6.csv", lowerBoundAb, getABImplementation(), 6);
+//        System.out.println("AB algorithm sq");
+//        runAlgoOnPoint("absq6.csv", lowerBoundAbSq, getABImplementation(), 6);
+
+//        System.out.println("AB algorithm");
+//        runAlgoOnPoint("abexp1600.csv", lowerBoundAb, getABExpImplementation(), 1600);
+//        System.out.println("AB algorithm sq");
+//        runAlgoOnPoint("abexpsq1600.csv", lowerBoundAbSq, getABExpImplementation(), 1600);
+
+//        System.out.println("AB algorithm");
+//        runAlgoOnPoint("abexp6.csv", lowerBoundAb, getABExpImplementation(), 6);
+//        System.out.println("AB algorithm sq");
+//        runAlgoOnPoint("abexpsq6.csv", lowerBoundAbSq, getABExpImplementation(), 6);
+
+        System.out.println("Two Rate algorithm");
+        runAlgoByFitnessCount("twoRateFitCou.csv", lowerBoundTwoRate, getTwoRateImplementation());
+        System.out.println("Two Rate algorithm sq");
+        runAlgoByFitnessCount("twoRateFitCousq.csv", lowerBoundTwoRateSq, getTwoRateImplementation());
+
+        System.out.println("Two Rate NoShift algorithm");
+        runAlgoByFitnessCount("twoRateNoShiftFitCou.csv", lowerBoundTwoRate, getTwoRateNoShiftImplementation());
+        System.out.println("Two Rate NoShift algorithm sq");
+        runAlgoByFitnessCount("twoRateNoShiftFitCousq.csv", lowerBoundTwoRateSq, getTwoRateNoShiftImplementation());
+
+
 
     }
 
@@ -98,6 +125,24 @@ public class Main {
         }
         pw.close();
     }
+    private static void runAlgoByFitnessCount(String filename, double lowerBound, AlgoFactory factory) throws FileNotFoundException {
+        PrintWriter pw = new PrintWriter(filename);
+        pw.println("fitCou, lambda");
+        for (int lambda : lambdas) {
+            System.out.println(lambda + " " + lowerBound);
+            double averageFitCou = 0;
+            for (int i = 0; i < avCount; i++) {
+                Algorithm algo = factory.getInstance(lambda, lowerBound, n);
+                while (!algo.isFinished()) {
+                    algo.makeIteration();
+                }
+                averageFitCou = (i == 0) ? algo.getFitnessCount() : (averageFitCou * i + algo.getFitnessCount()) / (i + 1);
+//                algo.printInfo();
+            }
+            pw.println((int) averageFitCou + ", " + lambda);
+        }
+        pw.close();
+    }
 
     private static void runAlgoOnPoint(String filename, double lowerBound, AlgoFactory factory, int lambda) throws FileNotFoundException {
         PrintWriter pw = new PrintWriter(filename);
@@ -116,6 +161,11 @@ public class Main {
     private static AlgoFactory getTwoRateImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
+
+    private static AlgoFactory getTwoRateNoShiftImplementation() {
+        return (lambda, lowerBound, problemLength) -> new TwoRateNoShift(2.0, lowerBound, lambda, new OneMax(problemLength));
+    }
+
 
     private static AlgoFactory getTwoRateExpImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateToExplore(2.0, lowerBound, lambda, new OneMax(problemLength));

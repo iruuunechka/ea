@@ -13,9 +13,13 @@ public class ABalgoToExplore implements Algorithm {
     private final double b; //b = 0.5
     private final double lowerBound; // 1 / problemLength or 1 / (problemLength^2)
     private final int lambda;
+
     private final Problem problem;
     private final int problemLength;
+
     private final Random rand;
+    private int iterCount = 0;
+
 
     private String info = "";
 
@@ -33,7 +37,8 @@ public class ABalgoToExplore implements Algorithm {
     @Override
     public void makeIteration() {
         info = "";
-        BestCalculatedPatchOneBitMarker bestPatch = new BestCalculatedPatchOneBitMarker(null, problem.getFitness(), false);
+        iterCount++;
+        BestCalculatedPatchOneBitMarker bestPatch = new BestCalculatedPatchOneBitMarker(null, -1, false);
         int numberOfBetter = 0;
         int bestFitness = -1;
         boolean bestNotOneBit = false;
@@ -41,7 +46,7 @@ public class ABalgoToExplore implements Algorithm {
         int bestCount = 0;
         for (int i = 0; i < lambda; ++i) {
             BestCalculatedPatchOneBitMarker calcPatch = new BestCalculatedPatchOneBitMarker(mutationRate, problem, rand);
-            if (calcPatch.fitness > problem.getFitness()) {
+            if (calcPatch.fitness >= problem.getFitness()) { //> or >= and why?
                 numberOfBetter++;
             }
             if (calcPatch.fitness > bestPatch.fitness) {
@@ -61,14 +66,14 @@ public class ABalgoToExplore implements Algorithm {
                 bestCount++;
             }
         }
-        if (bestPatch.patch != null) {
+        if (bestPatch.patch != null && bestPatch.fitness >= problem.getFitness()) { //учитываем или нет патчи что хуже исходного фитнеса?
             problem.applyPatch(bestPatch.patch, bestPatch.fitness);
         }
         info += bestPatch.fitness;
         if (numberOfBetter >= 0.05 * lambda) {
             mutationRate = Math.min(0.5, a * mutationRate);
             info += " inc" + mutationRate;
-        } else if (bestNotOneBit) {
+        } else if (!bestPatch.isOneBit) { // bestNotOneBit
             mutationRate = Math.max(lowerBound, b * mutationRate);
             info += " dec" + mutationRate;
         } else {
@@ -100,5 +105,10 @@ public class ABalgoToExplore implements Algorithm {
     @Override
     public int getFitness() {
         return problem.getFitness();
+    }
+
+    @Override
+    public long getFitnessCount() {
+        return iterCount * lambda;
     }
 }

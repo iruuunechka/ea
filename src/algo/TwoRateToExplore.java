@@ -17,6 +17,8 @@ public class TwoRateToExplore implements Algorithm {
 
     private final Random rand;
 
+    private int iterCount = 0;
+
     private String info = "";
     private boolean oneBit = false; //true if one random bit inverted in createPatch
 
@@ -31,6 +33,7 @@ public class TwoRateToExplore implements Algorithm {
 
     @Override
     public void makeIteration() {
+        iterCount++;
         BestCalculatedPatchOneBitMarker bpHalf = new BestCalculatedPatchOneBitMarker(mutationRate / 2, lambda / 2, problem, rand);
         BestCalculatedPatchOneBitMarker bpMult = new BestCalculatedPatchOneBitMarker(mutationRate * 2, lambda / 2, problem, rand);
         double newMutationRate = mutationRate;
@@ -111,6 +114,11 @@ public class TwoRateToExplore implements Algorithm {
     @Override
     public int getFitness() {
         return problem.getFitness();
+    }
+
+    @Override
+    public long getFitnessCount() {
+        return iterCount * lambda;
     }
 
 }

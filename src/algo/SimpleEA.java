@@ -20,6 +20,8 @@ public class SimpleEA implements Algorithm {
 
     private final Random rand;
 
+    private int iterCount = 0;
+
     public SimpleEA(double r, double lowerBound, int lambda, Problem problem) {
         this.problem = problem;
         this.problemLength = problem.getLength();
@@ -30,6 +32,7 @@ public class SimpleEA implements Algorithm {
 
     @Override
     public void makeIteration() {
+        iterCount++;
         BestCalculatedPatch best = new BestCalculatedPatch(mutationRate, lambda, problem);
         if (best.fitness > problem.getFitness()) {
             problem.applyPatch(best.patch, best.fitness);
@@ -54,6 +57,11 @@ public class SimpleEA implements Algorithm {
     @Override
     public int getFitness() {
         return problem.getFitness();
+    }
+
+    @Override
+    public long getFitnessCount() {
+        return iterCount * lambda;
     }
 }
 
