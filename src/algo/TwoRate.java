@@ -95,11 +95,11 @@ public class TwoRate implements Algorithm {
 
     @Override
     public void printInfo() {
-        System.out.println("decCou: " + decreaseCount + " incCou: " + increaseCount + " eqCou: " + equalCount + " sameCou: " + almostTheSame);
+        System.out.println(iterCount + " " + problem.getFitness() + " " + mutationRate);
 //        for (String s : decreaseCountInfo) {
 //            System.out.print(s + " ");
 //        }
-        System.out.println();
+//        System.out.println();
     }
 
     @Override

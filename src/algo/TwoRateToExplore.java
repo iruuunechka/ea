@@ -2,6 +2,7 @@ package algo;
 
 import problem.Problem;
 import utils.BestCalculatedPatchOneBitMarker;
+import utils.BestCalculatedPatchOneBitMarkerByPercentage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +104,7 @@ public class TwoRateToExplore implements Algorithm {
 
     @Override
     public void printInfo() {
-        System.out.println(info + " " + problem.getFitness() + " " + mutationRate);
+        System.out.println(iterCount + " " + info + " " + problem.getFitness() + " " + mutationRate);
     }
 
     @Override

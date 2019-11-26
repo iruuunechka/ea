@@ -14,6 +14,12 @@ public class BestCalculatedPatchOneBitMarker {
     public int fitness;
     public boolean isOneBit;
 
+    protected BestCalculatedPatchOneBitMarker() {
+        patch = null;
+        fitness = 0;
+        isOneBit = false;
+    }
+
     public BestCalculatedPatchOneBitMarker(List<Integer> patch, int fitness, boolean isOneBit) {
         this.patch = patch;
         this.fitness = fitness;
