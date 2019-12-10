@@ -35,8 +35,8 @@ public class TwoRateToExplore implements Algorithm {
     @Override
     public void makeIteration() {
         iterCount++;
-        BestCalculatedPatchOneBitMarker bpHalf = new BestCalculatedPatchOneBitMarker(mutationRate / 2, lambda / 2, problem, rand);
-        BestCalculatedPatchOneBitMarker bpMult = new BestCalculatedPatchOneBitMarker(mutationRate * 2, lambda / 2, problem, rand);
+        BestCalculatedPatchOneBitMarker bpHalf = new BestCalculatedPatchOneBitMarkerByPercentage(mutationRate / 2, lambda / 2, problem, rand);
+        BestCalculatedPatchOneBitMarker bpMult = new BestCalculatedPatchOneBitMarkerByPercentage(mutationRate * 2, lambda / 2, problem, rand);
         double newMutationRate = mutationRate;
         info = "";
         if (bpHalf.fitness > bpMult.fitness) {

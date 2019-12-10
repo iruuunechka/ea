@@ -27,12 +27,12 @@ public class LeadingOnes implements Problem {
     @Override
     public int calculatePatchFitness(List<Integer> patch) {
         int newFitness = fitness;
-        for (Integer i : patch) {
+        for (int i : patch) {
             if (newFitness < i) {
                 return newFitness;
             } else if (individual[i]) { //newFitness > i;
                 return i;
-            } else if (!individual[i]){ //newFitness == i
+            } else if (!individual[i]) { //newFitness == i
                 newFitness++;
                 while (newFitness < individual.length && individual[newFitness]) {
                     newFitness++;

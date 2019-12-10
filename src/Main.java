@@ -16,6 +16,7 @@ public class Main {
         double lowerBoundTwoRateSq = 2.0 / (n * n);
         double lowerBoundAb = 1.0 / n;
         double lowerBoundAbSq = 1.0 / (n * n);
+        double beta = 1.4;
 
 //        System.out.println("two rate");
 //        runAlgo("tworate.csv", lowerBoundTwoRate, getTwoRateOMImplementation());
@@ -42,15 +43,15 @@ public class Main {
 //        System.out.println("two rate exp sq");
 //        runAlgo("tworateexpsq.csv", lowerBoundTwoRateSq, getTwoRateOMExpImplementation());
 
-        System.out.println("two rate leading ones");
-        runAlgo("tworateLO.csv", lowerBoundTwoRate, getTwoRateLOImplementation());
-        System.out.println("two rate sq leading ones");
-        runAlgo("tworatesqLO.csv", lowerBoundTwoRateSq, getTwoRateLOImplementation());
-
-        System.out.println("two rate exp leading ones");
-        runAlgo("tworateexpLO.csv", lowerBoundTwoRate, getTwoRateLOExpImplementation());
-        System.out.println("two rate exp leading ones sq ");
-        runAlgo("tworateexpsqLO.csv", lowerBoundTwoRateSq, getTwoRateLOExpImplementation());
+//        System.out.println("two rate leading ones");
+//        runAlgo("tworateLO.csv", lowerBoundTwoRate, getTwoRateLOImplementation());
+//        System.out.println("two rate sq leading ones");
+//        runAlgo("tworatesqLO.csv", lowerBoundTwoRateSq, getTwoRateLOImplementation());
+//
+//        System.out.println("two rate exp leading ones");
+//        runAlgo("tworateexpLO.csv", lowerBoundTwoRate, getTwoRateLOExpImplementation());
+//        System.out.println("two rate exp leading ones sq ");
+//        runAlgo("tworateexpsqLO.csv", lowerBoundTwoRateSq, getTwoRateLOExpImplementation());
 
 //        System.out.println("two rate exp");
 //        runAlgoOnPoint("tworateexp10.csv", lowerBoundTwoRate, getTwoRateOMExpImplementation(), 10);
@@ -110,8 +111,29 @@ public class Main {
 //        System.out.println("Two Rate NoShift algorithm sq");
 //        runAlgoByFitnessCount("twoRateNoShiftFitCousq.csv", lowerBoundTwoRateSq, getTwoRateOMNoShiftImplementation());
 
+        System.out.println("Heavy Tail algo OneMax");
+        runHeavyTailAlgo("heavyTail1.4.csv", beta, getHeavyTailOMImplementation());
 
+    }
 
+    private static void runHeavyTailAlgo(String filename, double beta, HeavyTailAlgoFactory factory) throws FileNotFoundException {
+        PrintWriter pw = new PrintWriter(filename);
+        pw.println("gen, lambda");
+        for (int lambda : lambdas) {
+            System.out.println(lambda + " " + beta);
+            double averageIterCount = 0;
+            for (int i = 0; i < avCount; i++) {
+                Algorithm algo = factory.getInstance(lambda, beta, n);
+                while (!algo.isFinished()) {
+                    algo.makeIteration();
+//                    algo.printInfo();
+                }
+                averageIterCount = (i == 0) ? algo.getIterCount() : (averageIterCount * i + algo.getIterCount()) / (i + 1);
+                System.out.println(i);
+            }
+            pw.println((int) averageIterCount + ", " + lambda);
+        }
+        pw.close();
     }
 
     private static void runAlgo(String filename, double lowerBound, AlgoFactory factory) throws FileNotFoundException {
@@ -129,7 +151,7 @@ public class Main {
                     curIterCount++;
                 }
                 averageIterCount = (i == 0) ? curIterCount : (averageIterCount * i + curIterCount) / (i + 1);
-                System.out.println(i);
+//                System.out.println(i);
             }
             pw.println((int) averageIterCount + ", " + lambda);
         }
@@ -224,4 +246,11 @@ public class Main {
         return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
+    private static HeavyTailAlgoFactory getHeavyTailOMImplementation() {
+        return ((lambda, beta, problemLength) -> new HeavyTailAlgo(beta, lambda, new OneMax((problemLength))));
+    }
+
+    private static HeavyTailAlgoFactory getHeavyTailLOImplementation() {
+        return ((lambda, beta, problemLength) -> new HeavyTailAlgo(beta, lambda, new LeadingOnes((problemLength))));
+    }
 }

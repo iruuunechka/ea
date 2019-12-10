@@ -18,7 +18,7 @@ public class BestCalculatedPatchNoShiftFitnessCount {
         List<Integer> bestPatch = null;
         int bestFitness = -1;
         for (int i = 0; i < count; ++i) {
-            createPatchWithOneBitMarker(mutation, problem, rand);
+            createPatch(mutation, problem, rand);
             if (fitness >= bestFitness) {
                 bestFitness = fitness;
                 bestPatch = patch;
@@ -35,10 +35,10 @@ public class BestCalculatedPatchNoShiftFitnessCount {
      * @param rand
      */
     public BestCalculatedPatchNoShiftFitnessCount(double mutation, Problem problem, Random rand) {
-        createPatchWithOneBitMarker(mutation, problem, rand);
+        createPatch(mutation, problem, rand);
     }
 
-    public void createPatchWithOneBitMarker(double mutation, Problem problem, Random rand) {
+    public void createPatch(double mutation, Problem problem, Random rand) {
         List<Integer> patch = new ArrayList<>(16);
         int i = getNextIndex(-1, mutation);
         int problemLength = problem.getLength();
