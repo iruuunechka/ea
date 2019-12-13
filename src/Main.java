@@ -1,14 +1,17 @@
 import algo.*;
 import problem.LeadingOnes;
 import problem.OneMax;
+import problem.Ruggedness;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 public class Main {
     private static final int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800, 1600, 3200};
-    private static final int n = 10000;
+    private static final int n = 1000;
     private static final int avCount = 10;
+    private static final int[] rugs = new int[] {1, 2};
+    private static final double beta = 2.5;
 
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -16,7 +19,6 @@ public class Main {
         double lowerBoundTwoRateSq = 2.0 / (n * n);
         double lowerBoundAb = 1.0 / n;
         double lowerBoundAbSq = 1.0 / (n * n);
-        double beta = 1.4;
 
 //        System.out.println("two rate");
 //        runAlgo("tworate.csv", lowerBoundTwoRate, getTwoRateOMImplementation());
@@ -111,8 +113,29 @@ public class Main {
 //        System.out.println("Two Rate NoShift algorithm sq");
 //        runAlgoByFitnessCount("twoRateNoShiftFitCousq.csv", lowerBoundTwoRateSq, getTwoRateOMNoShiftImplementation());
 
-        System.out.println("Heavy Tail algo OneMax");
-        runHeavyTailAlgo("heavyTail1.4.csv", beta, getHeavyTailOMImplementation());
+//        System.out.println("Heavy Tail algo OneMax");
+//        runHeavyTailAlgo("heavyTail1.4.csv", beta, getHeavyTailOMImplementation());
+//
+//        for (int i : rugs) {
+//            System.out.println("Heavy Tail algo Ruggedness, r = " + i);
+//            runHeavyTailAlgo("heavyTailRug" + i + "_1000.csv", beta, getHeavyTailRugImplementation(i));
+//        }
+
+        for (int i : rugs) {
+            System.out.println("Two Rate algo Ruggedness, r = " + i);
+            runAlgo("twoRateRug" + i + "_1000.csv", lowerBoundTwoRate, getTwoRateRugImplementation(i));
+            System.out.println("Two Rate algo Ruggedness sq, r = " + i);
+            runAlgo("twoRateRug" + i + "_1000sq.csv", lowerBoundTwoRateSq, getTwoRateRugImplementation(i));
+        }
+
+        for (int i : rugs) {
+            System.out.println("Simple algo Ruggedness, r = " + i);
+            runAlgo("simpleRug" + i + "_1000.csv", lowerBoundTwoRate, getSimpleEARugImplementation(i));
+        }
+
+
+
+
 
     }
 
@@ -200,6 +223,10 @@ public class Main {
         return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new LeadingOnes(problemLength));
     }
 
+    private static AlgoFactory getTwoRateRugImplementation(int r) {
+        return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new Ruggedness(problemLength, r));
+    }
+
     private static AlgoFactory getTwoRateOMNoShiftImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateNoShift(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
@@ -246,11 +273,21 @@ public class Main {
         return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
+    private static AlgoFactory getSimpleEARugImplementation(int r) {
+        return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new Ruggedness(problemLength, r));
+    }
+
     private static HeavyTailAlgoFactory getHeavyTailOMImplementation() {
-        return ((lambda, beta, problemLength) -> new HeavyTailAlgo(beta, lambda, new OneMax((problemLength))));
+        return ((lambda, beta, problemLength) -> new HeavyTailAlgo(beta, lambda, new OneMax(problemLength)));
     }
 
     private static HeavyTailAlgoFactory getHeavyTailLOImplementation() {
-        return ((lambda, beta, problemLength) -> new HeavyTailAlgo(beta, lambda, new LeadingOnes((problemLength))));
+        return ((lambda, beta, problemLength) -> new HeavyTailAlgo(beta, lambda, new LeadingOnes(problemLength)));
     }
+
+    private static HeavyTailAlgoFactory getHeavyTailRugImplementation(int r) {
+        return ((lambda, beta, problemLength) -> new HeavyTailAlgo(beta, lambda, new Ruggedness(problemLength, r)));
+    }
+
+
 }

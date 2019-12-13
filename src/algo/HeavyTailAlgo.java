@@ -69,13 +69,13 @@ public class HeavyTailAlgo implements Algorithm {
                 }
             }
             int patchFitness = problem.calculatePatchFitness(patch);
-            if (patchFitness > bestFitness) {
+            if (patchFitness >= bestFitness) {
                 bestFitness = patchFitness;
                 bestPatch = patch;
             }
         }
 
-        if (bestFitness > problem.getFitness()) {
+        if (bestFitness >= problem.getFitness()) {
             problem.applyPatch(bestPatch, bestFitness);
         }
     }
