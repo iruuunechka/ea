@@ -1,6 +1,7 @@
 import algo.*;
 import problem.LeadingOnes;
 import problem.OneMax;
+import problem.OneMaxNeutral3;
 import problem.Ruggedness;
 
 import java.io.FileNotFoundException;
@@ -8,7 +9,7 @@ import java.io.PrintWriter;
 
 public class Main {
     private static final int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800, 1600, 3200};
-    private static final int n = 1000;
+    private static final int n = 3000;
     private static final int avCount = 10;
     private static final int[] rugs = new int[] {1, 2};
     private static final double beta = 2.5;
@@ -121,17 +122,26 @@ public class Main {
 //            runHeavyTailAlgo("heavyTailRug" + i + "_1000.csv", beta, getHeavyTailRugImplementation(i));
 //        }
 
-        for (int i : rugs) {
-            System.out.println("Two Rate algo Ruggedness, r = " + i);
-            runAlgo("twoRateRug" + i + "_1000.csv", lowerBoundTwoRate, getTwoRateRugImplementation(i));
-            System.out.println("Two Rate algo Ruggedness sq, r = " + i);
-            runAlgo("twoRateRug" + i + "_1000sq.csv", lowerBoundTwoRateSq, getTwoRateRugImplementation(i));
-        }
+//        for (int i : rugs) {
+//            System.out.println("Two Rate algo Ruggedness, r = " + i);
+//            runAlgo("twoRateRug" + i + "_1000.csv", lowerBoundTwoRate, getTwoRateRugImplementation(i));
+//            System.out.println("Two Rate algo Ruggedness sq, r = " + i);
+//            runAlgo("twoRateRug" + i + "_1000sq.csv", lowerBoundTwoRateSq, getTwoRateRugImplementation(i));
+//        }
+//
+//        for (int i : rugs) {
+//            System.out.println("Simple algo Ruggedness, r = " + i);
+//            runAlgo("simpleRug" + i + "_1000.csv", lowerBoundTwoRate, getSimpleEARugImplementation(i));
+//        }
 
-        for (int i : rugs) {
-            System.out.println("Simple algo Ruggedness, r = " + i);
-            runAlgo("simpleRug" + i + "_1000.csv", lowerBoundTwoRate, getSimpleEARugImplementation(i));
-        }
+//        System.out.println("simpleAlgo");
+//        runAlgo("simpleNeutral.csv", lowerBoundTwoRateSq, getSimpleEANeutralImplementation());
+
+        System.out.println("two rate");
+        runAlgo("tworateNeutral3000.csv", lowerBoundTwoRate, getTwoRateNeutralImplementation());
+
+        System.out.println("two rate sq");
+        runAlgo("tworateNeutral3000sq.csv", lowerBoundTwoRateSq, getTwoRateNeutralImplementation());
 
 
 
@@ -174,7 +184,7 @@ public class Main {
                     curIterCount++;
                 }
                 averageIterCount = (i == 0) ? curIterCount : (averageIterCount * i + curIterCount) / (i + 1);
-//                System.out.println(i);
+                System.out.println(i);
             }
             pw.println((int) averageIterCount + ", " + lambda);
         }
@@ -221,6 +231,10 @@ public class Main {
 
     private static AlgoFactory getTwoRateLOImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new LeadingOnes(problemLength));
+    }
+
+    private static AlgoFactory getTwoRateNeutralImplementation() {
+        return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new OneMaxNeutral3(problemLength));
     }
 
     private static AlgoFactory getTwoRateRugImplementation(int r) {
@@ -271,6 +285,10 @@ public class Main {
 
     private static AlgoFactory getSimpleEAOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new OneMax(problemLength));
+    }
+
+    private static AlgoFactory getSimpleEANeutralImplementation() {
+        return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new OneMaxNeutral3(problemLength));
     }
 
     private static AlgoFactory getSimpleEARugImplementation(int r) {
