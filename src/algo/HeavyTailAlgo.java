@@ -1,7 +1,6 @@
 package algo;
 
 import problem.Problem;
-import utils.BestCalculatedPatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,8 @@ public class HeavyTailAlgo implements Algorithm {
     @Override
     public void makeIteration() {
         iterCount++;
-        List<Integer> bestPatch = null;
+        List<Integer> bestPatch = new ArrayList<>(4);
+        List<Integer> patch = new ArrayList<>(4);
         int bestFitness = -1;
         for (int count = 0; count < lambda; count++) {
             double prob = rand.nextDouble();
@@ -53,26 +53,21 @@ public class HeavyTailAlgo implements Algorithm {
             while (i < x) {
                 int pos = rand.nextInt(problemLength);
                 if (!flipped[pos]) {
+                    patch.add(pos);
                     flipped[pos] = true;
                     i++;
                 }
             }
-            List<Integer> patch = new ArrayList(x);
-            for (int j = 0; j < problemLength; j++) {
-                if (flipped[j]) {
-                    patch.add(j);
-                    flipped[j] = false;
-                    x--;
-                }
-                if (x == 0) {
-                    break;
-                }
+            for (int p : patch) {
+                flipped[p] = false;
             }
             int patchFitness = problem.calculatePatchFitness(patch);
             if (patchFitness >= bestFitness) {
                 bestFitness = patchFitness;
-                bestPatch = patch;
+                bestPatch.clear();
+                bestPatch.addAll(patch);
             }
+            patch.clear();
         }
 
         if (bestFitness >= problem.getFitness()) {
