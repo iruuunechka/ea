@@ -127,4 +127,9 @@ public class TwoRateToExplore implements Algorithm {
         return iterCount;
     }
 
+    @Override
+    public String getProblemInfo() {
+       return problem.getInfo();
+    }
+
 }

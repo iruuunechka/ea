@@ -64,4 +64,9 @@ public class LeadingOnes implements Problem {
     public boolean isOptimized() {
         return fitness == individual.length;
     }
+
+    @Override
+    public String getInfo() {
+        return "";
+    }
 }

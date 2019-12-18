@@ -13,4 +13,6 @@ public interface Problem {
     int getLength();
 
     boolean isOptimized();
+
+    String getInfo();
 }

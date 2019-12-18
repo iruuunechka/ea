@@ -8,5 +8,5 @@ public interface Algorithm {
     int getFitness();
     long getFitnessCount();
     int getIterCount();
-
+    String getProblemInfo();
 }

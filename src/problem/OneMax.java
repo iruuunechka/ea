@@ -55,4 +55,9 @@ public class OneMax implements Problem {
     public boolean isOptimized() {
         return fitness == individual.length;
     }
+
+    @Override
+    public String getInfo() {
+        return "";
+    }
 }

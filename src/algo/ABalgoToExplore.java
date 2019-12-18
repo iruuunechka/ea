@@ -116,4 +116,9 @@ public class ABalgoToExplore implements Algorithm {
     public int getIterCount() {
         return iterCount;
     }
+
+    @Override
+    public String getProblemInfo() {
+        return problem.getInfo();
+    }
 }

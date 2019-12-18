@@ -122,6 +122,11 @@ public class TwoRate implements Algorithm {
         return iterCount;
     }
 
+    @Override
+    public String getProblemInfo() {
+        return problem.getInfo();
+    }
+
 //@Override
 //    public void makeIteration() {
 //        BestCalculatedPatch bpHalf = getHalfBest(mutationRate / 2);

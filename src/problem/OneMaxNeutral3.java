@@ -1,5 +1,7 @@
 package problem;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -8,6 +10,7 @@ public class OneMaxNeutral3 implements Problem {
     private int fitness;
     private boolean[] chunks;
     private int[] chunksCount;
+    private int[] chunksCountByOnesNumber;
     private int tail;
 
     public OneMaxNeutral3(int n) {
@@ -16,6 +19,7 @@ public class OneMaxNeutral3 implements Problem {
         tail = n % 3;
         chunks = new boolean[n / 3 + (tail == 0 ? 0 : 1)];
         chunksCount = new int[n / 3 + (tail == 0 ? 0 : 1)];
+        chunksCountByOnesNumber = new int[4];
         fitness = 0;
         for (int i = 0; i < n; ++i) {
             individual[i] = rand.nextBoolean();
@@ -30,6 +34,7 @@ public class OneMaxNeutral3 implements Problem {
                 }
             }
             chunksCount[curChunk] = count;
+            chunksCountByOnesNumber[count]++;
             if (count >= 2) {
                 chunks[curChunk] = true;
                 fitness++;
@@ -44,6 +49,7 @@ public class OneMaxNeutral3 implements Problem {
                 }
             }
             chunksCount[curChunk] = count;
+            chunksCountByOnesNumber[count]++;
             if (count > tail / 2) {
                 chunks[curChunk] = true;
                 fitness++;
@@ -110,7 +116,9 @@ public class OneMaxNeutral3 implements Problem {
                     } else {
                         chunks[curChunk] = true;
                     }
+                    chunksCountByOnesNumber[chunksCount[curChunk]]--;
                     chunksCount[curChunk] = curChunkCount;
+                    chunksCountByOnesNumber[curChunkCount]++;
                 }
                 //go to the next chunk
                 curChunk = i / 3;
@@ -131,7 +139,9 @@ public class OneMaxNeutral3 implements Problem {
             } else {
                 chunks[curChunk] = true;
             }
+            chunksCountByOnesNumber[chunksCount[curChunk]]--;
             chunksCount[curChunk] = curChunkCount;
+            chunksCountByOnesNumber[curChunkCount]++;
         }
         this.fitness = fitness;
     }
@@ -149,5 +159,14 @@ public class OneMaxNeutral3 implements Problem {
     @Override
     public boolean isOptimized() {
         return fitness == chunks.length;
+    }
+
+    @Override
+    public String getInfo() {
+        StringBuilder s = new StringBuilder();
+        for (int i : chunksCountByOnesNumber) {
+            s.append(", ").append(i);
+        }
+        return s.toString();
     }
 }
