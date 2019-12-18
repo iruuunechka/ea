@@ -22,6 +22,7 @@ public class PatchCalcUtil {
     }
 
     public static int getNextIndex(int curIndex, double mutation) {
-        return curIndex + 1 + (int) (Math.log(rand.nextDouble()) / Math.log(1.0 - mutation));
+        // casting the entire result to int correctly processes int overflows.
+        return (int) (curIndex + 1 + Math.log(rand.nextDouble()) / Math.log(1.0 - mutation));
     }
 }
