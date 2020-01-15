@@ -4,12 +4,13 @@ import problem.OneMax;
 import problem.OneMaxNeutral3;
 import problem.Ruggedness;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 public class Main {
     private static final int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800, 1600, 3200};
-    private static  int n = 10000;
+    private static final int n = 1000;
     private static final int avCount = 10;
     private static final int[] rugs = new int[] {1, 2, 5};
     private static final double beta = 2.5;
@@ -173,19 +174,34 @@ public class Main {
 //        System.out.println("Heavy Tail algo Neutral3");//tail = 2.5
 //        runHeavyTailAlgo("heavyTailNeutral.csv", beta, getHeavyTailNeutralImplementation());
 
-        //Run all on Neutral3 on 1600
-        int lambda = 1600;
-        System.out.println("Two Rate Neutral" + lambda);
-        runAlgoOnPoint("twoRateNeutral"+lambda+".csv", getTwoRateNeutralImplementation().getInstance(lambda, lowerBoundTwoRate, n));
-        System.out.println("Two Rate sq Neutral" + lambda);
-        runAlgoOnPoint("twoRateNeutral" + lambda + "sq.csv", getTwoRateNeutralImplementation().getInstance(lambda, lowerBoundTwoRateSq, n));
-        System.out.println("Two Rate Exp Neutral" + lambda);
-        runAlgoOnPoint("twoRateExpNeutral" + lambda +".csv", getTwoRateNeutralExpImplementation().getInstance(lambda, lowerBoundTwoRate, n));
-        System.out.println("Two Rate Exp sq Neutral" + lambda);
-        runAlgoOnPoint("twoRateExpNeutral" + lambda + "sq.csv", getTwoRateNeutralExpImplementation().getInstance(lambda, lowerBoundTwoRateSq, n));
-        System.out.println("Heavy Tail Neutral" + lambda);
-        runAlgoOnPoint("heavyTailNeutral" + lambda + ".csv", getHeavyTailNeutralImplementation().getInstance(lambda, beta, n));
+//        //Run all on Neutral3 on 1600
+//        int lambda = 1600;
+//        System.out.println("Two Rate Neutral" + lambda);
+//        runAlgoOnPoint("twoRateNeutral"+lambda+".csv", getTwoRateNeutralImplementation().getInstance(lambda, lowerBoundTwoRate, n));
+//        System.out.println("Two Rate sq Neutral" + lambda);
+//        runAlgoOnPoint("twoRateNeutral" + lambda + "sq.csv", getTwoRateNeutralImplementation().getInstance(lambda, lowerBoundTwoRateSq, n));
+//        System.out.println("Two Rate Exp Neutral" + lambda);
+//        runAlgoOnPoint("twoRateExpNeutral" + lambda +".csv", getTwoRateNeutralExpImplementation().getInstance(lambda, lowerBoundTwoRate, n));
+//        System.out.println("Two Rate Exp sq Neutral" + lambda);
+//        runAlgoOnPoint("twoRateExpNeutral" + lambda + "sq.csv", getTwoRateNeutralExpImplementation().getInstance(lambda, lowerBoundTwoRateSq, n));
+//        System.out.println("Heavy Tail Neutral" + lambda);
+//        runAlgoOnPoint("heavyTailNeutral" + lambda + ".csv", getHeavyTailNeutralImplementation().getInstance(lambda, beta, n));
 
+        //Run all on int[] lambdaOMPoints = new int[] {1, 2, 5, 10, 50, 100, 200, 400, 800};
+        int[] lambdaOMPoints = new int[] {2, 5, 10, 50, 100, 200, 400, 800};
+        int runCount = 5;
+        String folder = "GradientPlotOMManyPoints/";
+        new File(folder).mkdir();
+        for (int lambda : lambdaOMPoints) {
+            System.out.println("Two Rate OM " + lambda);
+            runAlgoOnPointGradientPlot(folder + "twoRateOM_" + n + "_" + lambda+".csv", getTwoRateOMImplementation(), lambda, lowerBoundTwoRate, runCount);
+            System.out.println("Two Rate sq OM " + lambda);
+            runAlgoOnPointGradientPlot(folder + "twoRatesqOM_" + n + "_" + lambda + ".csv", getTwoRateOMImplementation(), lambda, lowerBoundTwoRateSq, runCount);
+            System.out.println("Two Rate Exp OM " + lambda);
+            runAlgoOnPointGradientPlot(folder + "twoRateExpOM_" + n + "_" + lambda +".csv", getTwoRateOMExpImplementation(), lambda, lowerBoundTwoRate, runCount);
+            System.out.println("Two Rate Exp sq OM " + lambda);
+            runAlgoOnPointGradientPlot(folder + "twoRateExpsqOM_" + n + "_" + lambda + ".csv", getTwoRateOMExpImplementation(), lambda, lowerBoundTwoRateSq, runCount);
+        }
     }
 
     private static void runHeavyTailAlgo(String filename, double beta, HeavyTailAlgoFactory factory) throws FileNotFoundException {
@@ -232,13 +248,31 @@ public class Main {
 
     private static void runAlgoOnPoint(String filename, Algorithm algo) throws FileNotFoundException {
         PrintWriter pw = new PrintWriter(filename);
-        pw.println("fitness, mutation, iter, zero, one, two, three");
+//        pw.println("fitness, mutation, iter, zero, one, two, three");
+        pw.println("fitness, mutation, iter");
         int curIterCount = 0;
         while (!algo.isFinished()) {
             algo.makeIteration();
             curIterCount++;
             pw.println(algo.getFitness() + ", " + algo.getMutationRate()  + ", " + curIterCount + algo.getProblemInfo());
 //            algo.printInfo();
+        }
+        pw.close();
+    }
+
+    private static void runAlgoOnPointGradientPlot(String filename, AlgoFactory factory, int lambda, double lowerBound, int runCount) throws FileNotFoundException {
+        PrintWriter pw = new PrintWriter(filename);
+//        pw.println("fitness, mutation, iter, zero, one, two, three");
+        for (int i = 0; i < runCount; i++) {
+            int curIterCount = 0;
+            pw.println("\\addplot coordinates {");
+            Algorithm algo = factory.getInstance(lambda, lowerBound, n);
+            while (!algo.isFinished()) {
+                algo.makeIteration();
+                curIterCount++;
+                pw.print("(" + (n - algo.getFitness()) + ", " + algo.getMutationRate() + ")");
+            }
+            pw.println("};");
         }
         pw.close();
     }
