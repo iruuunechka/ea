@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 
 public class Main {
     private static final int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800, 1600, 3200};
-    private static final int n = 1000;
+    private static final int n = 10000;
     private static final int avCount = 10;
     private static final int[] rugs = new int[] {1, 2, 5, 10, 15, 20};//{1, 2, 5};
     private static final double beta = 2.5;
@@ -206,7 +206,7 @@ public class Main {
         //Run Ruggedness on fixed budget
 
         int budget = 3200 * 100;
-        String folder = "RuggednessFixedBudget" + budget +"/";
+        String folder = "RuggednessFixedBudget_" + budget + "_" + n +"/";
         new File(folder).mkdir();
         for (int r : rugs) {
             String folderRug = folder + r + "/";
