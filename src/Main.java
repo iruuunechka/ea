@@ -1,18 +1,18 @@
 import algo.*;
-import problem.LeadingOnes;
-import problem.OneMax;
-import problem.OneMaxNeutral3;
-import problem.Ruggedness;
+import problem.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
-    private static final int[] lambdas = new int[] {6, 10, 50, 100, 200, 400, 800, 1600, 3200};
+    private static final int[] lambdas = new int[] {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};//6, 10, 50, 100, 200, 400, 800, 1600, 3200};
     private static final int n = 10000;
-    private static final int avCount = 10;
-    private static final int[] rugs = new int[] {1, 2, 5, 10, 15, 20};//{1, 2, 5};
+    private static final int runCount = 100;
+    private static final int[] rugs = new int[] {20};//1, 2, 5, 10, 15, 20};//{1, 2, 5};
     private static final double beta = 2.5;
 
 
@@ -203,25 +203,216 @@ public class Main {
 //            runAlgoOnPointGradientPlot(folder + "twoRateExpsqOM_" + n + "_" + lambda + ".csv", getTwoRateOMExpImplementation(), lambda, lowerBoundTwoRateSq, runCount);
 //        }
 
+//        Run plateau
+//        runAlgo("tworatePlateau.csv", lowerBoundTwoRate, getTwoRatePlateauImplementation(2));
         //Run Ruggedness on fixed budget
+//
+//        int budget = 3200 * 100;
+//        String folder = "RuggednessFixedBudget400_800_" + budget + "_" + n +"/";
+//        new File(folder).mkdir();
+//        for (int r : rugs) {
+//            String folderRug = folder + r + "/";
+//            new File(folderRug).mkdir();
+////            System.out.println("Heavy Tail algo Ruggedness, r = " + r);
+////            runHeavyTailAlgoOnFixedBudget(folderRug + "heavyTailRug" + r + "_" + n + "Av.csv", folderRug + "heavyTailRug" + r + "_" + n + ".csv", beta, getHeavyTailRugImplementation(r), budget);
+//            System.out.println("Two Rate algo Ruggedness, r = " + r);
+//            runAlgoOnFixedBudget(folderRug + "twoRateRug" + r + "_" + n + "Av.csv", folderRug + "twoRateRug" + r + "_" + n + ".csv", lowerBoundTwoRate, getTwoRateRugImplementation(r), budget);
+//            System.out.println("Two Rate sq algo Ruggedness, r = " + r);
+//            runAlgoOnFixedBudget(folderRug + "twoRateSqRug" + r + "_" + n + "Av.csv", folderRug + "twoRateSqRug" + r + "_" + n + ".csv", lowerBoundTwoRateSq, getTwoRateRugImplementation(r), budget);
+//            System.out.println("Two Rate Exp algo Ruggedness, r = " + r);
+//            runAlgoOnFixedBudget(folderRug + "twoRateExpRug" + r + "_" + n + "Av.csv", folderRug + "twoRateExpRug" + r + "_" + n + ".csv", lowerBoundTwoRate, getTwoRateExpRugImplementation(r), budget);
+//            System.out.println("Two Rate Exp algo Ruggedness sq, r = " + r);
+//            runAlgoOnFixedBudget(folderRug + "twoRateExpSqRug" + r + "_" + n + "Av.csv", folderRug + "twoRateExpSqRug" + r + "_" + n + ".csv", lowerBoundTwoRateSq, getTwoRateExpRugImplementation(r), budget);
+//        }
+//
+//        Runs for article
 
-        int budget = 3200 * 100;
-        String folder = "RuggednessFixedBudget_" + budget + "_" + n +"/";
+        ExecutorService es = Executors.newCachedThreadPool();
+        Thread thread;
+        String folder = "Article100runs10000len/";
         new File(folder).mkdir();
-        for (int r : rugs) {
-            String folderRug = folder + r + "/";
+
+        String folderPlateau = folder + "Plateau/";
+        new File(folderPlateau).mkdir();
+        int k = 2;
+
+//        Thread thread = new Thread(() -> {
+//            try {
+////                System.out.println("simpleAlgo Plateau");
+//                runAlgo(folderPlateau + "simplePlateau.csv", lowerBoundTwoRateSq, getSimpleEAPlateauImplementation(k));
+//            } catch (FileNotFoundException e) {
+//            }
+//        });
+//        es.execute(thread);
+        thread = new Thread(() -> {
+            try {
+//                System.out.println("two rate Plateau");
+                runAlgo(folderPlateau + "tworatePlateau.csv", lowerBoundTwoRate, getTwoRatePlateauImplementation(k));
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+        thread = new Thread(() -> {
+            try {
+//                System.out.println("two rate sq Plateau");
+                runAlgo(folderPlateau + "tworatesqPlateau.csv", lowerBoundTwoRateSq, getTwoRatePlateauImplementation(k));
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+        thread = new Thread(() -> {
+            try {
+//                System.out.println("two rate exp Plateau");
+                runAlgo(folderPlateau + "tworateexpPlateau.csv", lowerBoundTwoRate, getTwoRateExpPlateauImplementation(k));
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+        thread = new Thread(() -> {
+            try {
+//                System.out.println("two rate exp sq Plateau");
+                runAlgo(folderPlateau + "tworateexpsqPlateau.csv", lowerBoundTwoRateSq, getTwoRateExpPlateauImplementation(k));
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+
+
+        String folderOM = folder + "OM/";
+        new File(folderOM).mkdir();
+//        thread = new Thread(() -> {
+//            try {
+////                System.out.println("simpleAlgo OM");
+//                runAlgo(folderOM + "simpleOM.csv", lowerBoundTwoRateSq, getSimpleEAOMImplementation());
+//            } catch (FileNotFoundException e) {
+//            }
+//        });
+//        es.execute(thread);
+//        thread = new Thread(() -> {
+//            try {
+////                System.out.println("two rate OM");
+//                runAlgo(folderOM + "tworateOM.csv", lowerBoundTwoRate, getTwoRateOMImplementation());
+//            } catch (FileNotFoundException e) {
+//            }
+//        });
+//        es.execute(thread);
+        thread = new Thread(() -> {
+            try {
+//                System.out.println("two rate sq OM");
+                runAlgo(folderOM + "tworatesqOM.csv", lowerBoundTwoRateSq, getTwoRateOMImplementation());
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+        thread = new Thread(() -> {
+            try {
+//                System.out.println("two rate exp OM");
+                runAlgo(folderOM + "tworateexpOM.csv", lowerBoundTwoRate, getTwoRateOMExpImplementation());
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+        thread = new Thread(() -> {
+            try {
+//                System.out.println("two rate exp sq OM");
+                runAlgo(folderOM + "tworateexpsqOM.csv", lowerBoundTwoRateSq, getTwoRateOMExpImplementation());
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+
+        String folderNeutral = folder + "Neutral3/";
+        new File(folderNeutral).mkdir();
+//        thread = new Thread(() -> {
+//            try {
+////                System.out.println("simpleAlgo Neutral3");
+//                runAlgo(folderNeutral + "simpleNeutral.csv", lowerBoundTwoRateSq, getSimpleEANeutralImplementation());
+//            } catch (FileNotFoundException e) {
+//            }
+//        });
+//        es.execute(thread);
+        thread = new Thread(() -> {
+            try {
+//                System.out.println("two rate Neutral3");
+                runAlgo(folderNeutral + "tworateNeutral.csv", lowerBoundTwoRate, getTwoRateNeutralImplementation());
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+        thread = new Thread(() -> {
+            try {
+//                System.out.println("two rate sq Neutral3");
+                runAlgo(folderNeutral + "tworateNeutralsq.csv", lowerBoundTwoRateSq, getTwoRateNeutralImplementation());
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+        thread = new Thread(() -> {
+            try {
+//                System.out.println("two rate Neutral3");
+                runAlgo(folderNeutral + "tworateNeutralExp.csv", lowerBoundTwoRate, getTwoRateNeutralExpImplementation());
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+        thread = new Thread(() -> {
+            try {
+//                System.out.println("two rate sq Neutral3");
+                runAlgo(folderNeutral + "tworateNeutralExpsq.csv", lowerBoundTwoRateSq, getTwoRateNeutralExpImplementation());
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+
+        int[] articleRugs = {2, 10, 20};
+        int budget = 3200 * 100;
+        String folderRugs = folder + "/" + "RuggednessFixedBudget" + budget + "_" + n +"/";
+        new File(folderRugs).mkdir();
+        for (int r : articleRugs) {
+            String folderRug = folderRugs + r + "/";
             new File(folderRug).mkdir();
-            System.out.println("Heavy Tail algo Ruggedness, r = " + r);
-            runHeavyTailAlgoOnFixedBudget(folderRug + "heavyTailRug" + r + "_" + n + "Av.csv", folderRug + "heavyTailRug" + r + "_" + n + ".csv", beta, getHeavyTailRugImplementation(r), budget);
-            System.out.println("Two Rate algo Ruggedness, r = " + r);
-            runAlgoOnFixedBudget(folderRug + "twoRateRug" + r + "_" + n + "Av.csv", folderRug + "twoRateRug" + r + "_" + n + ".csv", lowerBoundTwoRate, getTwoRateRugImplementation(r), budget);
-            System.out.println("Two Rate sq algo Ruggedness, r = " + r);
-            runAlgoOnFixedBudget(folderRug + "twoRateSqRug" + r + "_" + n + "Av.csv", folderRug + "twoRateSqRug" + r + "_" + n + ".csv", lowerBoundTwoRateSq, getTwoRateRugImplementation(r), budget);
-            System.out.println("Two Rate Exp algo Ruggedness, r = " + r);
-            runAlgoOnFixedBudget(folderRug + "twoRateExpRug" + r + "_" + n + "Av.csv", folderRug + "twoRateExpRug" + r + "_" + n + ".csv", lowerBoundTwoRate, getTwoRateExpRugImplementation(r), budget);
-            System.out.println("Two Rate Exp algo Ruggedness sq, r = " + r);
-            runAlgoOnFixedBudget(folderRug + "twoRateExpSqRug" + r + "_" + n + "Av.csv", folderRug + "twoRateExpSqRug" + r + "_" + n + ".csv", lowerBoundTwoRateSq, getTwoRateExpRugImplementation(r), budget);
+//            thread = new Thread(() -> {
+//                try {
+////                    System.out.println("Simple algo Ruggedness, r = " + r);
+//                    runAlgoOnFixedBudget(folderRug + "simpleRug" + r + "_" + n + ".csv", lowerBoundTwoRate, getSimpleEARugImplementation(r), budget);
+//                } catch (FileNotFoundException e) {
+//                }
+//            });
+//            es.execute(thread);
+//            thread = new Thread(() -> {
+//                try {
+////                    System.out.println("Two Rate algo Ruggedness, r = " + r);
+//                    runAlgoOnFixedBudget(folderRug + "twoRateRug" + r + "_" + n + ".csv", lowerBoundTwoRate, getTwoRateRugImplementation(r), budget);
+//                } catch (FileNotFoundException e) {
+//                }
+//            });
+//            es.execute(thread);
+            thread = new Thread(() -> {
+                try {
+//                    System.out.println("Two Rate sq algo Ruggedness, r = " + r);
+                    runAlgoOnFixedBudget(folderRug + "twoRateSqRug" + r + "_" + n + ".csv", lowerBoundTwoRateSq, getTwoRateRugImplementation(r), budget);
+                } catch (FileNotFoundException e) {
+                }
+            });
+            es.execute(thread);
+            thread = new Thread(() -> {
+                try {
+//                    System.out.println("Two Rate Exp algo Ruggedness, r = " + r);
+                    runAlgoOnFixedBudget(folderRug + "twoRateExpRug" + r + "_" + n + ".csv", lowerBoundTwoRate, getTwoRateExpRugImplementation(r), budget);
+                } catch (FileNotFoundException e) {
+                }
+            });
+            es.execute(thread);
+            thread = new Thread(() -> {
+                try {
+//                    System.out.println("Two Rate Exp algo Ruggedness sq, r = " + r);
+                    runAlgoOnFixedBudget(folderRug + "twoRateExpSqRug" + r + "_" + n + ".csv", lowerBoundTwoRateSq, getTwoRateExpRugImplementation(r), budget);
+                } catch (FileNotFoundException e) {
+                }
+            });
+            es.execute(thread);
         }
+        es.shutdown();
     }
 
     private static void runHeavyTailAlgo(String filename, double beta, HeavyTailAlgoFactory factory) throws FileNotFoundException {
@@ -230,7 +421,7 @@ public class Main {
         for (int lambda : lambdas) {
             System.out.println(lambda + " " + beta);
             double averageIterCount = 0;
-            for (int i = 0; i < avCount; i++) {
+            for (int i = 0; i < runCount; i++) {
                 Algorithm algo = factory.getInstance(lambda, beta, n);
                 while (!algo.isFinished()) {
                     algo.makeIteration();
@@ -253,7 +444,7 @@ public class Main {
             System.out.println(lambda + " " + beta);
             double averageFitness = 0;
             int iterCount = budget / lambda;
-            for (int i = 0; i < avCount; i++) {
+            for (int i = 0; i < runCount; i++) {
                 int curIterCount = 0;
                 Algorithm algo = factory.getInstance(lambda, beta, n);
                 while (curIterCount < iterCount) {
@@ -275,9 +466,9 @@ public class Main {
         PrintWriter pw = new PrintWriter(filename);
         pw.println("gen, lambda");
         for (int lambda : lambdas) {
-            System.out.println(lambda + " " + lowerBound);
+            System.out.println(filename + " " + lambda + " " + lowerBound);
             double averageIterCount = 0;
-            for (int i = 0; i < avCount; i++) {
+            for (int i = 0; i < runCount; i++) {
                 int curIterCount = 0;
                 Algorithm algo = factory.getInstance(lambda, lowerBound, n);
                 while (!algo.isFinished()) {
@@ -285,24 +476,26 @@ public class Main {
 //                    algo.printInfo();
                     curIterCount++;
                 }
-                averageIterCount = (i == 0) ? curIterCount : (averageIterCount * i + curIterCount) / (i + 1);
-                System.out.println(i);
+                pw.println(curIterCount + ", " + lambda);
+//                averageIterCount = (i == 0) ? curIterCount : (averageIterCount * i + curIterCount) / (i + 1);
+                System.out.println(filename + " " + lambda + " " + i);
             }
-            pw.println((int) averageIterCount + ", " + lambda);
+            pw.flush();
+//            pw.println((int) averageIterCount + ", " + lambda);
         }
         pw.close();
     }
 
-    private static void runAlgoOnFixedBudget(String filenameAveraged, String filenameNotAveraged, double lowerBound, AlgoFactory factory, int budget) throws FileNotFoundException {
-        PrintWriter pwAveraged = new PrintWriter(filenameAveraged);
-        pwAveraged.println("fitness, lambda");
-        PrintWriter pwNotAveraged = new PrintWriter(filenameNotAveraged);
-        pwNotAveraged.println("fitness, lambda");
+    private static void runAlgoOnFixedBudget(String filenameNotAveraged, double lowerBound, AlgoFactory factory, int budget) throws FileNotFoundException {
+//        PrintWriter pwAveraged = new PrintWriter(filenameAveraged);
+//        pwAveraged.println("fitness, lambda");
+        PrintWriter pw = new PrintWriter(filenameNotAveraged);
+        pw.println("fitness, lambda");
         for (int lambda : lambdas) {
             System.out.println(lambda + " " + lowerBound);
             double averageFitness = 0;
             int iterCount = budget / lambda;
-            for (int i = 0; i < avCount; i++) {
+            for (int i = 0; i < runCount; i++) {
                 int curIterCount = 0;
                 Algorithm algo = factory.getInstance(lambda, lowerBound, n);
                 while (curIterCount < iterCount) {
@@ -310,14 +503,15 @@ public class Main {
 //                    algo.printInfo();
                     curIterCount++;
                 }
-                averageFitness = (i == 0) ? algo.getFitness() : (averageFitness * i + algo.getFitness()) / (i + 1);
-                System.out.println(i);
-                pwNotAveraged.println(algo.getFitness() + ", " + lambda);
+//                averageFitness = (i == 0) ? algo.getFitness() : (averageFitness * i + algo.getFitness()) / (i + 1);
+                System.out.println(filenameNotAveraged + " " + lambda + " " + i);
+                pw.println(algo.getFitness() + ", " + lambda);
             }
-            pwAveraged.println(averageFitness + ", " + lambda);
+            pw.flush();
+//            pwAveraged.println(averageFitness + ", " + lambda);
         }
-        pwAveraged.close();
-        pwNotAveraged.close();
+//        pwAveraged.close();
+        pw.close();
     }
 
     private static void runAlgoOnPoint(String filename, Algorithm algo) throws FileNotFoundException {
@@ -360,7 +554,7 @@ public class Main {
             System.out.println(lambda + " " + lowerBound);
             double averageFitCou = 0;
             double averageIterCou = 0;
-            for (int i = 0; i < avCount; i++) {
+            for (int i = 0; i < runCount; i++) {
                 Algorithm algo = factory.getInstance(lambda, lowerBound, n);
                 while (!algo.isFinished()) {
                     algo.makeIteration();
@@ -391,6 +585,10 @@ public class Main {
         return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new Ruggedness(problemLength, r));
     }
 
+    private static AlgoFactory getTwoRatePlateauImplementation(int k) {
+        return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new Plateau(problemLength, k));
+    }
+
     //Two Rate No Shift
     private static AlgoFactory getTwoRateOMNoShiftImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateNoShift(2.0, lowerBound, lambda, new OneMax(problemLength));
@@ -411,6 +609,10 @@ public class Main {
 
     private static AlgoFactory getTwoRateExpRugImplementation(int r) {
         return (lambda, lowerBound, problemLength) -> new TwoRateToExplore(2.0, lowerBound, lambda, new Ruggedness(problemLength, r));
+    }
+
+    private static AlgoFactory getTwoRateExpPlateauImplementation(int k) {
+        return (lambda, lowerBound, problemLength) -> new TwoRateToExplore(2.0, lowerBound, lambda, new Plateau(problemLength, k));
     }
 
     //Two Rate Adaptive
@@ -449,6 +651,10 @@ public class Main {
         return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
+    private static AlgoFactory getSimpleEAPlateauImplementation(int k) {
+        return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new Plateau(problemLength, k));
+    }
+
     private static AlgoFactory getSimpleEANeutralImplementation() {
         return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new OneMaxNeutral3(problemLength));
     }
@@ -473,5 +679,6 @@ public class Main {
     private static HeavyTailAlgoFactory getHeavyTailNeutralImplementation() {
         return ((lambda, beta, problemLength) -> new HeavyTailAlgo(beta, lambda, new OneMaxNeutral3(problemLength)));
     }
+
 
 }

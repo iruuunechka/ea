@@ -20,11 +20,11 @@ public class TwoRate implements Algorithm {
 
     private int iterCount = 0;
 
-    public int decreaseCount = 0;
-    public List<String> decreaseCountInfo = new ArrayList<>();
-    public int increaseCount = 0;
-    public int equalCount = 0;
-    private int almostTheSame = 0;
+//    public int decreaseCount = 0;
+//    public List<String> decreaseCountInfo = new ArrayList<>();
+//    public int increaseCount = 0;
+//    public int equalCount = 0;
+//    private int almostTheSame = 0;
 
     public TwoRate(double r, double lowerBound, int lambda, Problem problem) {
         this.problem = problem;
@@ -45,15 +45,15 @@ public class TwoRate implements Algorithm {
             if (bpHalf.fitness >= problem.getFitness()) {
                 problem.applyPatch(bpHalf.patch, bpHalf.fitness);
             } else {
-                decreaseCount++;
-                decreaseCountInfo.add(problem.getFitness() + "," + mutationRate + "'" + (problem.getFitness() - bpHalf.fitness) + "," + (problem.getFitness() - bpMult.fitness));
+//                decreaseCount++;
+//                decreaseCountInfo.add(problem.getFitness() + "," + mutationRate + "'" + (problem.getFitness() - bpHalf.fitness) + "," + (problem.getFitness() - bpMult.fitness));
             }
             newMutationRate = mutationRate / 2;
         } else if (bpHalf.fitness < bpMult.fitness) {
             if (bpMult.fitness >= problem.getFitness()) {
                 problem.applyPatch(bpMult.patch, bpMult.fitness);
             } else {
-                increaseCount++;
+//                increaseCount++;
             }
             newMutationRate = mutationRate * 2;
         } else { // что если равны?
@@ -61,21 +61,21 @@ public class TwoRate implements Algorithm {
                 if (bpHalf.fitness >= problem.getFitness()) {
                     problem.applyPatch(bpHalf.patch, bpHalf.fitness);
                 } else {
-                    equalCount++;
+//                    equalCount++;
                 }
                 newMutationRate = mutationRate / 2;
             } else {
                 if (bpHalf.fitness >= problem.getFitness()) {
                     problem.applyPatch(bpMult.patch, bpMult.fitness);
                 } else {
-                    equalCount++;
+//                    equalCount++;
                 }
                 newMutationRate = mutationRate * 2;
             }
         }
         if (rand.nextBoolean()) { //вероятность не 0.5 а регулиировать в зависимости от разницы фитнеса в левой и правой.
             //посчитать среднее и дальше как по методу отжига
-            almostTheSame++;
+//            almostTheSame++;
             if (rand.nextBoolean()) {
                 mutationRate = mutationRate / 2;
             } else {
