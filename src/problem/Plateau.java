@@ -47,7 +47,7 @@ public class Plateau implements Problem {
             }
             individual[i] = !individual[i];
         }
-        System.out.println(onesCount + " " + fitness);
+//        System.out.println(onesCount + " " + fitness);
         this.fitness = fitness;
     }
 

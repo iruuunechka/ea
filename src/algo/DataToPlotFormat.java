@@ -11,8 +11,8 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class DataToPlotFormat {
-    private static Map<Integer, List<Integer>> readDataToMap (String file) throws FileNotFoundException {
-        Map<Integer, List<Integer>> data = new HashMap<>();
+    private static TreeMap<Integer, List<Integer>> readDataToMap (String file) throws FileNotFoundException {
+        TreeMap<Integer, List<Integer>> data = new TreeMap<>();
         Scanner sc = new Scanner(new File(file)).useDelimiter("\\D");
         sc.nextLine();
         while (sc.hasNextInt()) {
@@ -37,7 +37,7 @@ public class DataToPlotFormat {
         PrintWriter pw = new PrintWriter(out);
         pw.println("lambda, med, q1, q2, top, bottom");
         //List<Map<Integer, List<Integer>>> dataForFiles = new ArrayList<>();
-        Map<Integer, List<Integer>> data = readDataToMap(file);
+        TreeMap<Integer, List<Integer>> data = readDataToMap(file);
         for (int lambda : data.keySet()) {
             List<Integer> curData = data.get(lambda);
             Collections.sort(curData);
