@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class DataToRStats {
 
@@ -31,39 +32,45 @@ public class DataToRStats {
      * @param out
      * @throws IOException
      */
-    private static void compareFitnessByLambda(String[] files, String out) throws IOException {
+    private static void compareFitnessByLambda(Path[] files, String out) throws IOException {
         PrintWriter pw = new PrintWriter(out);
         //List<Map<Integer, List<Integer>>> dataForFiles = new ArrayList<>();
         Map<Integer, List<Integer>> data = null;
-        int fileNumber = 0;
-        for (String file : files) {
-            data = readDataToMap(file);
+        List<String> fileNames = new ArrayList<>();
+        for (Path file : files) {
+            data = readDataToMap(String.valueOf(file));
+            fileNames.add(file.subpath(file.getNameCount() - 1, file.getNameCount()).toString());
           //  dataForFiles.add(data);
             for (int lambda : data.keySet()) {
-                char algo = (char) ('a' + fileNumber);
-                pw.print(algo + "_" + lambda + " <- c(");
+
+//                char algo = (char) ('a' + fileNumber);
+//                pw.print(algo + "_" + lambda + " <- c(");
+                pw.println(fileNames.get(fileNames.size() - 1) + "_" + lambda + " <- c(");
+
                 for (int i = 0; i < data.get(lambda).size() - 1; ++i) {
                     pw.print(data.get(lambda).get(i) + ", ");
                 }
                 pw.println(data.get(lambda).get(data.get(lambda).size() - 1) + ")");
             }
 //            pw.flush();
-            fileNumber++;
+
         }
 
         for (int lambda : data.keySet()) {
-            for (int i = 0; i < fileNumber; ++i) {
-                for (int j = i + 1; j < fileNumber; ++j) {
-                    char algo1 = (char) ('a' + i);
-                    char algo2 = (char) ('a' + j);
-                    pw.println("wilcox.test(" + algo1 + "_" + lambda + ", " + algo2 + "_" + lambda + ", paired = FALSE)");
+            for (int i = 0; i < fileNames.size(); ++i) {
+                for (int j = i + 1; j < fileNames.size(); ++j) {
+//                    char algo1 = (char) ('a' + i);
+//                    char algo2 = (char) ('a' + j);
+//                    pw.println("wilcox.test(" + algo1 + "_" + lambda + ", " + algo2 + "_" + lambda + ", paired = FALSE)");
+                    pw.println("wilcox.test(" + fileNames.get(i) + "_" + lambda + ", " + fileNames.get(j) + "_" + lambda + ", paired = FALSE)");
+
                 }
             }
         }
         pw.close();
     }
     public static void main(String[] args) throws IOException {
-        String[] files = Files.list(Paths.get(args[0])).map(x -> String.valueOf(x)).toArray(String[]::new);
+        Path[] files = Files.list(Paths.get(args[0])).filter(Files::isRegularFile).toArray(Path[]::new);
         compareFitnessByLambda(files, args[0] + args[1]);
     }
 }
