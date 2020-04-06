@@ -462,73 +462,81 @@ public class Main {
 //        es.shutdown();
 
 //        Run twoRateNew on all problems
-        String folder = "TwoRateNew_" + n + "/";
+        String folder = "TwoRateNewStagnationVersion_" + n + "/";
         new File(folder).mkdir();
         ExecutorService es = Executors.newCachedThreadPool();
         Thread thread;
 
-//        thread = new Thread(() -> {
-//        try {
-//            runAlgo(folder + "twoRateNewOM.csv", lowerBoundTwoRate, getTwoRateNewOMImplementation());
-//        } catch (FileNotFoundException e) {
-//        }
-//        });
-//        es.execute(thread);
-//
-//        thread = new Thread(() -> {
-//        try {
-//            runAlgo(folder + "twoRateNewOMsq.csv", lowerBoundTwoRateSq, getTwoRateNewOMImplementation());
-//        } catch (FileNotFoundException e) {
-//        }
-//        });
-//        es.execute(thread);
-
-        int point = 3200;
         thread = new Thread(() -> {
         try {
-            runAlgoOnPoint(folder + "twoRateNewOMsq" + point + ".csv", getTwoRateNewOMImplementation().getInstance(point, lowerBoundTwoRateSq, n));
+            runAlgo(folder + "twoRateNewOM.csv", lowerBoundTwoRate, getTwoRateNewOMImplementation());
         } catch (FileNotFoundException e) {
         }
         });
         es.execute(thread);
 
+        thread = new Thread(() -> {
+        try {
+            runAlgo(folder + "twoRateNewOMsq.csv", lowerBoundTwoRateSq, getTwoRateNewOMImplementation());
+        } catch (FileNotFoundException e) {
+        }
+        });
+        es.execute(thread);
+
+//        int point = 3200;
 //        thread = new Thread(() -> {
 //        try {
-//            runAlgo(folder + "twoRateNewNeutral.csv", lowerBoundTwoRate, getTwoRateNewNeutralImplementation());
+//            runAlgoOnPoint(folder + "twoRateNewOMsq" + point + ".csv", getTwoRateNewOMImplementation().getInstance(point, lowerBoundTwoRateSq, n));
 //        } catch (FileNotFoundException e) {
 //        }
 //        });
 //        es.execute(thread);
 //
 //        thread = new Thread(() -> {
-//        try {
-//            runAlgo(folder + "twoRateNewNeutralsq.csv", lowerBoundTwoRateSq, getTwoRateNewNeutralImplementation());
-//        } catch (FileNotFoundException e) {
-//        }
+//            try {
+//                runAlgoOnPoint(folder + "twoRateNewOM" + point + ".csv", getTwoRateNewOMImplementation().getInstance(point, lowerBoundTwoRate, n));
+//            } catch (FileNotFoundException e) {
+//            }
 //        });
 //        es.execute(thread);
-//
-//        int[] articleRugs = {2, 10, 20};
-//        int budget = 1000;
-//        String folderRugs = folder + "/" + "RuggednessFixedBudget" + budget + "/";
-//        new File(folderRugs).mkdir();
-//        for (int r : articleRugs) {
-//            thread = new Thread(() -> {
-//                try {
-//                    runAlgoOnFixedBudget(folderRugs + "twoRateNewRuggedness" + r + ".csv", lowerBoundTwoRate, getTwoRateNewRugImplementation(r), budget);
-//                } catch (FileNotFoundException e) {
-//                }
-//            });
-//            es.execute(thread);
-//
-//            thread = new Thread(() -> {
-//                try {
-//                    runAlgoOnFixedBudget(folderRugs + "twoRateNewRuggedness" + r + "sq.csv", lowerBoundTwoRateSq, getTwoRateNewRugImplementation(r), budget);
-//                } catch (FileNotFoundException e) {
-//                }
-//            });
-//            es.execute(thread);
-//        }
+
+        thread = new Thread(() -> {
+        try {
+            runAlgo(folder + "twoRateNewNeutral.csv", lowerBoundTwoRate, getTwoRateNewNeutralImplementation());
+        } catch (FileNotFoundException e) {
+        }
+        });
+        es.execute(thread);
+
+        thread = new Thread(() -> {
+        try {
+            runAlgo(folder + "twoRateNewNeutralsq.csv", lowerBoundTwoRateSq, getTwoRateNewNeutralImplementation());
+        } catch (FileNotFoundException e) {
+        }
+        });
+        es.execute(thread);
+
+        int[] articleRugs = {2, 10, 20};
+        int budget = 1000;
+        String folderRugs = folder + "/" + "RuggednessFixedBudget" + budget + "/";
+        new File(folderRugs).mkdir();
+        for (int r : articleRugs) {
+            thread = new Thread(() -> {
+                try {
+                    runAlgoOnFixedBudget(folderRugs + "twoRateNewRuggedness" + r + ".csv", lowerBoundTwoRate, getTwoRateNewRugImplementation(r), budget);
+                } catch (FileNotFoundException e) {
+                }
+            });
+            es.execute(thread);
+
+            thread = new Thread(() -> {
+                try {
+                    runAlgoOnFixedBudget(folderRugs + "twoRateNewRuggedness" + r + "sq.csv", lowerBoundTwoRateSq, getTwoRateNewRugImplementation(r), budget);
+                } catch (FileNotFoundException e) {
+                }
+            });
+            es.execute(thread);
+        }
 
         es.shutdown();
 
@@ -593,9 +601,9 @@ public class Main {
                 while (!algo.isFinished()) {
                     algo.makeIteration();
 //                    algo.printInfo();
-                    curIterCount++;
+//                    curIterCount++;
                 }
-                pw.println(curIterCount + ", " + lambda);
+                pw.println(algo.getIterCount() + ", " + lambda);
 //                averageIterCount = (i == 0) ? curIterCount : (averageIterCount * i + curIterCount) / (i + 1);
                 System.out.println(filename + " " + lambda + " " + i);
             }
@@ -641,9 +649,9 @@ public class Main {
         int curIterCount = 0;
         while (!algo.isFinished()) {
             algo.makeIteration();
-            curIterCount++;
+//            curIterCount++;
 //            pw.println(algo.getFitness() + ", " + algo.getMutationRate()  + ", " + curIterCount + algo.getProblemInfo());
-            pw.println(algo.getFitness() + ", " + algo.getMutationRate()  + ", " + curIterCount);
+            pw.println(algo.getFitness() + ", " + algo.getMutationRate()  + ", " + algo.getIterCount());
 //            algo.printInfo();
         }
         pw.close();

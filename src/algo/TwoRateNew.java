@@ -1,12 +1,8 @@
 package algo;
 
 import problem.Problem;
-import utils.BestCalculatedPatchOneBitMarker;
-import utils.BestCalculatedPatchOneBitMarkerByPercentage;
 import utils.BestCalculatedPatchOneBitPercent;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class TwoRateNew implements Algorithm {
@@ -19,7 +15,11 @@ public class TwoRateNew implements Algorithm {
 
     private final Random rand;
 
+    private final int maxStagnation = 10;
+    private int curStagnation = 0;
+
     private int iterCount = 0;
+
 
     private String info = "";
     private boolean oneBit = false; //true if one random bit inverted in createPatch
@@ -40,6 +40,34 @@ public class TwoRateNew implements Algorithm {
         BestCalculatedPatchOneBitPercent bpMult = new BestCalculatedPatchOneBitPercent(mutationRate * 2, lambda / 2, problem, rand);
         double newMutationRate = mutationRate;
         info = "";
+        if (bpHalf.fitness > problem.getFitness() || bpMult.fitness > problem.getFitness()) {
+            curStagnation = 0;
+        } else {
+            curStagnation++;
+        }
+
+        if (curStagnation > maxStagnation) {
+            curStagnation = 0;
+            BestCalculatedPatchOneBitPercent bpHalfNew = new BestCalculatedPatchOneBitPercent(Math.max(mutationRate / 8, lowerBound), lambda / 2, problem, rand);
+            BestCalculatedPatchOneBitPercent bpMultNew = new BestCalculatedPatchOneBitPercent(Math.min(mutationRate * 8, 0.25), lambda / 2, problem, rand);
+            iterCount++;
+            if (Math.max(bpHalfNew.fitness, bpMultNew.fitness) > problem.getFitness()) {
+                if (bpHalfNew.fitness == bpMultNew.fitness) {
+                    double prob = rand.nextDouble();
+                    if (prob < 0.5) {
+                        mutationRate /= 8;
+                    } else {
+                        mutationRate *= 8;
+                    }
+                } else if (bpHalfNew.fitness > problem.getFitness()) {
+                    mutationRate /= 8;
+                } else if (bpMultNew.fitness > problem.getFitness()) {
+                    mutationRate *= 8;
+                }
+                mutationRate = Math.min(Math.max(lowerBound, mutationRate), 0.25);
+                return;
+            }
+        }
         if (bpHalf.fitness > bpMult.fitness) {
             if (bpHalf.fitness >= problem.getFitness()) {
                 problem.applyPatch(bpHalf.patch, bpHalf.fitness);

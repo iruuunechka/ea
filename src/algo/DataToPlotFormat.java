@@ -56,10 +56,10 @@ public class DataToPlotFormat {
         new File(args[0] + "_plots/").mkdir();
         files.forEach(x -> {
             try {
-                System.out.println((x.subpath(1, x.getNameCount() - 1)));
-                System.out.println(Paths.get(args[0] + "_plots/").resolve(x.subpath(1, x.getNameCount() - 1)));
-                Files.createDirectories(Paths.get(args[0] + "_plots/").resolve(x.subpath(1, x.getNameCount() - 1)));
-                createPlotFormat(String.valueOf(x),  args[0] + "_plots/" + String.valueOf(x.subpath(1, x.getNameCount())));
+                if (x.getNameCount() > 2) {
+                    Files.createDirectories(Paths.get(args[0] + "_plots/").resolve(x.subpath(1, x.getNameCount() - 1)));
+                }
+                createPlotFormat(String.valueOf(x), args[0] + "_plots/" + String.valueOf(x.subpath(1, x.getNameCount())));
             } catch (IOException e) {
                 e.printStackTrace();
             }
