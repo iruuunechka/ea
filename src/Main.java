@@ -229,7 +229,7 @@ public class Main {
 //
 //        ExecutorService es = Executors.newCachedThreadPool();
 //        Thread thread;
-//        String folder = "Article100runs10000_len_Rug_10000_iter/";
+//        String folder = "Article100runs10000lenSimple/";
 //        new File(folder).mkdir();
 
 //        String folderPlateau = folder + "Plateau/";
@@ -462,26 +462,26 @@ public class Main {
 //        es.shutdown();
 
 //        Run twoRateNew on all problems
-        String folder = "TwoRateNewStagnationVersion_" + n + "/";
-        new File(folder).mkdir();
-        ExecutorService es = Executors.newCachedThreadPool();
-        Thread thread;
-
-        thread = new Thread(() -> {
-        try {
-            runAlgo(folder + "twoRateNewOM.csv", lowerBoundTwoRate, getTwoRateNewOMImplementation());
-        } catch (FileNotFoundException e) {
-        }
-        });
-        es.execute(thread);
-
-        thread = new Thread(() -> {
-        try {
-            runAlgo(folder + "twoRateNewOMsq.csv", lowerBoundTwoRateSq, getTwoRateNewOMImplementation());
-        } catch (FileNotFoundException e) {
-        }
-        });
-        es.execute(thread);
+//        String folder = "TwoRateNewStagnationVersion_" + n + "/";
+//        new File(folder).mkdir();
+//        ExecutorService es = Executors.newCachedThreadPool();
+//        Thread thread;
+//
+//        thread = new Thread(() -> {
+//        try {
+//            runAlgo(folder + "twoRateNewOM.csv", lowerBoundTwoRate, getTwoRateNewOMImplementation());
+//        } catch (FileNotFoundException e) {
+//        }
+//        });
+//        es.execute(thread);
+//
+//        thread = new Thread(() -> {
+//        try {
+//            runAlgo(folder + "twoRateNewOMsq.csv", lowerBoundTwoRateSq, getTwoRateNewOMImplementation());
+//        } catch (FileNotFoundException e) {
+//        }
+//        });
+//        es.execute(thread);
 
 //        int point = 3200;
 //        thread = new Thread(() -> {
@@ -500,9 +500,70 @@ public class Main {
 //        });
 //        es.execute(thread);
 
+//        thread = new Thread(() -> {
+//        try {
+//            runAlgo(folder + "twoRateNewNeutral.csv", lowerBoundTwoRate, getTwoRateNewNeutralImplementation());
+//        } catch (FileNotFoundException e) {
+//        }
+//        });
+//        es.execute(thread);
+//
+//        thread = new Thread(() -> {
+//        try {
+//            runAlgo(folder + "twoRateNewNeutralsq.csv", lowerBoundTwoRateSq, getTwoRateNewNeutralImplementation());
+//        } catch (FileNotFoundException e) {
+//        }
+//        });
+//        es.execute(thread);
+//
+//        int[] articleRugs = {2, 10, 20};
+//        int budget = 1000;
+//        String folderRugs = folder + "/" + "RuggednessFixedBudget" + budget + "/";
+//        new File(folderRugs).mkdir();
+//        for (int r : articleRugs) {
+//            thread = new Thread(() -> {
+//                try {
+//                    runAlgoOnFixedBudget(folderRugs + "twoRateNewRuggedness" + r + ".csv", lowerBoundTwoRate, getTwoRateNewRugImplementation(r), budget);
+//                } catch (FileNotFoundException e) {
+//                }
+//            });
+//            es.execute(thread);
+//
+//            thread = new Thread(() -> {
+//                try {
+//                    runAlgoOnFixedBudget(folderRugs + "twoRateNewRuggedness" + r + "sq.csv", lowerBoundTwoRateSq, getTwoRateNewRugImplementation(r), budget);
+//                } catch (FileNotFoundException e) {
+//                }
+//            });
+//            es.execute(thread);
+//        }
+
+//        Run twoRateStagnationDetection on all problems
+        String folder = "TwoRateStagnationDetection_" + n + "/";
+        new File(folder).mkdir();
+        ExecutorService es = Executors.newCachedThreadPool();
+        Thread thread;
+
+//        int point = 3200;
+//        thread = new Thread(() -> {
+//            try {
+//                runAlgoOnPoint(folder + "twoRateStagDetectOMsq" + point + ".csv", getTwoRateStagDetectOMImplementation().getInstance(point, lowerBoundTwoRateSq, n));
+//            } catch (FileNotFoundException e) {
+//            }
+//        });
+//        es.execute(thread);
+//
+//        thread = new Thread(() -> {
+//            try {
+//                runAlgoOnPoint(folder + "twoRateStagDetectOM" + point + ".csv", getTwoRateStagDetectOMImplementation().getInstance(point, lowerBoundTwoRate, n));
+//            } catch (FileNotFoundException e) {
+//            }
+//        });
+//        es.execute(thread);
+
         thread = new Thread(() -> {
         try {
-            runAlgo(folder + "twoRateNewNeutral.csv", lowerBoundTwoRate, getTwoRateNewNeutralImplementation());
+            runAlgo(folder + "twoRateStagDetectOM.csv", lowerBoundTwoRate, getTwoRateStagDetectOMImplementation());
         } catch (FileNotFoundException e) {
         }
         });
@@ -510,7 +571,23 @@ public class Main {
 
         thread = new Thread(() -> {
         try {
-            runAlgo(folder + "twoRateNewNeutralsq.csv", lowerBoundTwoRateSq, getTwoRateNewNeutralImplementation());
+            runAlgo(folder + "twoRateStagDetectOMsq.csv", lowerBoundTwoRateSq, getTwoRateStagDetectOMImplementation());
+        } catch (FileNotFoundException e) {
+        }
+        });
+        es.execute(thread);
+
+        thread = new Thread(() -> {
+        try {
+            runAlgo(folder + "twoRateStagDetectNeutral.csv", lowerBoundTwoRate, getTwoRateStagDetectNeutralImplementation());
+        } catch (FileNotFoundException e) {
+        }
+        });
+        es.execute(thread);
+
+        thread = new Thread(() -> {
+        try {
+            runAlgo(folder + "twoRateStagDetectNeutralsq.csv", lowerBoundTwoRateSq, getTwoRateStagDetectNeutralImplementation());
         } catch (FileNotFoundException e) {
         }
         });
@@ -523,7 +600,7 @@ public class Main {
         for (int r : articleRugs) {
             thread = new Thread(() -> {
                 try {
-                    runAlgoOnFixedBudget(folderRugs + "twoRateNewRuggedness" + r + ".csv", lowerBoundTwoRate, getTwoRateNewRugImplementation(r), budget);
+                    runAlgoOnFixedBudget(folderRugs + "twoRateStagDetectRuggedness" + r + ".csv", lowerBoundTwoRate, getTwoRateStagDetectRugImplementation(r), budget);
                 } catch (FileNotFoundException e) {
                 }
             });
@@ -531,7 +608,7 @@ public class Main {
 
             thread = new Thread(() -> {
                 try {
-                    runAlgoOnFixedBudget(folderRugs + "twoRateNewRuggedness" + r + "sq.csv", lowerBoundTwoRateSq, getTwoRateNewRugImplementation(r), budget);
+                    runAlgoOnFixedBudget(folderRugs + "twoRateStagDetectRuggedness" + r + "sq.csv", lowerBoundTwoRateSq, getTwoRateStagDetectRugImplementation(r), budget);
                 } catch (FileNotFoundException e) {
                 }
             });
@@ -745,7 +822,7 @@ public class Main {
         return (lambda, lowerBound, problemLength) -> new TwoRateToExplore(2.0, lowerBound, lambda, new Plateau(problemLength, k));
     }
 
-    //Two Rate Exp
+    //Two Rate New (Stagnation experiments1)
     private static AlgoFactory getTwoRateNewOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateNew(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
@@ -764,6 +841,27 @@ public class Main {
 
     private static AlgoFactory getTwoRateNewPlateauImplementation(int k) {
         return (lambda, lowerBound, problemLength) -> new TwoRateNew(2.0, lowerBound, lambda, new Plateau(problemLength, k));
+    }
+
+    //Two Rate Stagnation Detection (ver.2)
+    private static AlgoFactory getTwoRateStagDetectOMImplementation() {
+        return (lambda, lowerBound, problemLength) -> new TwoRateStagnationDetection(2.0, lowerBound, lambda, new OneMax(problemLength));
+    }
+
+    private static AlgoFactory getTwoRateStagDetectLOImplementation() {
+        return (lambda, lowerBound, problemLength) -> new TwoRateStagnationDetection(2.0, lowerBound, lambda, new LeadingOnes(problemLength));
+    }
+
+    private static AlgoFactory getTwoRateStagDetectNeutralImplementation() {
+        return (lambda, lowerBound, problemLength) -> new TwoRateStagnationDetection(2.0, lowerBound, lambda, new OneMaxNeutral3(problemLength));
+    }
+
+    private static AlgoFactory getTwoRateStagDetectRugImplementation(int r) {
+        return (lambda, lowerBound, problemLength) -> new TwoRateStagnationDetection(2.0, lowerBound, lambda, new Ruggedness(problemLength, r));
+    }
+
+    private static AlgoFactory getTwoRateStagDetectPlateauImplementation(int k) {
+        return (lambda, lowerBound, problemLength) -> new TwoRateStagnationDetection(2.0, lowerBound, lambda, new Plateau(problemLength, k));
     }
 
     //Two Rate Adaptive
