@@ -2,13 +2,15 @@ package algo;
 
 import problem.Problem;
 import utils.BestCalculatedPatch;
-import utils.BestCalculatedPatchNoShift;
+import utils.BestCalculatedPatchNoShiftFitnessCount;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-public class TwoRateNoShift implements Algorithm{
+public class TwoRateNoShiftFitnessCount implements Algorithm {
     private double mutationRate;
-    private final double lowerBound;
+    private final double lowerBound; // 2.0 / problemLength or 2.0 / (problemLength^2)
     private final int lambda;
 
     private final Problem problem;
@@ -16,9 +18,11 @@ public class TwoRateNoShift implements Algorithm{
 
     private final Random rand;
 
+    private long fitnessCount = 0;
     private int iterCount = 0;
 
-    public TwoRateNoShift(double r, double lowerBound, int lambda, Problem problem) {
+
+    public TwoRateNoShiftFitnessCount(double r, double lowerBound, int lambda, Problem problem) {
         this.problem = problem;
         this.problemLength = problem.getLength();
         this.mutationRate = r / problemLength;
@@ -30,8 +34,9 @@ public class TwoRateNoShift implements Algorithm{
     @Override
     public void makeIteration() {
         iterCount++;
-        BestCalculatedPatchNoShift bpHalf = new BestCalculatedPatchNoShift(mutationRate / 2, lambda / 2, problem);
-        BestCalculatedPatchNoShift bpMult = new BestCalculatedPatchNoShift(mutationRate * 2, lambda / 2, problem);
+        BestCalculatedPatchNoShiftFitnessCount bpHalf = new BestCalculatedPatchNoShiftFitnessCount(mutationRate / 2, lambda / 2, problem, rand);
+        BestCalculatedPatchNoShiftFitnessCount bpMult = new BestCalculatedPatchNoShiftFitnessCount(mutationRate * 2, lambda / 2, problem, rand);
+        fitnessCount += bpHalf.fitnessCount + bpMult.fitnessCount;
         double newMutationRate = mutationRate;
         if (bpHalf.fitness > bpMult.fitness) {
             if (bpHalf.fitness >= problem.getFitness()) {
@@ -43,7 +48,7 @@ public class TwoRateNoShift implements Algorithm{
                 problem.applyPatch(bpMult.patch, bpMult.fitness);
             }
             newMutationRate = mutationRate * 2;
-        } else {
+        } else { // что если равны?
             if (rand.nextBoolean()) {
                 if (bpHalf.fitness >= problem.getFitness()) {
                     problem.applyPatch(bpHalf.patch, bpHalf.fitness);
@@ -76,7 +81,7 @@ public class TwoRateNoShift implements Algorithm{
 
     @Override
     public void printInfo() {
-        System.out.println(iterCount + " " + problem.getFitness() + " " + mutationRate);
+        System.out.println();
     }
 
     @Override
@@ -91,7 +96,7 @@ public class TwoRateNoShift implements Algorithm{
 
     @Override
     public long getFitnessCount() {
-        return iterCount * lambda;
+        return fitnessCount;
     }
 
     @Override
@@ -100,8 +105,7 @@ public class TwoRateNoShift implements Algorithm{
     }
 
     @Override
-    public String getProblemInfo() {
-        return problem.getInfo();
-    }
+    public String getProblemInfo() { return problem.getInfo();}
 
 }
+

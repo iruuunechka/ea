@@ -21,6 +21,17 @@ public class PatchCalcUtil {
 
     }
 
+    public static List<Integer> createPatchNoShift (double mutation, int problemLength) {
+        List<Integer> patch = new ArrayList<>(16);
+        int i = getNextIndex(-1, mutation);
+        while (i < problemLength) {
+            patch.add(i);
+            i = getNextIndex(i, mutation);
+        }
+        return patch;
+
+    }
+
     public static int getNextIndex(int curIndex, double mutation) {
         // casting the entire result to int correctly processes int overflows.
         return (int) (curIndex + 1 + Math.log(rand.nextDouble()) / Math.log(1.0 - mutation));
