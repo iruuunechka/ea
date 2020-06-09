@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class OneMaxNeutral3 implements Problem {
+public class Neutral3 implements Problem {
     private boolean[] individual;
     private int fitness;
     private boolean[] chunks;
@@ -13,7 +13,7 @@ public class OneMaxNeutral3 implements Problem {
     private int[] chunksCountByOnesNumber;
     private int tail;
 
-    public OneMaxNeutral3(int n) {
+    public Neutral3(int n) {
         individual = new boolean[n];
         Random rand = new Random();
         tail = n % 3;
