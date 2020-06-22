@@ -127,7 +127,7 @@ public class Main {
 //        System.out.println("Heavy Tail algo OneMax");
 //        runHeavyTailAlgo("heavyTail1.4.csv", beta, getHeavyTailOMImplementation());
 //
-//        n = 500;
+////        n = 500;
 //        for (int i : rugs) {
 //            System.out.println("Heavy Tail algo Ruggedness, r = " + i);
 //            runHeavyTailAlgo("heavyTailRug" + i + "_" + n +".csv", beta, getHeavyTailRugImplementation(i));
@@ -145,7 +145,7 @@ public class Main {
 //            runAlgo("simpleRug" + i + "_" + n +".csv", lowerBoundTwoRate, getSimpleEARugImplementation(i));
 //        }
 //
-//        n = 1000;
+////        n = 1000;
 //        System.out.println("Heavy Tail algo Ruggedness, r = 5");
 //        runHeavyTailAlgo("heavyTailRug5" + "_" + n +".csv", beta, getHeavyTailRugImplementation(5));
 //
@@ -175,7 +175,7 @@ public class Main {
 //
 //        System.out.println("Heavy Tail algo Neutral3");//tail = 2.5
 //        runHeavyTailAlgo("heavyTailNeutral.csv", beta, getHeavyTailNeutralImplementation());
-
+//
 //        //Run all on Neutral3 on 1600
 //        int lambda = 1600;
 //        System.out.println("Two Rate Neutral" + lambda);
@@ -188,7 +188,7 @@ public class Main {
 //        runAlgoOnPoint("twoRateExpNeutral" + lambda + "sq.csv", getTwoRateNeutralExpImplementation().getInstance(lambda, lowerBoundTwoRateSq, n));
 //        System.out.println("Heavy Tail Neutral" + lambda);
 //        runAlgoOnPoint("heavyTailNeutral" + lambda + ".csv", getHeavyTailNeutralImplementation().getInstance(lambda, beta, n));
-
+//
 //        //Run all on int[] lambdaOMPoints = new int[] {1, 2, 5, 10, 50, 100, 200, 400, 800};
 //        int[] lambdaOMPoints = new int[] {2, 5, 10, 50, 100, 200, 400, 800};
 //        int runCount = 5;
@@ -204,10 +204,10 @@ public class Main {
 //            System.out.println("Two Rate Exp sq OM " + lambda);
 //            runAlgoOnPointGradientPlot(folder + "twoRateExpsqOM_" + n + "_" + lambda + ".csv", getTwoRateOMExpImplementation(), lambda, lowerBoundTwoRateSq, runCount);
 //        }
-
-//        Run plateau
+//
+////        Run plateau
 //        runAlgo("tworatePlateau.csv", lowerBoundTwoRate, getTwoRatePlateauImplementation(2));
-        //Run Ruggedness on fixed budget
+////        Run Ruggedness on fixed budget
 //
 //        int budget = 3200 * 100;
 //        String folder = "RuggednessFixedBudget400_800_" + budget + "_" + n +"/";
@@ -218,7 +218,7 @@ public class Main {
 ////            System.out.println("Heavy Tail algo Ruggedness, r = " + r);
 ////            runHeavyTailAlgoOnFixedBudget(folderRug + "heavyTailRug" + r + "_" + n + "Av.csv", folderRug + "heavyTailRug" + r + "_" + n + ".csv", beta, getHeavyTailRugImplementation(r), budget);
 //            System.out.println("Two Rate algo Ruggedness, r = " + r);
-//            runAlgoOnFixedBudget(folderRug + "twoRateRug" + r + "_" + n + "Av.csv", folderRug + "twoRateRug" + r + "_" + n + ".csv", lowerBoundTwoRate, getTwoRateRugImplementation(r), budget);
+//            runAlgoOnFixedBudget(lambdas, runCount, n, folderRug + "twoRateRug" + r + "_" + n + "Av.csv", folderRug + "twoRateRug" + r + "_" + n + ".csv", lowerBoundTwoRate, getTwoRateRugImplementation(r), budget);
 //            System.out.println("Two Rate sq algo Ruggedness, r = " + r);
 //            runAlgoOnFixedBudget(folderRug + "twoRateSqRug" + r + "_" + n + "Av.csv", folderRug + "twoRateSqRug" + r + "_" + n + ".csv", lowerBoundTwoRateSq, getTwoRateRugImplementation(r), budget);
 //            System.out.println("Two Rate Exp algo Ruggedness, r = " + r);
@@ -226,14 +226,14 @@ public class Main {
 //            System.out.println("Two Rate Exp algo Ruggedness sq, r = " + r);
 //            runAlgoOnFixedBudget(folderRug + "twoRateExpSqRug" + r + "_" + n + "Av.csv", folderRug + "twoRateExpSqRug" + r + "_" + n + ".csv", lowerBoundTwoRateSq, getTwoRateExpRugImplementation(r), budget);
 //        }
-//
+
 //        Runs for article
 //
 //        ExecutorService es = Executors.newCachedThreadPool();
 //        Thread thread;
 //        String folder = "Article100runs10000lenSimple/";
 //        new File(folder).mkdir();
-
+//
 //        String folderPlateau = folder + "Plateau/";
 //        new File(folderPlateau).mkdir();
 //        int k = 2;
@@ -241,7 +241,7 @@ public class Main {
 //        thread = new Thread(() -> {
 //            try {
 ////                System.out.println("simpleAlgo Plateau");
-//                runAlgo(folderPlateau + "simplePlateau.csv", lowerBoundTwoRateSq, getSimpleEAPlateauImplementation(k));
+//                runAlgo(lambdas, runCount, n,folderPlateau + "simplePlateau.csv", lowerBoundTwoRateSq, getSimpleEAPlateauImplementation(k));
 //            } catch (FileNotFoundException e) {
 //            }
 //        });
@@ -249,7 +249,7 @@ public class Main {
 //        thread = new Thread(() -> {
 //            try {
 ////                System.out.println("two rate Plateau");
-//                runAlgo(folderPlateau + "tworatePlateau.csv", lowerBoundTwoRate, getTwoRatePlateauImplementation(k));
+//                runAlgo(lambdas, runCount, n,folderPlateau + "tworatePlateau.csv", lowerBoundTwoRate, getTwoRatePlateauImplementation(k));
 //            } catch (FileNotFoundException e) {
 //            }
 //        });
@@ -415,8 +415,8 @@ public class Main {
 //            es.execute(thread);
 //        }
 //        es.shutdown();
-
-//        Run all on int[] lambdaPoints
+//
+////        Run all on int[] lambdaPoints
 //        int[] lambdaOMPoints = new int[] {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144};
 //        String folder = "PlotsOMNoshiftGradient/";
 //        new File(folder).mkdir();
@@ -441,7 +441,7 @@ public class Main {
 //            }
 //            });
 //            es.execute(thread);
-
+//
 //            thread = new Thread(() -> {
 //            try {
 //                System.out.println("Two Rate Exp OM " + lambda);
@@ -461,8 +461,8 @@ public class Main {
 //            es.execute(thread);
 //        }
 //        es.shutdown();
-
-//        Run twoRateNew on all problems
+//
+////        Run twoRateNew on all problems
 //        String folder = "TwoRateNewStagnationVersion_" + n + "/";
 //        new File(folder).mkdir();
 //        ExecutorService es = Executors.newCachedThreadPool();
@@ -483,7 +483,7 @@ public class Main {
 //        }
 //        });
 //        es.execute(thread);
-
+//
 //        int point = 3200;
 //        thread = new Thread(() -> {
 //        try {
@@ -500,7 +500,7 @@ public class Main {
 //            }
 //        });
 //        es.execute(thread);
-
+//
 //        thread = new Thread(() -> {
 //        try {
 //            runAlgo(folder + "twoRateNewNeutral.csv", lowerBoundTwoRate, getTwoRateNewNeutralImplementation());
@@ -538,13 +538,13 @@ public class Main {
 //            });
 //            es.execute(thread);
 //        }
-
-//        Run twoRateStagnationDetection on all problems
+//
+////        Run twoRateStagnationDetection on all problems
 //        String folder = "TwoRateStagnationDetection_" + n + "/";
 //        new File(folder).mkdir();
 //        ExecutorService es = Executors.newCachedThreadPool();
 //        Thread thread;
-
+//
 //        int point = 3200;
 //        thread = new Thread(() -> {
 //            try {
@@ -561,7 +561,7 @@ public class Main {
 //            }
 //        });
 //        es.execute(thread);
-
+//
 //        thread = new Thread(() -> {
 //        try {
 //            runAlgo(folder + "twoRateStagDetectOM.csv", lowerBoundTwoRate, getTwoRateStagDetectOMImplementation());
@@ -617,14 +617,14 @@ public class Main {
 //        }
 //
 //        es.shutdown();
-
-
-//        Run twoRateNoShift on all problems
+//
+//
+////        Run twoRateNoShift on all problems
 //        String folder = "TwoRateNoShift_" + n + "/";
 //        new File(folder).mkdir();
 //        ExecutorService es = Executors.newCachedThreadPool();
 //        Thread thread;
-
+//
 //        int point = 3200;
 //        thread = new Thread(() -> {
 //            try {
@@ -641,7 +641,7 @@ public class Main {
 //            }
 //        });
 //        es.execute(thread);
-
+//
 //        thread = new Thread(() -> {
 //        try {
 //            runAlgo(folder + "twoRateNoShiftOM.csv", lowerBoundTwoRate, getTwoRateNoShiftOMImplementation());
@@ -701,40 +701,40 @@ public class Main {
         new File(folder).mkdir();
         ExecutorService es = Executors.newCachedThreadPool();
         Thread thread;
-//
-//        int point = 3200;
-//        thread = new Thread(() -> {
-//            try {
-//                runAlgoOnPoint(folder + "twoRateByFlipBitssq" + point + ".csv", getTwoRateByFlipBitsOMImplementation().getInstance(point, lowerBoundTwoRateByFlipBitsSq, n));
-//            } catch (FileNotFoundException e) {
-//            }
-//        });
-//        es.execute(thread);
-//
-//        thread = new Thread(() -> {
-//            try {
-//                runAlgoOnPoint(folder + "twoRateByFlipBitsOM" + point + ".csv", getTwoRateByFlipBitsOMImplementation().getInstance(point, lowerBoundTwoRateByFlipBits, n));
-//            } catch (FileNotFoundException e) {
-//            }
-//        });
-//        es.execute(thread);
-//
-//        thread = new Thread(() -> {
-//        try {
-//            runAlgo(folder + "twoRateByFlipBitsOM.csv", lowerBoundTwoRateByFlipBits, getTwoRateByFlipBitsOMImplementation());
-//        } catch (FileNotFoundException e) {
-//        }
-//        });
-//        es.execute(thread);
-//
-//        thread = new Thread(() -> {
-//        try {
-//            runAlgo(folder + "twoRateByFlipBitsOMsq.csv", lowerBoundTwoRateByFlipBitsSq, getTwoRateByFlipBitsOMImplementation());
-//        } catch (FileNotFoundException e) {
-//        }
-//        });
-//        es.execute(thread);
-//
+
+        int point = 3200;
+        thread = new Thread(() -> {
+            try {
+                runAlgoOnPoint(folder + "twoRateByFlipBitssq" + point + ".csv", getTwoRateByFlipBitsOMImplementation().getInstance(point, lowerBoundTwoRateByFlipBitsSq, n));
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+
+        thread = new Thread(() -> {
+            try {
+                runAlgoOnPoint(folder + "twoRateByFlipBitsOM" + point + ".csv", getTwoRateByFlipBitsOMImplementation().getInstance(point, lowerBoundTwoRateByFlipBits, n));
+            } catch (FileNotFoundException e) {
+            }
+        });
+        es.execute(thread);
+
+        thread = new Thread(() -> {
+        try {
+            runAlgo(folder + "twoRateByFlipBitsOM.csv", lowerBoundTwoRateByFlipBits, getTwoRateByFlipBitsOMImplementation());
+        } catch (FileNotFoundException e) {
+        }
+        });
+        es.execute(thread);
+
+        thread = new Thread(() -> {
+        try {
+            runAlgo(folder + "twoRateByFlipBitsOMsq.csv", lowerBoundTwoRateByFlipBitsSq, getTwoRateByFlipBitsOMImplementation());
+        } catch (FileNotFoundException e) {
+        }
+        });
+        es.execute(thread);
+
         thread = new Thread(() -> {
         try {
             runAlgo(folder + "twoRateByFlipBitsNeutral.csv", lowerBoundTwoRateByFlipBits, getTwoRateByFlipBitsNeutralImplementation());
@@ -751,7 +751,7 @@ public class Main {
         });
         es.execute(thread);
 
-        int[] articleRugs = {2, 10, 20};
+        int[] articleRugs = {20};
         int budget = 1000;
         String folderRugs = folder + "/" + "RuggednessFixedBudget" + budget + "/";
         new File(folderRugs).mkdir();
