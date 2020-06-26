@@ -5,11 +5,11 @@ import problem.Problem;
 import reinforcement.agent.Agent;
 import reinforcement.reward.Reward;
 import reinforcement.state.State;
-import reinforcement.utils.FastRandom;
 import utils.PatchCalcUtil;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class HQEA implements Algorithm {
 
@@ -41,7 +41,7 @@ public class HQEA implements Algorithm {
         this.lambda = lambda;
         this.problem = problem;
         this.problemLength = problem.getLength();
-        this.rand = FastRandom.threadLocal();
+        this.rand = ThreadLocalRandom.current();
         this.reward = reward;
         this.state = state;
         this.agent = agent;

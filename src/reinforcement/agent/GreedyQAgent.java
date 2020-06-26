@@ -1,11 +1,11 @@
 package reinforcement.agent;
 
-import reinforcement.utils.FastRandom;
 import reinforcement.utils.Map2;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GreedyQAgent implements Agent {
     private final Map2<Integer, Integer, Double> Q;
@@ -19,7 +19,7 @@ public class GreedyQAgent implements Agent {
         this.alpha = alpha;
         this.gamma = gamma;
         this.epsilon = epsilon;
-        rand = FastRandom.threadLocal();
+        rand = ThreadLocalRandom.current();
         Q = new Map2<>(0.0);
         actions = new ArrayList<>();
         for (int i = 0; i < actionsCount; ++i) {

@@ -2,6 +2,7 @@ package problem;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Ruggedness implements Problem {
     private boolean[] individual;
@@ -14,7 +15,7 @@ public class Ruggedness implements Problem {
     public Ruggedness(int n, int r) {
         individual = new boolean[n];
         length = n;
-        Random rand = new Random();
+        Random rand = ThreadLocalRandom.current();
         this.r = r;
         int om = 0;
         optimum = countFitness(n);

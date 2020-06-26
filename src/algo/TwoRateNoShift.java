@@ -5,6 +5,7 @@ import utils.BestCalculatedPatch;
 import utils.BestCalculatedPatchNoShift;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TwoRateNoShift implements Algorithm{
     private double mutationRate;
@@ -24,7 +25,7 @@ public class TwoRateNoShift implements Algorithm{
         this.mutationRate = r / problemLength;
         this.lowerBound = lowerBound;
         this.lambda = lambda;
-        rand = new Random();
+        rand = ThreadLocalRandom.current();
     }
 
     @Override

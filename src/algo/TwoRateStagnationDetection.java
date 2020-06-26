@@ -9,6 +9,7 @@ import utils.BestCalculatedPatchOneBitPercent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TwoRateStagnationDetection implements Algorithm{
     private double mutationRate;
@@ -35,7 +36,7 @@ public class TwoRateStagnationDetection implements Algorithm{
         this.mutationRate = r / problemLength;
         this.lowerBound = lowerBound;
         this.lambda = lambda;
-        rand = new Random();
+        rand = ThreadLocalRandom.current();
         maxStagnation = (int) Math.max(5, 60/(Math.log(lambda) / Math.log(2)));
     }
 

@@ -3,6 +3,7 @@ package problem;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class OneMax implements Problem {
     private boolean[] individual;
@@ -10,7 +11,7 @@ public class OneMax implements Problem {
 
     public OneMax(int n) {
         individual = new boolean[n];
-        Random rand = new Random();
+        Random rand = ThreadLocalRandom.current();
         fitness = 0;
         for (int i = 0; i < n; ++i) {
             individual[i] = rand.nextBoolean();

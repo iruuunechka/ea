@@ -6,6 +6,7 @@ import utils.BestCalculatedPatchMedAverage;
 import utils.PatchCalcUtil;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class AdaptiveTwoRate implements Algorithm{
 
@@ -35,7 +36,7 @@ public class AdaptiveTwoRate implements Algorithm{
         this.mutationRate = r / problemLength;
         this.lowerBound = lowerBound;
         this.lambda = lambda;
-        rand = new Random();
+        rand = ThreadLocalRandom.current();
         fitnessOfPatches = new int[lambda / 2];
     }
 

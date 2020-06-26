@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Neutral3 implements Problem {
     private boolean[] individual;
@@ -15,7 +16,7 @@ public class Neutral3 implements Problem {
 
     public Neutral3(int n) {
         individual = new boolean[n];
-        Random rand = new Random();
+        Random rand = ThreadLocalRandom.current();
         tail = n % 3;
         chunks = new boolean[n / 3 + (tail == 0 ? 0 : 1)];
         chunksCount = new int[n / 3 + (tail == 0 ? 0 : 1)];

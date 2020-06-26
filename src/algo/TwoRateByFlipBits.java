@@ -4,6 +4,7 @@ import problem.Problem;
 import utils.BestCalculatedPatch;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TwoRateByFlipBits implements Algorithm{
 
@@ -40,7 +41,7 @@ public class TwoRateByFlipBits implements Algorithm{
         this.precision = lowerBound;
         this.flipBits = 1.0 + Math.pow(1 - mutationRate, problemLength);
 
-        rand = new Random();
+        rand = ThreadLocalRandom.current();
     }
 
     private double calculateMutation(double expectedFlipBits) {

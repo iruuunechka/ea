@@ -4,6 +4,7 @@ import problem.Problem;
 import utils.BestCalculatedPatchOneBitPercent;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TwoRateNew implements Algorithm {
     private double mutationRate;
@@ -30,7 +31,7 @@ public class TwoRateNew implements Algorithm {
         this.mutationRate = r / problemLength;
         this.lowerBound = lowerBound;
         this.lambda = lambda;
-        rand = new Random();
+        rand = ThreadLocalRandom.current();
     }
 
     @Override

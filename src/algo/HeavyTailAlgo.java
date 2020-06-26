@@ -5,6 +5,7 @@ import problem.Problem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class HeavyTailAlgo implements Algorithm {
     private final double beta;
@@ -24,7 +25,7 @@ public class HeavyTailAlgo implements Algorithm {
         this.problemLength = problem.getLength();
         this.beta = beta;
         this.lambda = lambda;
-        rand = new Random();
+        rand = ThreadLocalRandom.current();
         probabilities = new double[problemLength];
         flipped = new boolean[problemLength];
         double sum = 0;

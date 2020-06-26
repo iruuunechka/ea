@@ -2,6 +2,7 @@ package problem;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Plateau implements Problem {
     private boolean[] individual;
@@ -11,7 +12,7 @@ public class Plateau implements Problem {
 
     public Plateau(int n, int k) {
         individual = new boolean[n];
-        Random rand = new Random();
+        Random rand = ThreadLocalRandom.current();
         onesCount = 0;
         this.k = k;
         for (int i = 0; i < n; ++i) {

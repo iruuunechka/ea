@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static utils.PatchCalcUtil.createPatch;
 
@@ -27,7 +28,7 @@ public class SimpleEA implements Algorithm {
         this.problemLength = problem.getLength();
         this.mutationRate = r / problemLength;
         this.lambda = lambda;
-        rand = new Random();
+        rand = ThreadLocalRandom.current();
     }
 
     @Override

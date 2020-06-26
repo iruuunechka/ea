@@ -1,6 +1,7 @@
 package reinforcement.utils;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -100,7 +101,7 @@ public final class Map2<K1, K2, V extends Comparable<? super V>> {
                 candidates.add(k2);
             }
         }
-        Random r = FastRandom.threadLocal();
+        Random r = ThreadLocalRandom.current();
         if (candidates.isEmpty()) {
             throw new AssertionError("Should not happen ever");
         }
