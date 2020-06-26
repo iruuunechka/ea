@@ -1,4 +1,4 @@
-package reinforcement;
+package reinforcement.agent;
 
 import reinforcement.utils.FastRandom;
 import reinforcement.utils.Map2;
@@ -39,7 +39,11 @@ public class GreedyQAgent implements Agent {
         if (rand.nextDouble() < epsilon) {
             return actions.get(rand.nextInt(actions.size()));
         } else {
-            return Q.argMax(state, actions);
+            if (Q.get(state, 0).equals(Q.get(state, 1))) {
+                return -1;
+            } else {
+                return Q.argMax(state, actions);
+            }
         }
     }
 }

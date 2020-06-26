@@ -1,4 +1,4 @@
-package runners;
+package runners.newRunner;
 
 import algo.AlgoFactory;
 

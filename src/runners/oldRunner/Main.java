@@ -1,3 +1,5 @@
+package runners.oldRunner;
+
 import algo.*;
 import problem.*;
 
@@ -777,7 +779,7 @@ public class Main {
 
     }
 
-    private static void runHeavyTailAlgo(String filename, double beta, HeavyTailAlgoFactory factory) throws FileNotFoundException {
+    private static void runHeavyTailAlgo(String filename, double beta, HeavyTailAlgoFactoryOld factory) throws FileNotFoundException {
         PrintWriter pw = new PrintWriter(filename);
         pw.println("gen, lambda");
         for (int lambda : lambdas) {
@@ -797,7 +799,7 @@ public class Main {
         pw.close();
     }
 
-    private static void runHeavyTailAlgoOnFixedBudget(String filenameAveraged, String filenameNotAveraged, double beta, HeavyTailAlgoFactory factory, int budget) throws FileNotFoundException {
+    private static void runHeavyTailAlgoOnFixedBudget(String filenameAveraged, String filenameNotAveraged, double beta, HeavyTailAlgoFactoryOld factory, int budget) throws FileNotFoundException {
         PrintWriter pwAveraged = new PrintWriter(filenameAveraged);
         pwAveraged.println("fitness, lambda");
         PrintWriter pwNotAveraged = new PrintWriter(filenameNotAveraged);
@@ -824,7 +826,7 @@ public class Main {
         pwNotAveraged.close();
     }
 
-    private static void runAlgo(String filename, double lowerBound, AlgoFactory factory) throws FileNotFoundException {
+    private static void runAlgo(String filename, double lowerBound, AlgoFactoryOld factory) throws FileNotFoundException {
         PrintWriter pw = new PrintWriter(filename);
         pw.println("gen, lambda");
         for (int lambda : lambdas) {
@@ -848,7 +850,7 @@ public class Main {
         pw.close();
     }
 
-    private static void runAlgoOnFixedBudget(String filenameNotAveraged, double lowerBound, AlgoFactory factory, int budget) throws FileNotFoundException {
+    private static void runAlgoOnFixedBudget(String filenameNotAveraged, double lowerBound, AlgoFactoryOld factory, int budget) throws FileNotFoundException {
 //        PrintWriter pwAveraged = new PrintWriter(filenameAveraged);
 //        pwAveraged.println("fitness, lambda");
         PrintWriter pw = new PrintWriter(filenameNotAveraged);
@@ -892,7 +894,7 @@ public class Main {
         pw.close();
     }
 
-    private static void runAlgoOnPointGradientPlot(String filename, AlgoFactory factory, int lambda, double lowerBound) throws FileNotFoundException {
+    private static void runAlgoOnPointGradientPlot(String filename, AlgoFactoryOld factory, int lambda, double lowerBound) throws FileNotFoundException {
         PrintWriter pw = new PrintWriter(filename);
 //        pw.println("fitness, mutation, iter, zero, one, two, three");
         for (int i = 0; i < runCount; i++) {
@@ -921,7 +923,7 @@ public class Main {
 
 
 
-    private static void runAlgoByFitnessCount(String filename, double lowerBound, AlgoFactory factory) throws FileNotFoundException {
+    private static void runAlgoByFitnessCount(String filename, double lowerBound, AlgoFactoryOld factory) throws FileNotFoundException {
         PrintWriter pw = new PrintWriter(filename);
         pw.println("fitCou, lambda, iter");
         for (int lambda : lambdas) {
@@ -943,194 +945,194 @@ public class Main {
     }
 
     //Two Rate
-    private static AlgoFactory getTwoRateOMImplementation() {
+    private static AlgoFactoryOld getTwoRateOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static AlgoFactory getTwoRateLOImplementation() {
+    private static AlgoFactoryOld getTwoRateLOImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new LeadingOnes(problemLength));
     }
 
-    private static AlgoFactory getTwoRateNeutralImplementation() {
+    private static AlgoFactoryOld getTwoRateNeutralImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new Neutral3(problemLength));
     }
 
-    private static AlgoFactory getTwoRateRugImplementation(int r) {
+    private static AlgoFactoryOld getTwoRateRugImplementation(int r) {
         return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new Ruggedness(problemLength, r));
     }
 
-    private static AlgoFactory getTwoRatePlateauImplementation(int k) {
+    private static AlgoFactoryOld getTwoRatePlateauImplementation(int k) {
         return (lambda, lowerBound, problemLength) -> new TwoRate(2.0, lowerBound, lambda, new Plateau(problemLength, k));
     }
 
     //Two Rate No Shift Doerr
-    private static AlgoFactory getTwoRateOMNoShiftImplementation() {
+    private static AlgoFactoryOld getTwoRateOMNoShiftImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateNoShiftFitnessCount(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
     //Two Rate Exp
-    private static AlgoFactory getTwoRateOMExpImplementation() {
+    private static AlgoFactoryOld getTwoRateOMExpImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateToExplore(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static AlgoFactory getTwoRateLOExpImplementation() {
+    private static AlgoFactoryOld getTwoRateLOExpImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateToExplore(2.0, lowerBound, lambda, new LeadingOnes(problemLength));
     }
 
-    private static AlgoFactory getTwoRateNeutralExpImplementation() {
+    private static AlgoFactoryOld getTwoRateNeutralExpImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateToExplore(2.0, lowerBound, lambda, new Neutral3(problemLength));
     }
 
-    private static AlgoFactory getTwoRateExpRugImplementation(int r) {
+    private static AlgoFactoryOld getTwoRateExpRugImplementation(int r) {
         return (lambda, lowerBound, problemLength) -> new TwoRateToExplore(2.0, lowerBound, lambda, new Ruggedness(problemLength, r));
     }
 
-    private static AlgoFactory getTwoRateExpPlateauImplementation(int k) {
+    private static AlgoFactoryOld getTwoRateExpPlateauImplementation(int k) {
         return (lambda, lowerBound, problemLength) -> new TwoRateToExplore(2.0, lowerBound, lambda, new Plateau(problemLength, k));
     }
 
     //Two Rate NoShift
-    private static AlgoFactory getTwoRateNoShiftOMImplementation() {
+    private static AlgoFactoryOld getTwoRateNoShiftOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateNoShift(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static AlgoFactory getTwoRateNoShiftLOImplementation() {
+    private static AlgoFactoryOld getTwoRateNoShiftLOImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateNoShift(2.0, lowerBound, lambda, new LeadingOnes(problemLength));
     }
 
-    private static AlgoFactory getTwoRateNoShiftNeutralImplementation() {
+    private static AlgoFactoryOld getTwoRateNoShiftNeutralImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateNoShift(2.0, lowerBound, lambda, new Neutral3(problemLength));
     }
 
-    private static AlgoFactory getTwoRateNoShiftRugImplementation(int r) {
+    private static AlgoFactoryOld getTwoRateNoShiftRugImplementation(int r) {
         return (lambda, lowerBound, problemLength) -> new TwoRateNoShift(2.0, lowerBound, lambda, new Ruggedness(problemLength, r));
     }
 
-    private static AlgoFactory getTwoRateNoShiftPlateauImplementation(int k) {
+    private static AlgoFactoryOld getTwoRateNoShiftPlateauImplementation(int k) {
         return (lambda, lowerBound, problemLength) -> new TwoRateNoShift(2.0, lowerBound, lambda, new Plateau(problemLength, k));
     }
 
     //Two Rate New (Stagnation experiments1)
-    private static AlgoFactory getTwoRateNewOMImplementation() {
+    private static AlgoFactoryOld getTwoRateNewOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateNew(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static AlgoFactory getTwoRateNewLOImplementation() {
+    private static AlgoFactoryOld getTwoRateNewLOImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateNew(2.0, lowerBound, lambda, new LeadingOnes(problemLength));
     }
 
-    private static AlgoFactory getTwoRateNewNeutralImplementation() {
+    private static AlgoFactoryOld getTwoRateNewNeutralImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateNew(2.0, lowerBound, lambda, new Neutral3(problemLength));
     }
 
-    private static AlgoFactory getTwoRateNewRugImplementation(int r) {
+    private static AlgoFactoryOld getTwoRateNewRugImplementation(int r) {
         return (lambda, lowerBound, problemLength) -> new TwoRateNew(2.0, lowerBound, lambda, new Ruggedness(problemLength, r));
     }
 
-    private static AlgoFactory getTwoRateNewPlateauImplementation(int k) {
+    private static AlgoFactoryOld getTwoRateNewPlateauImplementation(int k) {
         return (lambda, lowerBound, problemLength) -> new TwoRateNew(2.0, lowerBound, lambda, new Plateau(problemLength, k));
     }
 
     //Two Rate Stagnation Detection (ver.2)
-    private static AlgoFactory getTwoRateStagDetectOMImplementation() {
+    private static AlgoFactoryOld getTwoRateStagDetectOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateStagnationDetection(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static AlgoFactory getTwoRateStagDetectLOImplementation() {
+    private static AlgoFactoryOld getTwoRateStagDetectLOImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateStagnationDetection(2.0, lowerBound, lambda, new LeadingOnes(problemLength));
     }
 
-    private static AlgoFactory getTwoRateStagDetectNeutralImplementation() {
+    private static AlgoFactoryOld getTwoRateStagDetectNeutralImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateStagnationDetection(2.0, lowerBound, lambda, new Neutral3(problemLength));
     }
 
-    private static AlgoFactory getTwoRateStagDetectRugImplementation(int r) {
+    private static AlgoFactoryOld getTwoRateStagDetectRugImplementation(int r) {
         return (lambda, lowerBound, problemLength) -> new TwoRateStagnationDetection(2.0, lowerBound, lambda, new Ruggedness(problemLength, r));
     }
 
-    private static AlgoFactory getTwoRateStagDetectPlateauImplementation(int k) {
+    private static AlgoFactoryOld getTwoRateStagDetectPlateauImplementation(int k) {
         return (lambda, lowerBound, problemLength) -> new TwoRateStagnationDetection(2.0, lowerBound, lambda, new Plateau(problemLength, k));
     }
 
     //Two Rate Adaptive
-    private static AlgoFactory getAdaptiveTwoRateOMImplementation() {
+    private static AlgoFactoryOld getAdaptiveTwoRateOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new AdaptiveTwoRate(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static AlgoFactory getAdaptiveDivTwoRateOMImplementation() {
+    private static AlgoFactoryOld getAdaptiveDivTwoRateOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new AdaptiveDivTwoRate(2.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
     //Two Rate Square Start
-    private static AlgoFactory getTwoRateOMSQImplementation() {
+    private static AlgoFactoryOld getTwoRateOMSQImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRate(2.0 / n, lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static AlgoFactory getAdaptiveTwoRateOMSQImplementation() {
+    private static AlgoFactoryOld getAdaptiveTwoRateOMSQImplementation() {
         return (lambda, lowerBound, problemLength) -> new AdaptiveTwoRate(2.0 / n, lowerBound, lambda, new OneMax(problemLength));
     }
 
     //AB
-    private static AlgoFactory getABExpOMImplementation() {
+    private static AlgoFactoryOld getABExpOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new ABalgoToExplore(1.0 / n, 2, 0.5, lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static AlgoFactory getABOMImplementation() {
+    private static AlgoFactoryOld getABOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new ABalgo(1.0 / n, 2, 0.5, lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static AlgoFactory getABSQOMImplementation() {
+    private static AlgoFactoryOld getABSQOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new ABalgo(1.0 / (n * n), 2, 0.5, lowerBound, lambda, new OneMax(problemLength));
     }
 
     //Simple
-    private static AlgoFactory getSimpleEAOMImplementation() {
+    private static AlgoFactoryOld getSimpleEAOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static AlgoFactory getSimpleEAPlateauImplementation(int k) {
+    private static AlgoFactoryOld getSimpleEAPlateauImplementation(int k) {
         return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new Plateau(problemLength, k));
     }
 
-    private static AlgoFactory getSimpleEANeutralImplementation() {
+    private static AlgoFactoryOld getSimpleEANeutralImplementation() {
         return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new Neutral3(problemLength));
     }
 
-    private static AlgoFactory getSimpleEARugImplementation(int r) {
+    private static AlgoFactoryOld getSimpleEARugImplementation(int r) {
         return (lambda, lowerBound, problemLength) -> new SimpleEA(1.0, lowerBound, lambda, new Ruggedness(problemLength, r));
     }
 
     //Heavy Tail
-    private static HeavyTailAlgoFactory getHeavyTailOMImplementation() {
+    private static HeavyTailAlgoFactoryOld getHeavyTailOMImplementation() {
         return ((lambda, beta, problemLength) -> new HeavyTailAlgo(beta, lambda, new OneMax(problemLength)));
     }
 
-    private static HeavyTailAlgoFactory getHeavyTailLOImplementation() {
+    private static HeavyTailAlgoFactoryOld getHeavyTailLOImplementation() {
         return ((lambda, beta, problemLength) -> new HeavyTailAlgo(beta, lambda, new LeadingOnes(problemLength)));
     }
 
-    private static HeavyTailAlgoFactory getHeavyTailRugImplementation(int r) {
+    private static HeavyTailAlgoFactoryOld getHeavyTailRugImplementation(int r) {
         return ((lambda, beta, problemLength) -> new HeavyTailAlgo(beta, lambda, new Ruggedness(problemLength, r)));
     }
 
-    private static HeavyTailAlgoFactory getHeavyTailNeutralImplementation() {
+    private static HeavyTailAlgoFactoryOld getHeavyTailNeutralImplementation() {
         return ((lambda, beta, problemLength) -> new HeavyTailAlgo(beta, lambda, new Neutral3(problemLength)));
     }
 
     //TwoRateByFlipBits
-    private static AlgoFactory getTwoRateByFlipBitsOMImplementation() {
+    private static AlgoFactoryOld getTwoRateByFlipBitsOMImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateByFlipBits(lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static AlgoFactory getTwoRateByFlipBitsLOImplementation() {
+    private static AlgoFactoryOld getTwoRateByFlipBitsLOImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateByFlipBits(lowerBound, lambda, new LeadingOnes(problemLength));
     }
 
-    private static AlgoFactory getTwoRateByFlipBitsNeutralImplementation() {
+    private static AlgoFactoryOld getTwoRateByFlipBitsNeutralImplementation() {
         return (lambda, lowerBound, problemLength) -> new TwoRateByFlipBits(lowerBound, lambda, new Neutral3(problemLength));
     }
 
-    private static AlgoFactory getTwoRateByFlipBitsRugImplementation(int r) {
+    private static AlgoFactoryOld getTwoRateByFlipBitsRugImplementation(int r) {
         return (lambda, lowerBound, problemLength) -> new TwoRateByFlipBits(lowerBound, lambda, new Ruggedness(problemLength, r));
     }
 }

@@ -2,19 +2,23 @@ package reinforcement;
 
 import algo.Algorithm;
 import problem.Problem;
+import reinforcement.agent.Agent;
+import reinforcement.reward.Reward;
+import reinforcement.state.State;
 import reinforcement.utils.FastRandom;
 import utils.PatchCalcUtil;
 
 import java.util.List;
 import java.util.Random;
 
-public class QEA implements Algorithm {
+public class HQEA implements Algorithm {
 
     private double mutationRate;
     private final double a; //a = 2
     private final double b; //b = 0.5
     private final double lowerBound; // 1 / problemLength or 1 / (problemLength^2)
     private final int lambda;
+    private final boolean strict;
 
     private final Problem problem;
     private final int problemLength;
@@ -29,7 +33,7 @@ public class QEA implements Algorithm {
     private int curState = -1;
     private int curAction = -1;
 
-    public QEA(double mutationRate, double a, double b, double lowerBound, int lambda, Problem problem, Reward reward, State state, Agent agent) {
+    public HQEA(double mutationRate, double a, double b, boolean strict, double lowerBound, int lambda, Problem problem, Reward reward, State state, Agent agent) {
         this.mutationRate = mutationRate;
         this.a = a;
         this.b = b;
@@ -41,6 +45,7 @@ public class QEA implements Algorithm {
         this.reward = reward;
         this.state = state;
         this.agent = agent;
+        this.strict = strict;
     }
 
     @Override
@@ -51,18 +56,16 @@ public class QEA implements Algorithm {
         for (int i = 0; i < lambda; ++i) {
             List<Integer> patch = PatchCalcUtil.createPatch(mutationRate, problemLength);
             int fitness = problem.calculatePatchFitness(patch);
-            if (fitness >= problem.getFitness()) {
+            if (strict ? fitness > problem.getFitness() : fitness >= problem.getFitness()) {
                 numberOfBetter++;
             }
-            if (fitness > bestFitness) {
+
+            if (fitness >= bestFitness) {
                 bestFitness = fitness;
                 bestPatch = patch;
             }
         }
         double newReward = reward.calculate(bestFitness, problem.getFitness());
-        if (bestFitness >= problem.getFitness()) {
-            problem.applyPatch(bestPatch, bestFitness);
-        }
         int newState = state.calculate(numberOfBetter);
 
         if (iterCount != 0) {
@@ -70,6 +73,16 @@ public class QEA implements Algorithm {
         }
         curState = newState;
         curAction = agent.chooseAction(curState);
+        if (curAction == -1) {
+            if (strict ? (bestFitness > problem.getFitness()) : (bestFitness >= problem.getFitness()) ) {
+                curAction = 0;
+            } else {
+                curAction = 1;
+            }
+        }
+        if (bestFitness >= problem.getFitness()) {
+            problem.applyPatch(bestPatch, bestFitness);
+        }
         if (curAction == 0) {
             mutationRate = Math.min(0.5, a * mutationRate);
         } else {

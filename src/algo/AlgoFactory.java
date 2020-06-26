@@ -1,7 +1,7 @@
 package algo;
 
-import problem.Problem;
+import runners.newRunner.parameterSets.ParameterSet;
 
-public interface AlgoFactory {
-    Algorithm getInstance (int lambda, double lowerBound, int problemLength);
+public interface AlgoFactory<P extends ParameterSet> {
+    Algorithm getInstance (P ps);
 }

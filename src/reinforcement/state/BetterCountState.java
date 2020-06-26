@@ -1,4 +1,4 @@
-package reinforcement;
+package reinforcement.state;
 
 public class BetterCountState implements State{
 

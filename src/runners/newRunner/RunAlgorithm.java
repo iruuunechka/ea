@@ -1,7 +1,10 @@
-package runners;
+package runners.newRunner;
 
 import algo.AlgoFactory;
 import algo.Algorithm;
+import runners.newRunner.parameterSets.ABLearningParameterSet;
+import runners.newRunner.parameterSets.BoundedParameterSet;
+import runners.newRunner.parameterSets.HeavyTailParameterSet;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,14 +13,14 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static runners.Params.*;
+import static runners.newRunner.Params.*;
 
 
-public class RunUtils {
+public class RunAlgorithm {
 
     public static void main(String[] args) throws FileNotFoundException {
         ExecutorService es = Executors.newCachedThreadPool();
-        String mainFolder = "TestNewRunner/";
+        String mainFolder = "HQEA" + n + "_" + runCount + "/";
         new File(mainFolder).mkdir();
 //        Example:
 //        runAlgo(es, mainFolder, runByOptimum());
@@ -25,6 +28,7 @@ public class RunUtils {
 //        Problems.LO.used = false;
 //        Problems.RUG.used = true;
 //        runAlgo(es, mainFolder, runOnFixedBudget());
+        runAlgo(es, mainFolder, runLearningByOptimum());
         es.shutdown();
     }
 
@@ -133,7 +137,7 @@ public class RunUtils {
             for (int lambda : Params.lambdas) {
                 System.out.println(filename + " " + lambda + " " + lowerBound);
                 for (int i = 0; i < Params.runCount; i++) {
-                    Algorithm algo = factory.getInstance(lambda, lowerBound, n);
+                    Algorithm algo = factory.getInstance(new BoundedParameterSet(lambda, lowerBound, n));
                     while (!algo.isFinished()) {
                         algo.makeIteration();
 //                    algo.printInfo();
@@ -144,6 +148,45 @@ public class RunUtils {
                 pw.flush();
             }
             pw.close();
+        };
+    }
+
+    public static Runner runLearningByOptimum() throws FileNotFoundException {
+        return (filename, lowerBound, factory) -> {
+            for (double alpha : Params.alphas) {
+                for (double gamma : Params.gammas) {
+                    for (double epsilon : Params.epsilon) {
+                        for (double a : Params.a){
+                            for (double b : Params.b) {
+                                for (boolean strict : Params.strict) {
+                                    String filenameNew;
+                                    if (filename.contains("sq")) {
+                                        filenameNew = filename.substring(0, filename.length() - 6) + (strict ? "strict" : "") + "_" + alpha + "_" + gamma + "_" + epsilon + "_" + a + "_" + b + filename.substring(filename.length() - 6);
+                                    } else {
+                                        filenameNew = filename.substring(0, filename.length() - 4) + (strict ? "strict" : "") + "_" + alpha + "_" + gamma + "_" + epsilon + "_" + a + "_" + b + filename.substring(filename.length() - 4);
+                                    }
+                                    PrintWriter pw = new PrintWriter(filenameNew);
+                                    pw.println("gen, lambda");
+                                    for (int lambda : Params.lambdas) {
+                                        System.out.println(filenameNew + " " + lambda + " " + lowerBound);
+                                        for (int i = 0; i < Params.runCount; i++) {
+                                            Algorithm algo = factory.getInstance(new ABLearningParameterSet(lambda, lowerBound, n, a, b, strict, alpha, gamma, epsilon));
+                                            while (!algo.isFinished()) {
+                                                algo.makeIteration();
+                                                //                                algo.printInfo();
+                                            }
+                                            pw.println(algo.getIterCount() + ", " + lambda);
+                                            System.out.println(filename + " " + lambda + " " + i);
+                                        }
+                                        pw.flush();
+                                    }
+                                    pw.close();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         };
     }
 
@@ -158,7 +201,7 @@ public class RunUtils {
                 int iterCount = Params.budget;
                 for (int i = 0; i < Params.runCount; i++) {
                     int curIterCount = 0;
-                    Algorithm algo = factory.getInstance(lambda, lowerBound, n);
+                    Algorithm algo = factory.getInstance(new BoundedParameterSet(lambda, lowerBound, n));
                     while (curIterCount < iterCount) {
                         algo.makeIteration();
 //                    algo.printInfo();
@@ -187,7 +230,7 @@ public class RunUtils {
 //        pw.println("fitness, mutation, iter, zero, one, two, three");
                 pw.println("fitness, mutation, iter");
 //                int curIterCount = 0;
-                Algorithm algo = factory.getInstance(lambda, lowerBound, n);
+                Algorithm algo = factory.getInstance(new BoundedParameterSet(lambda, lowerBound, n));
                 while (!algo.isFinished()) {
                     algo.makeIteration();
 //            curIterCount++;
@@ -215,7 +258,7 @@ public class RunUtils {
 //                    int curIterCount = 0;
                     pw.println("\\addplot coordinates {");
                     Map<Integer, List<Double>> vals = new TreeMap<>();
-                    Algorithm algo = factory.getInstance(lambda, lowerBound, n);
+                    Algorithm algo = factory.getInstance(new BoundedParameterSet(lambda, lowerBound, n));
                     while (!algo.isFinished()) {
                         algo.makeIteration();
 //                        curIterCount++;
@@ -247,7 +290,7 @@ public class RunUtils {
                 double averageFitCou = 0;
                 double averageIterCou = 0;
                 for (int i = 0; i < Params.runCount; i++) {
-                    Algorithm algo = factory.getInstance(lambda, lowerBound, n);
+                    Algorithm algo = factory.getInstance(new BoundedParameterSet(lambda, lowerBound, n));
                     while (!algo.isFinished()) {
                         algo.makeIteration();
                     }
@@ -268,7 +311,7 @@ public class RunUtils {
             for (int lambda : Params.lambdas) {
                 System.out.println(lambda + " " + beta);
                 for (int i = 0; i < Params.runCount; i++) {
-                    Algorithm algo = factory.getInstance(lambda, beta, n);
+                    Algorithm algo = factory.getInstance(new HeavyTailParameterSet(lambda, n, beta));
                     while (!algo.isFinished()) {
                         algo.makeIteration();
 //                    algo.printInfo();
@@ -290,7 +333,7 @@ public class RunUtils {
                 int iterCount = Params.budget / lambda;
                 for (int i = 0; i < Params.runCount; i++) {
                     int curIterCount = 0;
-                    Algorithm algo = factory.getInstance(lambda, beta, n);
+                    Algorithm algo = factory.getInstance(new HeavyTailParameterSet(lambda, n, beta));
                     while (curIterCount < iterCount) {
                         algo.makeIteration();
 //                    algo.printInfo();

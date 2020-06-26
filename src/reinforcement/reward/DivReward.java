@@ -1,4 +1,4 @@
-package reinforcement;
+package reinforcement.reward;
 
 public class DivReward implements Reward {
     @Override
