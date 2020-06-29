@@ -20,7 +20,7 @@ public class RunAlgorithm {
 
     public static void main(String[] args) throws FileNotFoundException {
         ExecutorService es = Executors.newCachedThreadPool();
-        String mainFolder = "HQEA" + n + "_" + runCount + "/";
+        String mainFolder = "AbBasic" + n + "_" + runCount + "/";
         new File(mainFolder).mkdir();
 //        Example:
 //        runAlgo(es, mainFolder, runByOptimum());
@@ -28,7 +28,8 @@ public class RunAlgorithm {
 //        Problems.LO.used = false;
 //        Problems.RUG.used = true;
 //        runAlgo(es, mainFolder, runOnFixedBudget());
-        runAlgo(es, mainFolder, runLearningByOptimum());
+//        runAlgo(es, mainFolder, runLearningByOptimum());
+        runAlgo(es, mainFolder, runByOptimum());
         es.shutdown();
     }
 

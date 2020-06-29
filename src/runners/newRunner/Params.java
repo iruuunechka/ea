@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 public class Params {
     public static final int n = 10000;
-    public static final int[] lambdas = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};
+    public static final int[] lambdas = {2, 4, 8, 16, 32, 64, 128, 256};//, 512, 1024, 2048, 4096};
     public static final int[] lambdaPoints = {2, 4};
     public static final int runCount = 100;
     public static final int[] rugs = {2, 5};
@@ -44,12 +44,12 @@ public class Params {
         TWORATESTAGDETECT("TwoRateStagDetect", false, 2.0),
         ADAPTIVETWORATE("AdaptiveTwoRate", false, 2.0),
         ADAPTIVEDIVTWORATE("AdaptiveDivTwoRate", false, 2.0),
-        AB("AB", false, 1.0),
+        AB("AB", true, 1.0),
         ABEXP("ABExp", false, 1.0),
         SIMPLE("SimpleEA", false, 1.0),
         HEAVYTAIL("HeavyTail", false, 2.0),
         TWORATEFB("TwoRateByFlipBits", false, 1.0),
-        HQEA("HQEA", true, 1.0);
+        HQEA("HQEA", false, 1.0);
 
         public String name;
         public boolean used;

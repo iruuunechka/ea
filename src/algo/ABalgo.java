@@ -43,7 +43,7 @@ public class ABalgo implements Algorithm {
             if (fitness >= problem.getFitness()) {
                 numberOfBetter++;
             }
-            if (fitness > bestFitness) {
+            if (fitness >= bestFitness) {
                 bestFitness = fitness;
                 bestPatch = patch;
             }
@@ -51,7 +51,7 @@ public class ABalgo implements Algorithm {
         if (bestPatch != null) {
             problem.applyPatch(bestPatch, bestFitness);
         }
-        if (numberOfBetter > 0.05 * lambda) {
+        if (numberOfBetter > 0) {
             mutationRate = Math.min(0.5, a * mutationRate);
         } else {
             mutationRate = Math.max(lowerBound, b * mutationRate);

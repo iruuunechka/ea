@@ -56,7 +56,7 @@ public class HQEA implements Algorithm {
         for (int i = 0; i < lambda; ++i) {
             List<Integer> patch = PatchCalcUtil.createPatch(mutationRate, problemLength);
             int fitness = problem.calculatePatchFitness(patch);
-            if (strict ? fitness > problem.getFitness() : fitness >= problem.getFitness()) {
+            if (strict ? (fitness > problem.getFitness()) : (fitness >= problem.getFitness())) {
                 numberOfBetter++;
             }
 
