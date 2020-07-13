@@ -127,17 +127,4 @@ public class HQEA implements Algorithm {
         return problem.getInfo();
     }
 
-//    private List<Integer> createPatch() {
-//        List<Integer> patch = new ArrayList<>();
-//        for (int i = 0; i < problemLength; i++) {
-//            if (rand.nextDouble() < mutationRate) {
-//                patch.add(i);
-//            }
-//        }
-//        if (patch.isEmpty()) {
-//            patch.add(rand.nextInt(problemLength));
-//        }
-//        return patch;
-//    }
-
 }

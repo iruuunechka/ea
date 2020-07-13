@@ -1077,12 +1077,12 @@ public class Main {
         return (lambda, lowerBound, problemLength) -> new ABalgoToExplore(1.0 / n, 2, 0.5, lowerBound, lambda, new OneMax(problemLength));
     }
 
-    private static AlgoFactoryOld getABOMImplementation() {
-        return (lambda, lowerBound, problemLength) -> new ABalgo(1.0 / n, 2, 0.5, lowerBound, lambda, new OneMax(problemLength));
+    private static AlgoFactoryOld getABOMImplementation(boolean strict) {
+        return (lambda, lowerBound, problemLength) -> new ABalgo(1.0 / n, 2, 0.5, lowerBound, lambda, strict, new OneMax(problemLength));
     }
 
-    private static AlgoFactoryOld getABSQOMImplementation() {
-        return (lambda, lowerBound, problemLength) -> new ABalgo(1.0 / (n * n), 2, 0.5, lowerBound, lambda, new OneMax(problemLength));
+    private static AlgoFactoryOld getABSQOMImplementation(boolean strict) {
+        return (lambda, lowerBound, problemLength) -> new ABalgo(1.0 / (n * n), 2, 0.5, lowerBound, lambda, strict, new OneMax(problemLength));
     }
 
     //Simple
