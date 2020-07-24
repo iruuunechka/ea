@@ -18,7 +18,7 @@ public class RunAlgorithm {
 
     public static void main(String[] args) throws FileNotFoundException {
         ExecutorService es = Executors.newCachedThreadPool();
-        String mainFolder = "LO" + n + "_" + runCount + "/";
+        String mainFolder = "HQEALearningParams" + n + "_" + runCount + "/";
         new File(mainFolder).mkdir();
 //        Example:
 //        runAlgo(es, mainFolder, runByOptimum());
@@ -39,17 +39,17 @@ public class RunAlgorithm {
                 try {
                     if (problem.equals("Rug")) {
                         for (int r : rugs) {
-                            runner.runAlgo(es, mainFolder + algo.name + problem + r + ".csv", algo.lowerBoundConst / n, getAlgoFactory(algo.name, problem + r));
-                            runner.runAlgo(es, mainFolder + algo.name + problem + r + "sq.csv", algo.lowerBoundConst / (n * n), getAlgoFactory(algo.name, problem + r));
+                            runner.runAlgo(es, mainFolder + algo.name + "_" + problem + r + ".csv", algo.lowerBoundConst / n, getAlgoFactory(algo.name, problem + r));
+                            runner.runAlgo(es, mainFolder + algo.name + "_" + problem + r + "sq.csv", algo.lowerBoundConst / (n * n), getAlgoFactory(algo.name, problem + r));
                         }
                     } else if (problem.equals("Plateau")) {
                         for (int k : plateaus) {
-                            runner.runAlgo(es, mainFolder + algo.name + problem + k + ".csv", algo.lowerBoundConst / n, getAlgoFactory(algo.name, problem + k));
-                            runner.runAlgo(es, mainFolder + algo.name + problem + k + "sq.csv", algo.lowerBoundConst / (n * n), getAlgoFactory(algo.name, problem + k));
+                            runner.runAlgo(es, mainFolder + algo.name + "_" + problem + k + ".csv", algo.lowerBoundConst / n, getAlgoFactory(algo.name, problem + k));
+                            runner.runAlgo(es, mainFolder + algo.name + "_" + problem + k + "sq.csv", algo.lowerBoundConst / (n * n), getAlgoFactory(algo.name, problem + k));
                         }
                     } else {
-                        runner.runAlgo(es, mainFolder + algo.name + problem + ".csv", algo.lowerBoundConst / n, getAlgoFactory(algo.name, problem));
-                        runner.runAlgo(es, mainFolder + algo.name + problem + "sq.csv", algo.lowerBoundConst / (n * n), getAlgoFactory(algo.name, problem));
+                        runner.runAlgo(es, mainFolder + algo.name + "_" + problem + ".csv", algo.lowerBoundConst / n, getAlgoFactory(algo.name, problem));
+                        runner.runAlgo(es, mainFolder + algo.name + "_" + problem + "sq.csv", algo.lowerBoundConst / (n * n), getAlgoFactory(algo.name, problem));
                     }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -98,9 +98,9 @@ public class RunAlgorithm {
                         es.execute(() -> {
                             String filenameNew;
                             if (filename.contains("sq")) {
-                                    filenameNew = filename.substring(0, filename.length() - 6) + (strict ? "strict" : "") + "_" + a + "_" + b + filename.substring(filename.length() - 6);
+                                    filenameNew = filename.substring(0, filename.length() - 6) + a + "_" + b + "_" + (strict ? "strict" : "") + filename.substring(filename.length() - 6);
                                 } else {
-                                    filenameNew = filename.substring(0, filename.length() - 4) + (strict ? "strict" : "") + "_" + a + "_" + b + filename.substring(filename.length() - 4);
+                                    filenameNew = filename.substring(0, filename.length() - 4) + a + "_" + b + "_" + (strict ? "strict" : "") + filename.substring(filename.length() - 4);
                                 }
                             PrintWriter pw = null;
                             try {
@@ -141,9 +141,9 @@ public class RunAlgorithm {
                                     es.execute(() -> {
                                         String filenameNew;
                                         if (filename.contains("sq")) {
-                                            filenameNew = filename.substring(0, filename.length() - 6) + (strict ? "strict" : "") + "_" + alpha + "_" + gamma + "_" + epsilon + "_" + a + "_" + b + filename.substring(filename.length() - 6);
+                                            filenameNew = filename.substring(0, filename.length() - 6) + alpha + "_" + gamma + "_" + epsilon + "_" + a + "_" + b + "_" + (strict ? "strict" : "") + filename.substring(filename.length() - 6);
                                         } else {
-                                            filenameNew = filename.substring(0, filename.length() - 4) + (strict ? "strict" : "") + "_" + alpha + "_" + gamma + "_" + epsilon + "_" + a + "_" + b + filename.substring(filename.length() - 4);
+                                            filenameNew = filename.substring(0, filename.length() - 4) + alpha + "_" + gamma + "_" + epsilon + "_" + a + "_" + b + "_" + (strict ? "strict" : "") + filename.substring(filename.length() - 4);
                                         }
                                         PrintWriter pw = null;
                                         try {
@@ -158,10 +158,10 @@ public class RunAlgorithm {
                                                 Algorithm algo = factory.getInstance(new ABLearningParameterSet(lambda, lowerBound, n, a, b, strict, alpha, gamma, epsilon));
                                                 while (!algo.isFinished()) {
                                                     algo.makeIteration();
-                                                    //                                algo.printInfo();
+//                                                    algo.printInfo();
                                                 }
                                                 pw.println(algo.getIterCount() + ", " + lambda);
-                                                System.out.println(filenameNew + " " + lambda + " " + i);
+                                                System.out.println(filenameNew + " " + lambda + " " + i + " " + algo.getIterCount());
                                             }
                                             pw.flush();
                                         }

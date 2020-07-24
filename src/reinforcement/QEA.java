@@ -99,7 +99,7 @@ public class QEA implements Algorithm {
 
     @Override
     public void printInfo() {
-
+        System.out.println(iterCount + " " + problem.getFitness() + " " + curState + " " + curAction);
     }
 
     @Override

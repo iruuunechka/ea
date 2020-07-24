@@ -19,19 +19,19 @@ import java.util.stream.Stream;
 import static runners.newRunner.RunAlgorithm.*;
 
 public class Params {
-    public static final int n = 1000;
-    public static final int[] lambdas = {2, 4, 8, 16, 32, 64, 128, 256, 512};//, 1024, 2048, 4096}; //{1, 1024};
+    public static final int n = 10000;
+    public static final int[] lambdas = {2, 1024};//{2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096}; //
     public static final int[] lambdaPoints = {2, 4};
     public static final int runCount = 100;
-    public static final int[] rugs = {2, 5};
-    public static final int[] plateaus = {2};
+    public static final int[] rugs = {2};
+    public static final int[] plateaus = {3};
     public static final int budget = 1000;
     public static final double beta = 2.5;
     public static final double[] a = {2};
     public static final double[] b = {0.5};
-    public static final double[] alphas = {0.8};//, 0.6, 0.4};
-    public static final double[] gammas = {0.2};//, 0.4, 0.6};
-    public static final double[] epsilon = {0.0};//, 0.1, 0.3};
+    public static final double[] alphas = {0.8, 0.6, 0.4};
+    public static final double[] gammas = {0.2, 0.4, 0.6};
+    public static final double[] epsilon = {0.0, 0.1, 0.3};
     public static final boolean[] strict = {true, false};
 
 
@@ -39,7 +39,7 @@ public class Params {
     public static final Map<String, Double> methodLowerBound = new HashMap<>();
 
     public enum Algos {
-        TWORATE("TwoRate", true, 2.0, runByOptimum()),
+        TWORATE("TwoRate", false, 2.0, runByOptimum()),
         TWORATEEXP("TwoRateExp", false, 2.0, runByOptimum()),
 
         TWORATENOSHIFT("TwoRateNoShift", false, 2.0, runByOptimum()),
@@ -48,13 +48,13 @@ public class Params {
         TWORATESTAGDETECT("TwoRateStagDetect", false, 2.0, runByOptimum()),
         ADAPTIVETWORATE("AdaptiveTwoRate", false, 2.0, runByOptimum()),
         ADAPTIVEDIVTWORATE("AdaptiveDivTwoRate", false, 2.0, runByOptimum()),
-        AB("AB", true, 1.0, runABByOptimum()),
+        AB("AB", false, 1.0, runABByOptimum()),
         ABEXP("ABExp", false, 1.0, runABByOptimum()),
-        SIMPLE("SimpleEA", true, 1.0, runByOptimum()),
+        SIMPLE("SimpleEA", false, 1.0, runByOptimum()),
         HEAVYTAIL("HeavyTail", false, 2.0, runHeavyTailAlgo()),
         TWORATEFB("TwoRateByFlipBits", false, 1.0, runByOptimum()),
         HQEA("HQEA", true, 1.0, runLearningByOptimum()),
-        QEA("QEA", true, 1.0, runLearningByOptimum());
+        QEA("QEA", false, 1.0, runLearningByOptimum());
 
         public String name;
         public boolean used;
@@ -74,8 +74,8 @@ public class Params {
     }
 
     public enum Problems {
-        OM("OM", false),
-        LO("LO", true),
+        OM("OM", true),
+        LO("LO", false),
         NEUTRAL("Neutral", false),
         RUG("Rug", false),
         PLATEAU("Plateau", false);
@@ -221,16 +221,16 @@ public class Params {
         //QEA
         methods.put("QEAOM", ((ABLearningParameterSet ls) -> new QEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
                 new OneMax(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
-        methods.put("QEALO", ((ABLearningParameterSet ls) -> new HQEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
+        methods.put("QEALO", ((ABLearningParameterSet ls) -> new QEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
                 new LeadingOnes(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
-        methods.put("QEANeutral", ((ABLearningParameterSet ls) -> new HQEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
+        methods.put("QEANeutral", ((ABLearningParameterSet ls) -> new QEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
                 new Neutral3(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
         for (int r : rugs) {
-            methods.put("QEARug" + r, ((ABLearningParameterSet ls) -> new HQEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
+            methods.put("QEARug" + r, ((ABLearningParameterSet ls) -> new QEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
                     new Ruggedness(ls.problemLength, r), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
         }
         for (int k : plateaus) {
-            methods.put("QEAPlateau" + k, ((ABLearningParameterSet ls) -> new HQEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
+            methods.put("QEAPlateau" + k, ((ABLearningParameterSet ls) -> new QEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
                     new Plateau(ls.problemLength, k), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
         }
     }
