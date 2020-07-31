@@ -18,7 +18,7 @@ public class RunAlgorithm {
 
     public static void main(String[] args) throws FileNotFoundException {
         ExecutorService es = Executors.newCachedThreadPool();
-        String mainFolder = "HQEALearningParams" + n + "_" + runCount + "/";
+        String mainFolder = "HQEALearningParamsZeroEps" + n + "_" + runCount + "/";
         new File(mainFolder).mkdir();
 //        Example:
 //        runAlgo(es, mainFolder, runByOptimum());
@@ -48,8 +48,8 @@ public class RunAlgorithm {
                             runner.runAlgo(es, mainFolder + algo.name + "_" + problem + k + "sq.csv", algo.lowerBoundConst / (n * n), getAlgoFactory(algo.name, problem + k));
                         }
                     } else {
-                        runner.runAlgo(es, mainFolder + algo.name + "_" + problem + ".csv", algo.lowerBoundConst / n, getAlgoFactory(algo.name, problem));
-                        runner.runAlgo(es, mainFolder + algo.name + "_" + problem + "sq.csv", algo.lowerBoundConst / (n * n), getAlgoFactory(algo.name, problem));
+                        runner.runAlgo(es, mainFolder + algo.name + "_" + problem + "_" + ".csv", algo.lowerBoundConst / n, getAlgoFactory(algo.name, problem));
+                        runner.runAlgo(es, mainFolder + algo.name + "_" + problem + "_sq.csv", algo.lowerBoundConst / (n * n), getAlgoFactory(algo.name, problem));
                     }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();

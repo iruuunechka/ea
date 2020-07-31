@@ -29,9 +29,9 @@ public class Params {
     public static final double beta = 2.5;
     public static final double[] a = {2};
     public static final double[] b = {0.5};
-    public static final double[] alphas = {0.8, 0.6, 0.4};
-    public static final double[] gammas = {0.2, 0.4, 0.6};
-    public static final double[] epsilon = {0.0, 0.1, 0.3};
+    public static final double[] alphas = {0.8, 0.6, 0.4};//{0.1, 0.2, 0.3, 0.5, 0.7, 0.9};//
+    public static final double[] gammas = {0.2, 0.4, 0.6};//{0.1, 0.3, 0.5, 0.7, 0.8, 0.9};//
+    public static final double[] epsilon = {0.0};//, 0.1, 0.3};
     public static final boolean[] strict = {true, false};
 
 

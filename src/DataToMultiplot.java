@@ -79,8 +79,8 @@ public class DataToMultiplot {
     public static void main(String[] args) throws IOException {
         String outFolder = args[0] + "_plots/";
         new File(outFolder).mkdir();
-        createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + "strictsq.csv", 13);
-        createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && !String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + "strict.csv", 13);
+        createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + "strictsq.csv", 7);
+        createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && !String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + "strict.csv", 7);
         createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> !String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + "sq.csv", 7);
         createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> !String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && !String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + ".csv", 7);
     }
