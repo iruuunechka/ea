@@ -7,22 +7,23 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class GreedyQAgent implements Agent {
-    private final Map2<Integer, Integer, Double> Q;
-    private final List<Integer> actions;
+public class GreedyQAgent2actions implements Agent {
+    protected final Map2<Integer, Integer, Double> Q;
+    protected final List<Integer> actions;
     private final double alpha;
     private final double gamma;
-    private final double epsilon;
-    private final Random rand;
+    protected final double epsilon;
+    protected final Random rand;
 
-    public GreedyQAgent(int actionsCount, double alpha, double gamma, double epsilon) {
+
+    public GreedyQAgent2actions(double alpha, double gamma, double epsilon) {
         this.alpha = alpha;
         this.gamma = gamma;
         this.epsilon = epsilon;
         rand = ThreadLocalRandom.current();
         Q = new Map2<>(0.0);
         actions = new ArrayList<>();
-        for (int i = 0; i < actionsCount; ++i) {
+        for (int i = 0; i < 2; ++i) {
             actions.add(i);
         }
     }

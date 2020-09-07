@@ -3,9 +3,10 @@ package runners.newRunner;
 import algo.*;
 import problem.*;
 import reinforcement.QEA;
+import reinforcement.agent.GreedyQAgent3actions;
 import reinforcement.state.BetterCountState;
 import reinforcement.reward.DivReward;
-import reinforcement.agent.GreedyQAgent;
+import reinforcement.agent.GreedyQAgent2actions;
 import reinforcement.HQEA;
 import runners.newRunner.parameterSets.ABLearningParameterSet;
 import runners.newRunner.parameterSets.ABParameterSet;
@@ -19,19 +20,38 @@ import java.util.stream.Stream;
 import static runners.newRunner.RunAlgorithm.*;
 
 public class Params {
+    /**
+     * Ann's params
+     * n = 10000;
+     * a = 2;
+     * b = 0.5;
+     * alpha = 0.8
+     * gamma = 0.2
+     * epsilon = 0.0
+     */
+    /**
+     * HQEA Gradient params
+     * n = 5000;
+     * runcount = 3
+     * a = 2;
+     * b = 0.5;
+     * alpha = 0.9
+     * gamma = 0.1
+     * epsilon = 0.0
+     */
     public static final int n = 10000;
     public static final int[] lambdas = {2, 1024};//{2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096}; //
-    public static final int[] lambdaPoints = {2, 4};
+    public static final int[] lambdaPoints = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144};
     public static final int runCount = 100;
     public static final int[] rugs = {2};
     public static final int[] plateaus = {3};
     public static final int budget = 1000;
     public static final double beta = 2.5;
-    public static final double[] a = {2};
-    public static final double[] b = {0.5};
-    public static final double[] alphas = {0.8, 0.6, 0.4};//{0.1, 0.2, 0.3, 0.5, 0.7, 0.9};//
-    public static final double[] gammas = {0.2, 0.4, 0.6};//{0.1, 0.3, 0.5, 0.7, 0.8, 0.9};//
-    public static final double[] epsilon = {0.0};//, 0.1, 0.3};
+    public static final double[] a = {2}; //{1.3};//{1.7};//{1.5};//
+    public static final double[] b = {0.5};//{0.94};//{0.88};//{0.9};//
+    public static final double[] alphas = {0.8, 0.6, 0.4};//{0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};////{0.1, 0.2, 0.3, 0.5, 0.7, 0.9};//
+    public static final double[] gammas = {0.2, 0.4, 0.6};////{0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};//{0.1, 0.3, 0.5, 0.7, 0.8, 0.9};//
+    public static final double[] epsilon = {0.0, 0.1, 0.3};//{0.0};//{0.0, 0.01, 0.1, 0.3};//
     public static final boolean[] strict = {true, false};
 
 
@@ -53,7 +73,7 @@ public class Params {
         SIMPLE("SimpleEA", false, 1.0, runByOptimum()),
         HEAVYTAIL("HeavyTail", false, 2.0, runHeavyTailAlgo()),
         TWORATEFB("TwoRateByFlipBits", false, 1.0, runByOptimum()),
-        HQEA("HQEA", true, 1.0, runLearningByOptimum()),
+        HQEA("HQEA", true, 1.0, runLearningByOptimum()),//runABLearningOnPointGradientPlot()),//
         QEA("QEA", false, 1.0, runLearningByOptimum());
 
         public String name;
@@ -74,9 +94,9 @@ public class Params {
     }
 
     public enum Problems {
-        OM("OM", true),
+        OM("OM", false),
         LO("LO", false),
-        NEUTRAL("Neutral", false),
+        NEUTRAL("Neutral", true),
         RUG("Rug", false),
         PLATEAU("Plateau", false);
 
@@ -204,34 +224,34 @@ public class Params {
 
         //HQEA
         methods.put("HQEAOM", ((ABLearningParameterSet ls) -> new HQEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
-                new OneMax(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
+                new OneMax(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent3actions(ls.alpha, ls.gamma, ls.epsilon))));
         methods.put("HQEALO", ((ABLearningParameterSet ls) -> new HQEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
-                new LeadingOnes(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
+                new LeadingOnes(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent2actions(ls.alpha, ls.gamma, ls.epsilon))));
         methods.put("HQEANeutral", ((ABLearningParameterSet ls) -> new HQEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
-                new Neutral3(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
+                new Neutral3(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent2actions(ls.alpha, ls.gamma, ls.epsilon))));
         for (int r : rugs) {
             methods.put("HQEARug" + r, ((ABLearningParameterSet ls) -> new HQEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
-                    new Ruggedness(ls.problemLength, r), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
+                    new Ruggedness(ls.problemLength, r), new DivReward(), new BetterCountState(), new GreedyQAgent2actions(ls.alpha, ls.gamma, ls.epsilon))));
         }
         for (int k : plateaus) {
             methods.put("HQEAPlateau" + k, ((ABLearningParameterSet ls) -> new HQEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
-                    new Plateau(ls.problemLength, k), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
+                    new Plateau(ls.problemLength, k), new DivReward(), new BetterCountState(), new GreedyQAgent2actions(ls.alpha, ls.gamma, ls.epsilon))));
         }
 
         //QEA
         methods.put("QEAOM", ((ABLearningParameterSet ls) -> new QEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
-                new OneMax(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
+                new OneMax(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent2actions(ls.alpha, ls.gamma, ls.epsilon))));
         methods.put("QEALO", ((ABLearningParameterSet ls) -> new QEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
-                new LeadingOnes(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
+                new LeadingOnes(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent2actions(ls.alpha, ls.gamma, ls.epsilon))));
         methods.put("QEANeutral", ((ABLearningParameterSet ls) -> new QEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
-                new Neutral3(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
+                new Neutral3(ls.problemLength), new DivReward(), new BetterCountState(), new GreedyQAgent2actions(ls.alpha, ls.gamma, ls.epsilon))));
         for (int r : rugs) {
             methods.put("QEARug" + r, ((ABLearningParameterSet ls) -> new QEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
-                    new Ruggedness(ls.problemLength, r), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
+                    new Ruggedness(ls.problemLength, r), new DivReward(), new BetterCountState(), new GreedyQAgent2actions(ls.alpha, ls.gamma, ls.epsilon))));
         }
         for (int k : plateaus) {
             methods.put("QEAPlateau" + k, ((ABLearningParameterSet ls) -> new QEA(1.0 / n, ls.a, ls.b, ls.strict, ls.lowerBound, ls.lambda,
-                    new Plateau(ls.problemLength, k), new DivReward(), new BetterCountState(), new GreedyQAgent(2, ls.alpha, ls.gamma, ls.epsilon))));
+                    new Plateau(ls.problemLength, k), new DivReward(), new BetterCountState(), new GreedyQAgent2actions(ls.alpha, ls.gamma, ls.epsilon))));
         }
     }
 }

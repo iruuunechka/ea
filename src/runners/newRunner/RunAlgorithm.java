@@ -18,7 +18,7 @@ public class RunAlgorithm {
 
     public static void main(String[] args) throws FileNotFoundException {
         ExecutorService es = Executors.newCachedThreadPool();
-        String mainFolder = "HQEALearningParamsZeroEps" + n + "_" + runCount + "/";
+        String mainFolder = "HQEAABNeutral" + n + "_" + runCount + "/";
         new File(mainFolder).mkdir();
 //        Example:
 //        runAlgo(es, mainFolder, runByOptimum());
@@ -284,6 +284,58 @@ public class RunAlgorithm {
                     pw.close();
                 }
             });
+        };
+    }
+
+    public static Runner runABLearningOnPointGradientPlot() {
+        return (es, filename, lowerBound, factory) -> {
+            for (double alpha : Params.alphas) {
+                for (double gamma : Params.gammas) {
+                    for (double epsilon : Params.epsilon) {
+                        for (double a : Params.a){
+                            for (double b : Params.b) {
+                                for (boolean strict : Params.strict) {
+                                    es.execute(() -> {
+                                        for (int lambda : Params.lambdaPoints) {
+                                            String filenameNew;
+                                            if (filename.contains("sq")) {
+                                                filenameNew = filename.substring(0, filename.length() - 6) + alpha + "_" + gamma + "_" + epsilon + "_" + a + "_" + b + (strict ? "_strict" : "") + "_" + lambda + filename.substring(filename.length() - 6);
+                                            } else {
+                                                filenameNew = filename.substring(0, filename.length() - 4) + alpha + "_" + gamma + "_" + epsilon + "_" + a + "_" + b + (strict ? "_strict" : "") + "_" + lambda + filename.substring(filename.length() - 4);
+                                            }
+                                            PrintWriter pw = null;
+                                            try {
+                                                pw = new PrintWriter(filenameNew);
+                                            } catch (FileNotFoundException e) {
+                                                e.printStackTrace();
+                                            }
+                                            for (int i = 0; i < Params.runCount; i++) {
+                                                pw.println("\\addplot coordinates {");
+                                                Map<Integer, List<Double>> vals = new TreeMap<>();
+                                                Algorithm algo = factory.getInstance(new ABLearningParameterSet(lambda, lowerBound, n, a, b, strict, alpha, gamma, epsilon));
+                                                while (!algo.isFinished()) {
+                                                    algo.makeIteration();
+                                                    if (!vals.containsKey(n - algo.getFitness())) {
+                                                        vals.put(n - algo.getFitness(), new ArrayList<>());
+                                                    }
+                                                    vals.get(n - algo.getFitness()).add(algo.getMutationRate() * n);
+                                                }
+                                                for (int dist : vals.keySet()) {
+                                                    pw.print("(" + dist + ", " + vals.get(dist).get(0) + ")" + "(" + dist + ", " + vals.get(dist).get(vals.get(dist).size() - 1) + ")");
+                                                    pw.print("(" + dist + ", " + Collections.min(vals.get(dist)) + ")" + "(" + dist + ", " + Collections.max(vals.get(dist)) + ")");
+                                                }
+                                                System.out.println(filenameNew + " " + lambda + " " + i);
+                                                pw.println("};");
+                                            }
+                                            pw.close();
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         };
     }
 

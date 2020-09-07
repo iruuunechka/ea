@@ -85,11 +85,10 @@ public class HQEA implements Algorithm {
         }
         if (curAction == 0) {
             mutationRate = Math.min(0.5, a * mutationRate);
-        } else {
+        } else if (curAction == 1) {
             mutationRate = Math.max(lowerBound, b * mutationRate);
         }
         iterCount++;
-
     }
 
     @Override

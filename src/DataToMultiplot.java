@@ -9,6 +9,12 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class DataToMultiplot {
+    /**
+     * OM -- 8
+     * Neutral -- 13
+     */
+    private static final int position = 13;
+
     private static TreeMap<Integer, List<Integer>> readDataToMap (String file) throws FileNotFoundException {
         TreeMap<Integer, List<Integer>> data = new TreeMap<>();
         Scanner sc = new Scanner(new File(file)).useDelimiter("\\D");
@@ -44,11 +50,13 @@ public class DataToMultiplot {
             double b = 0;
             try {
                 String filename = String.valueOf(x.subpath(1, x.getNameCount()));
-                alpha = Double.valueOf(filename.substring(pos, pos + 3));
-                gamma = Double.valueOf(filename.substring(pos + 4, pos + 7));
-                epsilon = Double.valueOf(filename.substring(pos + 8, pos + 11));
-                a = Double.valueOf(filename.substring(pos + 12, pos + 15));
-                b = Double.valueOf(filename.substring(pos + 16, pos + 19));
+//                System.out.println(filename);
+                int curpos;
+                alpha = Double.valueOf(filename.substring(pos, curpos = filename.indexOf("_", pos)));
+                gamma = Double.valueOf(filename.substring(curpos + 1, curpos = filename.indexOf("_", curpos + 1)));
+                epsilon = Double.valueOf(filename.substring(curpos + 1, curpos = filename.indexOf("_", curpos + 1)));
+                a = Double.valueOf(filename.substring(curpos + 1, curpos = filename.indexOf("_", curpos + 1)));
+                b = Double.valueOf(filename.substring(curpos + 1, filename.indexOf("_", curpos + 1)));
                 data = readDataToMap(String.valueOf(x));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -79,9 +87,9 @@ public class DataToMultiplot {
     public static void main(String[] args) throws IOException {
         String outFolder = args[0] + "_plots/";
         new File(outFolder).mkdir();
-        createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + "strictsq.csv", 7);
-        createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && !String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + "strict.csv", 7);
-        createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> !String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + "sq.csv", 7);
-        createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> !String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && !String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + ".csv", 7);
+        createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + "strictsq.csv", position);
+        createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && !String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + "strict.csv", position);
+        createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> !String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + "sq.csv", position);
+        createPlotFormat(Files.walk(Paths.get(args[0])).filter(Files::isRegularFile).filter(x -> !String.valueOf(x.subpath(1, x.getNameCount())).contains("strict") && !String.valueOf(x.subpath(1, x.getNameCount())).contains("sq")), outFolder + args[1] + ".csv", position);
     }
 }
