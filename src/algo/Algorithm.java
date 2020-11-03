@@ -9,4 +9,6 @@ public interface Algorithm {
     long getFitnessCount();
     int getIterCount();
     String getProblemInfo();
+    String getInfo();
+    int getOptimum();
 }

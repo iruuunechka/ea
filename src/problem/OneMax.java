@@ -61,4 +61,9 @@ public class OneMax implements Problem {
     public String getInfo() {
         return "";
     }
+
+    @Override
+    public int getOptimum() {
+        return individual.length;
+    }
 }

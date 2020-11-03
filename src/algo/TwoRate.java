@@ -20,6 +20,8 @@ public class TwoRate implements Algorithm {
     private final Random rand;
 
     private int iterCount = 0;
+    private int action;
+    private String info = "";
 
 //    public int decreaseCount = 0;
 //    public List<String> decreaseCountInfo = new ArrayList<>();
@@ -50,6 +52,7 @@ public class TwoRate implements Algorithm {
 //                decreaseCountInfo.add(problem.getFitness() + "," + mutationRate + "'" + (problem.getFitness() - bpHalf.fitness) + "," + (problem.getFitness() - bpMult.fitness));
             }
             newMutationRate = mutationRate / 2;
+            action = 2;
         } else if (bpHalf.fitness < bpMult.fitness) {
             if (bpMult.fitness >= problem.getFitness()) {
                 problem.applyPatch(bpMult.patch, bpMult.fitness);
@@ -57,6 +60,7 @@ public class TwoRate implements Algorithm {
 //                increaseCount++;
             }
             newMutationRate = mutationRate * 2;
+            action = 1;
         } else { // что если равны?
             if (rand.nextBoolean()) {
                 if (bpHalf.fitness >= problem.getFitness()) {
@@ -65,6 +69,7 @@ public class TwoRate implements Algorithm {
 //                    equalCount++;
                 }
                 newMutationRate = mutationRate / 2;
+                action = 2;
             } else {
                 if (bpHalf.fitness >= problem.getFitness()) {
                     problem.applyPatch(bpMult.patch, bpMult.fitness);
@@ -72,6 +77,7 @@ public class TwoRate implements Algorithm {
 //                    equalCount++;
                 }
                 newMutationRate = mutationRate * 2;
+                action = 1;
             }
         }
         if (rand.nextBoolean()) { //вероятность не 0.5 а регулиировать в зависимости от разницы фитнеса в левой и правой.
@@ -79,8 +85,10 @@ public class TwoRate implements Algorithm {
 //            almostTheSame++;
             if (rand.nextBoolean()) {
                 mutationRate = mutationRate / 2;
+                action = 2;
             } else {
                 mutationRate = mutationRate * 2;
+                action = 1;
             }
         } else {
             mutationRate = newMutationRate;
@@ -96,7 +104,7 @@ public class TwoRate implements Algorithm {
 
     @Override
     public void printInfo() {
-        System.out.println(iterCount + " " + problem.getFitness() + " " + mutationRate);
+//        System.out.println(iterCount + " " + problem.getFitness() + " " + mutationRate);
 //        for (String s : decreaseCountInfo) {
 //            System.out.print(s + " ");
 //        }
@@ -126,6 +134,17 @@ public class TwoRate implements Algorithm {
     @Override
     public String getProblemInfo() {
         return problem.getInfo();
+    }
+
+    @Override
+    public String getInfo() {
+        return iterCount + ", fitness, " + getFitness() +"\n" +
+               iterCount + ", action, " + action;
+    }
+
+    @Override
+    public int getOptimum() {
+        return problem.getOptimum();
     }
 
 //@Override

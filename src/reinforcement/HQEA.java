@@ -126,4 +126,22 @@ public class HQEA implements Algorithm {
         return problem.getInfo();
     }
 
+    @Override
+    public String getInfo() {
+        return null;
+    }
+
+    @Override
+    public int getOptimum() {
+        return problem.getOptimum();
+    }
+
+    public int getAction() {
+        return curAction;
+    }
+
+    public int getState() {
+        return curState;
+    }
+
 }

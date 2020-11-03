@@ -25,7 +25,7 @@ public class DataToTable {
         private int pos; //position after lambda column
 
     }
-    private static void readDataToMap (Map<Integer, Set<DataItem>> data, String file, ResultsType res, int lambdaPos) throws IOException {
+    private static void readDataToMap (Map<Integer, List<DataItem>> data, String file, ResultsType res, int lambdaPos) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         String line = br.readLine();
         while ((line = br.readLine()) != null) {
@@ -55,7 +55,7 @@ public class DataToTable {
             }
             if (lambdas.contains (lambda)) {
                 if (!data.containsKey(lambda)) {
-                    data.put(lambda, new TreeSet<DataItem>() {
+                    data.put(lambda, new ArrayList<DataItem>() {
                     });
                 }
                 data.get(lambda).add(new DataItem(value, name.toString(), additionInf.toString()));
@@ -83,7 +83,7 @@ public class DataToTable {
 
     private static void createTableFormat(Stream<Path> files, String out, ResultsType res) throws FileNotFoundException {
         //List<Map<Integer, List<Integer>>> dataForFiles = new ArrayList<>();
-        TreeMap<Integer, Set<DataItem>> data = new TreeMap<>();
+        TreeMap<Integer, List<DataItem>> data = new TreeMap<>();
         PrintWriter pw = new PrintWriter(out);
         if (res == ResultsType.MEDIAN) {
             pw.println("name, lambda, med, q1, q2");
@@ -98,6 +98,7 @@ public class DataToTable {
             }
         });
         for (int lambda : data.keySet()) {
+            Collections.sort(data.get(lambda));
             for (DataItem curData : data.get(lambda)) {
                 pw.println(curData.name + ", " + lambda + ", " + curData.val + ", " + curData.additionInf);
             }

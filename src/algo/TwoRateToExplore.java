@@ -133,4 +133,14 @@ public class TwoRateToExplore implements Algorithm {
        return problem.getInfo();
     }
 
+    @Override
+    public String getInfo() {
+        return null;
+    }
+
+    @Override
+    public int getOptimum() {
+        return problem.getOptimum();
+    }
+
 }

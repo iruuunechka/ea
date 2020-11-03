@@ -170,4 +170,9 @@ public class Neutral3 implements Problem {
         }
         return s.toString();
     }
+
+    @Override
+    public int getOptimum() {
+        return chunks.length;
+    }
 }

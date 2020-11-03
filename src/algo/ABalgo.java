@@ -95,6 +95,16 @@ public class ABalgo implements Algorithm {
         return problem.getInfo();
     }
 
+    @Override
+    public String getInfo() {
+        return null;
+    }
+
+    @Override
+    public int getOptimum() {
+        return problem.getOptimum();
+    }
+
 //    private List<Integer> createPatch() {
 //        List<Integer> patch = new ArrayList<>();
 //        for (int i = 0; i < problemLength; i++) {

@@ -108,5 +108,15 @@ public class TwoRateNoShiftFitnessCount implements Algorithm {
     @Override
     public String getProblemInfo() { return problem.getInfo();}
 
+    @Override
+    public String getInfo() {
+        return null;
+    }
+
+    @Override
+    public int getOptimum() {
+        return problem.getOptimum();
+    }
+
 }
 

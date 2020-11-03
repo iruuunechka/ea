@@ -70,4 +70,9 @@ public class LeadingOnes implements Problem {
     public String getInfo() {
         return "";
     }
+
+    @Override
+    public int getOptimum() {
+        return individual.length;
+    }
 }

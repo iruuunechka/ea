@@ -89,4 +89,9 @@ public class Ruggedness implements Problem {
     public String getInfo() {
         return "";
     }
+
+    @Override
+    public int getOptimum() {
+        return optimum;
+    }
 }

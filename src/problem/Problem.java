@@ -15,4 +15,6 @@ public interface Problem {
     boolean isOptimized();
 
     String getInfo();
+
+    int getOptimum();
 }

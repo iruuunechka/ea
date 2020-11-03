@@ -28,7 +28,7 @@ public class GreedyQAgent3actions extends GreedyQAgent2actions {
             double q1 = Q.get(state, 1);
             double q2 = Q.get(state, 2);
             double max = Q.max(state, actions);
-            if ((q0 == max) && (q0 == q1) && (q0 != q2))  {
+            if ((q0 == max) && (q0 == q1) ){ // && (q0 != q2))  {
                 return -1;
             } else {
                 return Q.argMax(state, actions);
