@@ -7,6 +7,7 @@ import java.util.List;
 public class BestCalculatedPatch {
     public List<Integer> patch;
     public int fitness;
+    public int betterCount;
 
     public BestCalculatedPatch(List<Integer> patch, int fitness) {
         this.patch = patch;
@@ -20,6 +21,7 @@ public class BestCalculatedPatch {
      * @param problem
      */
     public BestCalculatedPatch (double mutation, int count, Problem problem) {
+        this.betterCount = 0;
         List<Integer> bestPatch = null;
         int bestFitness = -1;
         int problemLength = problem.getLength();
@@ -29,6 +31,7 @@ public class BestCalculatedPatch {
             if (fitness >= bestFitness) {
                 bestFitness = fitness;
                 bestPatch = patch;
+                this.betterCount++;
             }
         }
         this.patch = bestPatch;

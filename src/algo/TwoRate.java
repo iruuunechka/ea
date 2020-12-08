@@ -21,6 +21,8 @@ public class TwoRate implements Algorithm {
 
     private int iterCount = 0;
     private int action;
+    private int stateHalf;
+    private int stateDouble;
     private String info = "";
 
 //    public int decreaseCount = 0;
@@ -44,6 +46,8 @@ public class TwoRate implements Algorithm {
         BestCalculatedPatch bpHalf = new BestCalculatedPatch(mutationRate / 2, lambda / 2, problem);
         BestCalculatedPatch bpMult = new BestCalculatedPatch(mutationRate * 2, lambda / 2, problem);
         double newMutationRate = mutationRate;
+        stateHalf = bpHalf.betterCount;
+        stateDouble = bpMult.betterCount;
         if (bpHalf.fitness > bpMult.fitness) {
             if (bpHalf.fitness >= problem.getFitness()) {
                 problem.applyPatch(bpHalf.patch, bpHalf.fitness);
@@ -139,7 +143,10 @@ public class TwoRate implements Algorithm {
     @Override
     public String getInfo() {
         return iterCount + ", fitness, " + getFitness() +"\n" +
-               iterCount + ", action, " + action;
+               iterCount + ", action, " + action + "\n" +
+               iterCount + ", mutation" + mutationRate + "\n" +
+               iterCount + ", stateHalf, " + stateHalf + "\n" +
+               iterCount + ", stateDouble, " + stateDouble;
     }
 
     @Override

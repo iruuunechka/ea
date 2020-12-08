@@ -21,6 +21,9 @@ public class ABalgo implements Algorithm {
     private final boolean strict;
     private int iterCount = 0;
 
+    private int state = 0;
+    private int action = 0;
+
     public ABalgo(double mutationRate, double a, double b, double lowerBound, int lambda, boolean strict, Problem problem) {
         this.mutationRate = mutationRate;
         this.a = a;
@@ -55,9 +58,12 @@ public class ABalgo implements Algorithm {
         }
         if (numberOfBetter > 0) {
             mutationRate = Math.min(0.5, a * mutationRate);
+            action = 1;
         } else {
             mutationRate = Math.max(lowerBound, b * mutationRate);
+            action = 2;
         }
+        state = numberOfBetter;
     }
 
     @Override
@@ -97,7 +103,11 @@ public class ABalgo implements Algorithm {
 
     @Override
     public String getInfo() {
-        return null;
+        return iterCount + ", fitness, " + getFitness() +"\n" +
+               iterCount + ", action, " + action * problemLength / 2 + "\n" +
+               iterCount + ", mutation" + mutationRate + "\n" +
+               iterCount + ", state, " + state;
+
     }
 
     @Override

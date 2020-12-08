@@ -39,10 +39,10 @@ public class Params {
      * gamma = 0.1
      * epsilon = 0.0
      */
-    public static final int n = 100;
-    public static final int[] lambdas = {1024};//{2, 4, 8, 16, 32, 64, 128, 256, 512};//, 1024, 2048, 4096}; //
-    public static final int[] lambdaPoints = {16};// {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144};
-    public static final int runCount = 3;
+    public static final int n = 10000;
+    public static final int[] lambdas = {16, 512};//{2, 4, 8, 16, 32, 64, 128, 256, 512};//, 1024, 2048, 4096}; //
+    public static final int[] lambdaPoints = {512};// {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144};
+    public static final int runCount = 1;
     public static final int[] rugs = {2};
     public static final int[] plateaus = {3};
     public static final int budget = 1000;
@@ -51,7 +51,7 @@ public class Params {
     public static final double[] b = {0.5};//{0.94};//{0.88};//{0.9};//
     public static final double[] alphas = {0.8};//, 0.6, 0.4};//{0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};////{0.1, 0.2, 0.3, 0.5, 0.7, 0.9};//
     public static final double[] gammas = {0.2};//, 0.4, 0.6};////{0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};//{0.1, 0.3, 0.5, 0.7, 0.8, 0.9};//
-    public static final double[] epsilon = {0.3};//, 0.1, 0.3};//{0.0};//{0.0, 0.01, 0.1, 0.3};//
+    public static final double[] epsilon = {0.0};//, 0.1, 0.3};//{0.0};//{0.0, 0.01, 0.1, 0.3};//
     public static final boolean[] strict = {true, false};
 
 
@@ -59,7 +59,7 @@ public class Params {
     public static final Map<String, Double> methodLowerBound = new HashMap<>();
 
     public enum Algos {
-        TWORATE("TwoRate", false, 2.0, runOnPointGradientPlot()),//runByOptimum()),
+        TWORATE("TwoRate", true, 2.0, runByOptimumForStatisticsByIter()), //runOnPointGradientPlot()),//runByOptimum()),
         TWORATEEXP("TwoRateExp", false, 2.0, runByOptimum()),
 
         TWORATENOSHIFT("TwoRateNoShift", false, 2.0, runByOptimum()),
@@ -68,13 +68,13 @@ public class Params {
         TWORATESTAGDETECT("TwoRateStagDetect", false, 2.0, runByOptimum()),
         ADAPTIVETWORATE("AdaptiveTwoRate", false, 2.0, runByOptimum()),
         ADAPTIVEDIVTWORATE("AdaptiveDivTwoRate", false, 2.0, runByOptimum()),
-        AB("AB", false, 1.0, runABByOptimum()),
+        AB("AB", false, 1.0, runABForStatisticsByIter()),//runABOnPointGradientPlot()),//runABByOptimum()),
         ABEXP("ABExp", false, 1.0, runABByOptimum()),
         SIMPLE("SimpleEA", false, 1.0, runByOptimum()),
         HEAVYTAIL("HeavyTail", false, 2.0, runHeavyTailAlgo()),
         TWORATEFB("TwoRateByFlipBits", false, 1.0, runByOptimum()),
-        HQEA("HQEA", false, 1.0, runABLearningOnPointGradientPlot()),//runLearningForStatisticsByIter()),//runLearningForStatistics()),//runLearningByOptimum()),//
-        QEA("QEA", true, 1.0, runABLearningOnPointGradientPlot());//runLearningByOptimum());
+        HQEA("HQEA", false, 1.0, runLearningForStatisticsByIter()),//runABLearningOnPointGradientPlot()),//runLearningForStatistics()),//runLearningByOptimum()),//
+        QEA("QEA", false, 1.0, runABLearningOnPointGradientPlot());//runLearningByOptimum());
 
         public String name;
         public boolean used;
@@ -94,10 +94,10 @@ public class Params {
     }
 
     public enum Problems {
-        OM("OM", false),
+        OM("OM", true),
         LO("LO", false),
         NEUTRAL("Neutral", false),
-        RUG("Rug", true),
+        RUG("Rug", false),
         PLATEAU("Plateau", false);
 
         public String name;

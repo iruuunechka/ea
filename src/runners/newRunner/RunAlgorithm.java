@@ -1,5 +1,6 @@
 package runners.newRunner;
 
+import algo.ABalgo;
 import algo.AlgoFactory;
 import algo.Algorithm;
 import reinforcement.HQEA;
@@ -20,7 +21,7 @@ public class RunAlgorithm {
 
     public static void main(String[] args) throws FileNotFoundException {
         ExecutorService es = Executors.newCachedThreadPool();
-        String mainFolder = "RuggednessGradient" + n + "_" + runCount + "/";
+        String mainFolder = "OMStatistics" + n + "_" + runCount + "/";
         new File(mainFolder).mkdir();
 //        Example:
 //        runAlgo(es, mainFolder, runByOptimum());
@@ -96,22 +97,26 @@ public class RunAlgorithm {
         return (es, filename, lowerBound, factory) -> {
             for (int lambda : Params.lambdas) {
                 es.execute(() -> {
+                    String filenameIter;
+                    if (filename.contains("sq")) {
+                        filenameIter = filename.substring(0, filename.length() - 6) + lambda + "_iter" + filename.substring(filename.length() - 6);
+                    } else {
+                        filenameIter = filename.substring(0, filename.length() - 4) + lambda + "_iter" + filename.substring(filename.length() - 4);
+                    }
+
                     PrintWriter pw = null;
                     try {
-                        pw = new PrintWriter(filename);
+                        pw = new PrintWriter(filenameIter);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-                    pw.println("iter, fitness, action, state");
-                    System.out.println(filename + " " + lambda + " " + lowerBound);
-                    for (int i = 0; i < Params.runCount; i++) {
-                        Algorithm algo = factory.getInstance(new BoundedParameterSet(lambda, lowerBound, n));
-                        while (!algo.isFinished()) {
-                            algo.makeIteration();
-                            pw.println(algo.getInfo());
-                        }
+                    pw.println("iter, kind, value");
+                    System.out.println(filenameIter + " " + lambda + " " + lowerBound);
+                    Algorithm algo = factory.getInstance(new BoundedParameterSet(lambda, lowerBound, n));
+                    while (!algo.isFinished()) {
+                        algo.makeIteration();
+                        pw.println(algo.getInfo());
                     }
-                    pw.flush();
                     pw.close();
                 });
             };
@@ -158,6 +163,51 @@ public class RunAlgorithm {
             }
         };
     }
+
+    public static Runner runABForStatisticsByIter() {
+        return (es, filename, lowerBound, factory) -> {
+            for (double a : Params.a){
+                for (double b : Params.b) {
+                    for (boolean strict : Params.strict) {
+                        for (int lambda : Params.lambdas) {
+                            es.execute(() -> {
+                                String filenameIter;
+                                if (filename.contains("sq")) {
+                                    filenameIter = filename.substring(0, filename.length() - 6) + a + "_" + b + "_" + lambda + (strict ? "_strict" : "") + "_iter" + filename.substring(filename.length() - 6);
+                                } else {
+                                    filenameIter = filename.substring(0, filename.length() - 4) + a + "_" + b + "_" + lambda + (strict ? "_strict" : "") + "_iter" + filename.substring(filename.length() - 4);
+                                }
+
+                                PrintWriter pwIter = null;
+                                try {
+                                    pwIter = new PrintWriter(filenameIter);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+
+                                System.out.println(filenameIter);
+                                pwIter.println("iter, kind, value");
+                                ABalgo algo = (ABalgo) factory.getInstance(new ABParameterSet(lambda, lowerBound, n, a, b, strict));
+                                int state;
+                                while (!algo.isFinished()) {
+                                    algo.makeIteration();
+                                    pwIter.println(algo.getInfo());
+//                                    state = algo.getState();
+//                                    algo.makeIteration();
+//                                    pwIter.println(
+//                                            algo.getIterCount() + ", fitness, " + algo.getFitness() +"\n" +
+//                                                    algo.getIterCount() + ", action, " + (algo.getAction() + 1) * 500 +"\n" +
+//                                                    algo.getIterCount() + ", state, " + state);
+                                }
+                                pwIter.close();
+                            });
+                        }
+                    }
+                }
+            }
+        };
+    }
+
 
     public static Runner runLearningByOptimum() {
         return (es, filename, lowerBound, factory) -> {
@@ -206,6 +256,11 @@ public class RunAlgorithm {
         };
     }
 
+
+    /**
+     * HQEA statistics runner
+     * @return
+     */
     public static Runner runLearningForStatistics() {
         return (es, filename, lowerBound, factory) -> {
             for (double alpha : Params.alphas) {
@@ -269,6 +324,10 @@ public class RunAlgorithm {
         };
     }
 
+    /**
+     * HQEA statistics runner
+     * @return
+     */
     public static Runner runLearningForStatisticsByIter() {
         return (es, filename, lowerBound, factory) -> {
             for (double alpha : Params.alphas) {
@@ -302,7 +361,8 @@ public class RunAlgorithm {
                                                 algo.makeIteration();
                                                 pwIter.println(
                                                         algo.getIterCount() + ", fitness, " + algo.getFitness() +"\n" +
-                                                        algo.getIterCount() + ", action, " + (algo.getAction() + 1) * 500 +"\n" +
+                                                        algo.getIterCount() + ", action, " + (algo.getAction() + 1) +"\n" +
+                                                        algo.getIterCount() + ", mutation" + algo.getMutationRate() + "\n" +
                                                         algo.getIterCount() + ", state, " + state);
                                             }
                                             pwIter.close();
@@ -479,6 +539,51 @@ public class RunAlgorithm {
         };
     }
 
+    public static Runner runABOnPointGradientPlot() {
+        return (es, filename, lowerBound, factory) -> {
+            for (double a : Params.a){
+                for (double b : Params.b) {
+                    for (boolean strict : Params.strict) {
+                        es.execute(() -> {
+                            for (int lambda : Params.lambdaPoints) {
+                                String filenameNew;
+                                if (filename.contains("sq")) {
+                                    filenameNew = filename.substring(0, filename.length() - 6) + a + "_" + b + (strict ? "_strict" : "") + "_" + lambda + filename.substring(filename.length() - 6);
+                                } else {
+                                    filenameNew = filename.substring(0, filename.length() - 4) + a + "_" + b + (strict ? "_strict" : "") + "_" + lambda + filename.substring(filename.length() - 4);
+                                }
+                                PrintWriter pw = null;
+                                try {
+                                    pw = new PrintWriter(filenameNew);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                                for (int i = 0; i < Params.runCount; i++) {
+                                    pw.println("\\addplot coordinates {");
+                                    Map<Integer, List<Double>> vals = new TreeMap<>();
+                                    Algorithm algo = factory.getInstance(new ABParameterSet(lambda, lowerBound, n, a, b, strict));
+                                    while (!algo.isFinished()) {
+                                        algo.makeIteration();
+                                        if (!vals.containsKey(algo.getOptimum() - algo.getFitness())) {
+                                            vals.put(algo.getOptimum() - algo.getFitness(), new ArrayList<>());
+                                        }
+                                        vals.get(algo.getOptimum() - algo.getFitness()).add(algo.getMutationRate() * n);
+                                    }
+                                    for (int dist : vals.keySet()) {
+                                        pw.print("(" + dist + ", " + vals.get(dist).get(0) + ")" + "(" + dist + ", " + vals.get(dist).get(vals.get(dist).size() - 1) + ")");
+                                        pw.print("(" + dist + ", " + Collections.min(vals.get(dist)) + ")" + "(" + dist + ", " + Collections.max(vals.get(dist)) + ")");
+                                    }
+                                    System.out.println(filenameNew + " " + lambda + " " + i);
+                                    pw.println("};");
+                                }
+                                pw.close();
+                            }
+                        });
+                    }
+                }
+            }
+        };
+    }
 
     public static Runner runAlgoByFitnessCount() {
         return (es, filename, lowerBound, factory) -> {
