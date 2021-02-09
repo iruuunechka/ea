@@ -1,5 +1,6 @@
 package reinforcement.agent;
 
+import reinforcement.state.State;
 import reinforcement.utils.Map2;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GreedyQAgent2actions implements Agent {
-    protected final Map2<Integer, Integer, Double> Q;
+    protected final Map2<State, Integer, Double> Q;
     protected final List<Integer> actions;
     private final double alpha;
     private final double gamma;
@@ -29,14 +30,14 @@ public class GreedyQAgent2actions implements Agent {
     }
 
     @Override
-    public void updateExperience(int state, int newState, int action, double reward) {
+    public void updateExperience(State state, State newState, int action, double reward) {
         double old = Q.get(state, action);
         Q.put(state, action, old + alpha * (reward +
                 gamma * Q.max(newState, actions) - old));
     }
 
     @Override
-    public int chooseAction(int state) {
+    public int chooseAction(State state) {
         if (rand.nextDouble() < epsilon) {
             return actions.get(rand.nextInt(actions.size()));
         } else {

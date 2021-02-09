@@ -1,6 +1,8 @@
 package reinforcement.agent;
 
+import reinforcement.state.State;
+
 public interface Agent {
-    void updateExperience(int state, int newState, int action, double reward);
-    int chooseAction(int state);
+    void updateExperience(State state, State newState, int action, double reward);
+    int chooseAction(State state);
 }

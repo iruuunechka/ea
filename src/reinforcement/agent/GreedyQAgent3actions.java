@@ -1,5 +1,6 @@
 package reinforcement.agent;
 
+import reinforcement.state.State;
 import reinforcement.utils.Map2;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class GreedyQAgent3actions extends GreedyQAgent2actions {
     }
 
     @Override
-    public int chooseAction(int state) {
+    public int chooseAction(State state) {
         if (rand.nextDouble() < epsilon) {
             return actions.get(rand.nextInt(actions.size()));
         } else {

@@ -5,6 +5,7 @@ import problem.Problem;
 import reinforcement.agent.Agent;
 import reinforcement.reward.Reward;
 import reinforcement.state.State;
+import reinforcement.state.StateFactory;
 import utils.PatchCalcUtil;
 
 import java.util.List;
@@ -24,16 +25,16 @@ public class QEA implements Algorithm {
     private final int problemLength;
 
     private final Reward reward;
-    private final State state;
+    private final StateFactory stateFactory;
     private final Agent agent;
 
     private final Random rand;
     private int iterCount = 0;
 
-    private int curState = -1;
+    private State curState;
     private int curAction = -1;
 
-    public QEA(double mutationRate, double a, double b, boolean strict, double lowerBound, int lambda, Problem problem, Reward reward, State state, Agent agent) {
+    public QEA(double mutationRate, double a, double b, boolean strict, double lowerBound, int lambda, Problem problem, Reward reward, StateFactory stateFactory, Agent agent) {
         this.mutationRate = mutationRate;
         this.a = a;
         this.b = b;
@@ -43,9 +44,10 @@ public class QEA implements Algorithm {
         this.problemLength = problem.getLength();
         this.rand = ThreadLocalRandom.current();
         this.reward = reward;
-        this.state = state;
+        this.stateFactory = stateFactory;
         this.agent = agent;
         this.strict = strict;
+        curState = stateFactory.getInstance();
     }
 
     @Override
@@ -53,9 +55,11 @@ public class QEA implements Algorithm {
         List<Integer> bestPatch = null;
         int bestFitness = -1;
         int numberOfBetter = 0;
+        State newState = stateFactory.getInstance();
         for (int i = 0; i < lambda; ++i) {
             List<Integer> patch = PatchCalcUtil.createPatch(mutationRate, problemLength);
             int fitness = problem.calculatePatchFitness(patch);
+            newState.saveFitness(fitness);
             if (strict ? (fitness > problem.getFitness()) : (fitness >= problem.getFitness())) {
                 numberOfBetter++;
             }
@@ -66,7 +70,7 @@ public class QEA implements Algorithm {
             }
         }
         double newReward = reward.calculate(bestFitness, problem.getFitness());
-        int newState = state.calculate(numberOfBetter);
+        newState.calculate(numberOfBetter);
 
         if (iterCount != 0) {
             agent.updateExperience(curState, newState, curAction, newReward);
@@ -114,7 +118,7 @@ public class QEA implements Algorithm {
 
     @Override
     public long getFitnessCount() {
-        return iterCount * lambda;
+        return (long) iterCount * lambda;
     }
 
     @Override
