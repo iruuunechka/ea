@@ -2,6 +2,7 @@ package algo;
 
 import problem.Problem;
 import utils.BestCalculatedPatch;
+import utils.BestCalculatedPatchStrictStatistics;
 import utils.PatchCalcUtil;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class TwoRate implements Algorithm {
         double newMutationRate = mutationRate;
         stateHalf = bpHalf.betterCount;
         stateDouble = bpMult.betterCount;
+        int oldFitness = problem.getFitness();
         if (bpHalf.fitness > bpMult.fitness) {
             if (bpHalf.fitness >= problem.getFitness()) {
                 problem.applyPatch(bpHalf.patch, bpHalf.fitness);
@@ -144,7 +146,7 @@ public class TwoRate implements Algorithm {
     public String getInfo() {
         return iterCount + ", fitness, " + getFitness() +"\n" +
                iterCount + ", action, " + action + "\n" +
-               iterCount + ", mutation" + mutationRate + "\n" +
+               iterCount + ", mutation, " + mutationRate + "\n" +
                iterCount + ", stateHalf, " + stateHalf + "\n" +
                iterCount + ", stateDouble, " + stateDouble;
     }

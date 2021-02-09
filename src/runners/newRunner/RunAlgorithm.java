@@ -21,7 +21,7 @@ public class RunAlgorithm {
 
     public static void main(String[] args) throws FileNotFoundException {
         ExecutorService es = Executors.newCachedThreadPool();
-        String mainFolder = "OMStatistics" + n + "_" + runCount + "/";
+        String mainFolder = "PlateauForKirill" + n + "_" + runCount + "/";
         new File(mainFolder).mkdir();
 //        Example:
 //        runAlgo(es, mainFolder, runByOptimum());
@@ -362,7 +362,7 @@ public class RunAlgorithm {
                                                 pwIter.println(
                                                         algo.getIterCount() + ", fitness, " + algo.getFitness() +"\n" +
                                                         algo.getIterCount() + ", action, " + (algo.getAction() + 1) +"\n" +
-                                                        algo.getIterCount() + ", mutation" + algo.getMutationRate() + "\n" +
+                                                        algo.getIterCount() + ", mutation, " + algo.getMutationRate() + "\n" +
                                                         algo.getIterCount() + ", state, " + state);
                                             }
                                             pwIter.close();

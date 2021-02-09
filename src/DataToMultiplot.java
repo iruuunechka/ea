@@ -14,7 +14,7 @@ public class DataToMultiplot {
      * Neutral -- 13
      * Ruggedness -- 10
      */
-    private static final int position = 10;
+    private static final int position = 8;
 
     private static TreeMap<Integer, List<Integer>> readDataToMap (String file) throws FileNotFoundException {
         TreeMap<Integer, List<Integer>> data = new TreeMap<>();

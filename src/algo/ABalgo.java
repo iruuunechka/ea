@@ -104,8 +104,8 @@ public class ABalgo implements Algorithm {
     @Override
     public String getInfo() {
         return iterCount + ", fitness, " + getFitness() +"\n" +
-               iterCount + ", action, " + action * problemLength / 2 + "\n" +
-               iterCount + ", mutation" + mutationRate + "\n" +
+               iterCount + ", action, " + action + "\n" +
+               iterCount + ", mutation, " + mutationRate + "\n" +
                iterCount + ", state, " + state;
 
     }
