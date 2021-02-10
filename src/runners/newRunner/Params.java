@@ -39,8 +39,8 @@ public class Params {
      * gamma = 0.1
      * epsilon = 0.0
      */
-    public static final int n = 100;
-    public static final int[] lambdas = {2, 4, 8, 16, 32, 64, 128, 256, 512};//, 1024, 2048, 4096}; //{16, 512};//
+    public static final int n = 10000;
+    public static final int[] lambdas = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096}; //{16, 512};//
     public static final int[] lambdaPoints = {512};// {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144};
     public static final int runCount = 100;
     public static final int[] rugs = {2};
@@ -59,7 +59,7 @@ public class Params {
     public static final Map<String, Double> methodLowerBound = new HashMap<>();
 
     public enum Algos {
-        TWORATE("TwoRate", true, 2.0, runByOptimum()),//runByOptimumForStatisticsByIter()), //runOnPointGradientPlot()),//
+        TWORATE("TwoRate", false, 2.0, runByOptimum()),//runByOptimumForStatisticsByIter()), //runOnPointGradientPlot()),//
         TWORATEEXP("TwoRateExp", false, 2.0, runByOptimum()),
 
         TWORATENOSHIFT("TwoRateNoShift", false, 2.0, runByOptimum()),
@@ -68,13 +68,13 @@ public class Params {
         TWORATESTAGDETECT("TwoRateStagDetect", false, 2.0, runByOptimum()),
         ADAPTIVETWORATE("AdaptiveTwoRate", false, 2.0, runByOptimum()),
         ADAPTIVEDIVTWORATE("AdaptiveDivTwoRate", false, 2.0, runByOptimum()),
-        AB("AB", true, 1.0, runABByOptimum()),//runABForStatisticsByIter()),//runABOnPointGradientPlot()),//
+        AB("AB", false, 1.0, runABByOptimum()),//runABForStatisticsByIter()),//runABOnPointGradientPlot()),//
         ABEXP("ABExp", false, 1.0, runABByOptimum()),
-        SIMPLE("SimpleEA", true, 1.0, runByOptimum()),
+        SIMPLE("SimpleEA", false, 1.0, runByOptimum()),
         HEAVYTAIL("HeavyTail", false, 2.0, runHeavyTailAlgo()),
         TWORATEFB("TwoRateByFlipBits", false, 1.0, runByOptimum()),
         HQEA("HQEA", true, 1.0, runLearningByOptimum()),//runLearningForStatisticsByIter()),//runABLearningOnPointGradientPlot()),//runLearningForStatistics()),//
-        QEA("QEA", true, 1.0, runLearningByOptimum());//runABLearningOnPointGradientPlot());//
+        QEA("QEA", false, 1.0, runLearningByOptimum());//runABLearningOnPointGradientPlot());//
 
         public String name;
         public boolean used;
@@ -90,15 +90,14 @@ public class Params {
         public static Stream<Algos> stream() {
             return Stream.of(Algos.values());
         }
-//Algos.stream().filter(d-> d.used.equals(false));
     }
 
     public enum Problems {
-        OM("OM", false),
+        OM("OM", true),
         LO("LO", false),
         NEUTRAL("Neutral", false),
         RUG("Rug", false),
-        PLATEAU("Plateau", true);
+        PLATEAU("Plateau", false);
 
         public String name;
         public boolean used;

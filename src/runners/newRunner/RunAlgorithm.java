@@ -21,7 +21,7 @@ public class RunAlgorithm {
 
     public static void main(String[] args) throws FileNotFoundException {
         ExecutorService es = Executors.newCachedThreadPool();
-        String mainFolder = "PlateauForKirill" + n + "_" + runCount + "/";
+        String mainFolder = "Experiments/" + "HQEAPairState" + n + "_" + runCount + "/";
         new File(mainFolder).mkdir();
 //        Example:
 //        runAlgo(es, mainFolder, runByOptimum());
@@ -234,13 +234,13 @@ public class RunAlgorithm {
                                         for (int lambda : Params.lambdas) {
                                             System.out.println(filenameNew + " " + lambda + " " + lowerBound);
                                             for (int i = 0; i < Params.runCount; i++) {
-                                                Algorithm algo = factory.getInstance(new ABLearningParameterSet(lambda, lowerBound, n, a, b, strict, alpha, gamma, epsilon));
+                                                HQEA algo = (HQEA)factory.getInstance(new ABLearningParameterSet(lambda, lowerBound, n, a, b, strict, alpha, gamma, epsilon));
                                                 while (!algo.isFinished()) {
                                                     algo.makeIteration();
 //                                                    algo.printInfo();
                                                 }
                                                 pw.println(algo.getIterCount() + ", " + lambda);
-                                                System.out.println(filenameNew + " " + lambda + " " + i + " " + algo.getIterCount());
+                                                System.out.println(filenameNew + " " + lambda + " " + i + " " + algo.getIterCount() + " " + algo.getState());
                                             }
                                             pw.flush();
                                         }
